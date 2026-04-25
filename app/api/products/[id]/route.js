@@ -13,7 +13,13 @@ export async function GET(req, { params }) {
 
     const { data, error } = await query;
     if (error || !data) return NextResponse.json({ error: 'Product not found' }, { status: 404 });
-    return NextResponse.json(data);
+
+    // Dynamically compute our_price as exactly 10% off the highest market price
+    const marketPrice = Math.max(data.amazon_price || 0, data.flipkart_price || 0, data.online_price || 0);
+    const ourPrice = marketPrice > 0 ? Math.round(marketPrice * 0.9) : data.our_price;
+    const enriched = { ...data, our_price: ourPrice, market_price: marketPrice };
+
+    return NextResponse.json(enriched);
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

@@ -2,13 +2,19 @@
 import Link from 'next/link';
 import { Smartphone, ShoppingBag } from 'lucide-react';
 import styles from '@/styles/ProductCard.module.css';
-import { formatINR, calcDiscountPct, calcSavings } from '@/lib/utils';
+import { formatINR } from '@/lib/utils';
 
 export default function ProductCard({ product }) {
-  const maxCompetitor = Math.max(product.amazon_price || 0, product.flipkart_price || 0, product.online_price || 0);
-  const discountPct = maxCompetitor > 0 ? calcDiscountPct(maxCompetitor, product.our_price) : 0;
-  const savings = maxCompetitor > 0 ? calcSavings(maxCompetitor, product.our_price) : 0;
-  const inStock = product.stock > 0;
+  // market_price is pre-computed by the API as max(amazon, flipkart, online)
+  const marketPrice = product.market_price || Math.max(
+    product.amazon_price || 0,
+    product.flipkart_price || 0,
+    product.online_price || 0
+  );
+
+  // our_price is pre-computed by API as exactly 10% off market price
+  const ourPrice = product.our_price;
+  const savings = marketPrice > ourPrice ? marketPrice - ourPrice : 0;
 
   return (
     <Link href={`/products/${product.slug}`} className={styles.card} aria-label={product.name}>
@@ -27,14 +33,9 @@ export default function ProductCard({ product }) {
           </div>
         )}
 
-        {discountPct > 0 && (
-          <span className={styles.discountBadge}>{discountPct}% OFF</span>
-        )}
-
-        {!inStock && (
-          <div className={styles.outOfStock}>
-            <span className={styles.outOfStockLabel}>Out of Stock</span>
-          </div>
+        {/* 10% off badge — always shown when market price exists */}
+        {marketPrice > 0 && (
+          <span className={styles.discountBadge}>10% OFF</span>
         )}
       </div>
 
@@ -46,26 +47,24 @@ export default function ProductCard({ product }) {
         <h3 className={styles.name}>{product.name}</h3>
 
         <div className={styles.priceRow}>
-          <span className={styles.ourPrice}>{formatINR(product.our_price)}</span>
+          {/* Our wholesale price — always highlighted */}
+          <span className={styles.ourPrice}>{formatINR(ourPrice)}</span>
+
+          {/* Amazon price struck through */}
           {product.amazon_price > 0 && (
             <span className={styles.originalPrice}>
-              <span className={styles.compName}>Amz:</span> {formatINR(product.amazon_price)}
-            </span>
-          )}
-          {product.flipkart_price > 0 && (
-            <span className={styles.originalPrice}>
-              <span className={styles.compName}>Fk:</span> {formatINR(product.flipkart_price)}
+              <span className={styles.compName}>Amazon:</span> {formatINR(product.amazon_price)}
             </span>
           )}
         </div>
 
         {savings > 0 && (
-          <span className={styles.savings}>You save {formatINR(savings)}</span>
+          <span className={styles.savings}>🎉 You save {formatINR(savings)}</span>
         )}
 
         <span className={styles.buyBtn}>
           <ShoppingBag size={14} strokeWidth={2.5} />
-          {inStock ? 'Buy Now' : 'Notify Me'}
+          Buy Now
         </span>
       </div>
     </Link>

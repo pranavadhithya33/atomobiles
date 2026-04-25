@@ -12,12 +12,11 @@ export async function GET(req) {
 
     let query = supabase
       .from('products')
-      .select('id, name, slug, images, online_price, our_price, stock, category, featured')
-      .order('created_at', { ascending: false })
-      .limit(limit);
+      .select('id, name, slug, images, online_price, amazon_price, flipkart_price, amazon_url, our_price, stock, category, featured, prepaid_discount_pct, price_refreshed_at, description')
+      .gt('stock', 0); // Only show in-stock products
 
     if (search) {
-      query = query.ilike('name', `%${search}%`);
+      query = query.textSearch('fts', search.trim().split(/\s+/).join(' & '));
     }
     if (category) {
       query = query.eq('category', category);
@@ -26,9 +25,22 @@ export async function GET(req) {
       query = query.eq('featured', true);
     }
 
+    query = query
+      .order('featured', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
     const { data, error } = await query;
     if (error) throw error;
-    return NextResponse.json(data || []);
+
+    // Dynamically compute our_price as exactly 10% off the highest market price
+    const enriched = (data || []).map(p => {
+      const marketPrice = Math.max(p.amazon_price || 0, p.flipkart_price || 0, p.online_price || 0);
+      const ourPrice = marketPrice > 0 ? Math.round(marketPrice * 0.9) : p.our_price;
+      return { ...p, our_price: ourPrice, market_price: marketPrice };
+    });
+
+    return NextResponse.json(enriched);
   } catch (err) {
     console.error('Products fetch error:', err);
     return NextResponse.json([], { status: 200 });
