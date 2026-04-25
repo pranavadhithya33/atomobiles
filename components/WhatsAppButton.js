@@ -1,11 +1,17 @@
 'use client';
 // components/WhatsAppButton.js
 import { MessageCircle } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917397189222';
 
 export default function WhatsAppButton() {
+  const pathname = usePathname();
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hi! I want to know more about your products.')}`;
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   return (
     <a

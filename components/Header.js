@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search, Smartphone, MessageCircle } from 'lucide-react';
@@ -17,6 +18,7 @@ export default function Header() {
   const [categories, setCategories] = useState([]);
   const searchRef = useRef(null);
   const debounceRef = useRef(null);
+  const pathname = usePathname();
 
   // Fetch categories for nav bar
   useEffect(() => {
@@ -62,6 +64,10 @@ export default function Header() {
   }, []);
 
   const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hi! I have a query about your products.')}`;
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   return (
     <header className={styles.header}>

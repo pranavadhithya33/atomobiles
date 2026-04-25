@@ -26,6 +26,7 @@ function OrderFormContent() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [fullOrderId, setFullOrderId] = useState('');
   const [submitError, setSubmitError] = useState('');
 
   // Redirect if no product
@@ -81,6 +82,7 @@ function OrderFormContent() {
       if (!res.ok) throw new Error(data.error || 'Failed to place order');
 
       setOrderId(data.id?.slice(0, 8)?.toUpperCase() || 'N/A');
+      setFullOrderId(data.id || '');
       setSubmitted(true);
 
       // Auto-open WhatsApp
@@ -93,6 +95,7 @@ function OrderFormContent() {
         paymentOption,
         finalPrice,
         advanceAmount,
+        orderId: data.id || '',
       });
       setTimeout(() => window.open(waUrl, '_blank'), 800);
 
@@ -114,6 +117,7 @@ function OrderFormContent() {
       paymentOption,
       finalPrice,
       advanceAmount,
+      orderId: fullOrderId,
     });
 
     return (
@@ -131,10 +135,15 @@ function OrderFormContent() {
           </div>
           <div className={styles.successActions}>
             <a href={waUrl} target="_blank" rel="noopener noreferrer"
-              className="btn btn-whatsapp btn-full btn-lg">
+              className="btn btn-whatsapp btn-full btn-lg" style={{ marginBottom: 12 }}>
               💬 Confirm on WhatsApp
             </a>
-            <Link href="/" className="btn btn-secondary btn-full">
+            {fullOrderId && (
+              <Link href={`/track/${fullOrderId}`} className="btn btn-primary btn-full btn-lg" style={{ background: '#f8f9fa', color: '#1a1a2e', border: '1px solid #e2e8f0' }}>
+                📍 Track Order Live
+              </Link>
+            )}
+            <Link href="/" className="btn btn-secondary btn-full" style={{ marginTop: 12 }}>
               ← Continue Shopping
             </Link>
           </div>

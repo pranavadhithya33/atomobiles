@@ -180,6 +180,20 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleUpdateOrderStatus = async (id, newStatus) => {
+    try {
+      const res = await fetch(`/api/orders/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!res.ok) throw new Error('Failed');
+      await fetchOrders();
+    } catch {
+      alert('Failed to update order status');
+    }
+  };
+
   // Stats
   const totalRevenue = orders.reduce((sum, o) => sum + (o.final_price || 0), 0);
   const pendingOrders = orders.filter(o => o.status === 'pending').length;
@@ -370,13 +384,21 @@ export default function AdminDashboard() {
                         </td>
                         <td style={{ fontWeight:700 }}>{formatINR(o.final_price)}</td>
                         <td>
-                          <span className={`${styles.orderStatus} ${
-                            o.status === 'confirmed' ? styles.orderStatusConfirmed :
-                            o.status === 'cancelled' ? styles.orderStatusCancelled :
-                            styles.orderStatusPending
-                          }`}>
-                            {o.status || 'pending'}
-                          </span>
+                          <select 
+                            value={o.status || 'pending'} 
+                            onChange={(e) => handleUpdateOrderStatus(o.id, e.target.value)}
+                            className={`${styles.orderStatus} ${
+                              o.status === 'shipped' || o.status === 'delivered' ? styles.orderStatusConfirmed :
+                              o.status === 'cancelled' ? styles.orderStatusCancelled :
+                              styles.orderStatusPending
+                            }`}
+                            style={{ padding: '4px 24px 4px 10px', appearance: 'auto', cursor: 'pointer', border: '1px solid transparent' }}
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                          </select>
                         </td>
                         <td style={{ fontSize:12, color:'var(--text-muted)', whiteSpace:'nowrap' }}>
                           {new Date(o.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'2-digit' })}
