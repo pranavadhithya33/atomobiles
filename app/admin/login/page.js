@@ -1,0 +1,85 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import styles from '@/styles/Admin.module.css';
+import { Smartphone, Lock } from 'lucide-react';
+
+export default function AdminLoginPage() {
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/admin/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        sessionStorage.setItem('og_admin', 'true');
+        router.push('/admin/dashboard');
+      } else {
+        setError('Incorrect password. Please try again.');
+      }
+    } catch {
+      setError('Connection error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className={styles.loginPage}>
+      <div className={styles.loginCard}>
+        <div className={styles.loginLogo}>
+          <div className={styles.loginLogoIcon}>
+            <Smartphone size={28} color="#f4a724" />
+          </div>
+          <div>
+            <h1 className={styles.loginTitle}>Only Gadjets</h1>
+            <p className={styles.loginSubtitle}>Admin Panel · Secure Login</p>
+          </div>
+        </div>
+
+        <form onSubmit={handleLogin} style={{ display:'flex', flexDirection:'column', gap:14 }}>
+          <div className="form-group">
+            <label htmlFor="admin-password" className="form-label">Admin Password</label>
+            <input
+              id="admin-password"
+              type="password"
+              className="form-input"
+              placeholder="Enter admin password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+            />
+          </div>
+
+          {error && <div className={styles.loginError}>{error}</div>}
+
+          <button
+            type="submit"
+            id="admin-login-btn"
+            className={styles.loginBtn}
+            disabled={loading || !password}
+          >
+            {loading ? 'Verifying…' : '🔐 Login to Dashboard'}
+          </button>
+        </form>
+
+        <p style={{ textAlign:'center', fontSize:12, color:'#aaa' }}>
+          <Lock size={11} style={{ verticalAlign:'middle', marginRight:4 }} />
+          Authorized personnel only
+        </p>
+      </div>
+    </div>
+  );
+}

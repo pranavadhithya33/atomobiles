@@ -1,0 +1,564 @@
+/* styles/Admin.module.css */
+
+.adminPage {
+  min-height: 100vh;
+  background: #f0f2f5;
+}
+
+.adminHeader {
+  background: var(--brand-primary);
+  padding: 16px var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.adminHeaderTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adminHeaderTitle span {
+  color: var(--brand-accent);
+}
+
+.logoutBtn {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.logoutBtn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.adminBody {
+  padding: var(--space-md);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-card);
+  padding: 6px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-md);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  flex: 1;
+  min-width: 100px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: all var(--transition);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tab:hover {
+  background: var(--bg-page);
+  color: var(--text-primary);
+}
+
+.tabActive {
+  background: var(--brand-primary);
+  color: #fff;
+}
+
+/* Stats Bar */
+.statsBar {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+@media (min-width: 600px) {
+  .statsBar {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.statCard {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 14px var(--space-md);
+  box-shadow: var(--shadow-card);
+}
+
+.statLabel {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statValue {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-top: 4px;
+}
+
+/* Product List */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--brand-accent);
+  color: var(--brand-primary);
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.addBtn:hover {
+  background: var(--brand-accent-dark);
+}
+
+/* Product Table */
+.tableWrap {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.table th {
+  background: #f8fafc;
+  padding: 12px var(--space-md);
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+
+.table td {
+  padding: 14px var(--space-md);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background: #fafbfc;
+}
+
+.productThumb {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+}
+
+.productThumbPlaceholder {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-page);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+}
+
+.actionBtns {
+  display: flex;
+  gap: 6px;
+}
+
+.editBtn {
+  background: var(--info-bg);
+  color: var(--info);
+  border: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.editBtn:hover {
+  background: var(--info);
+  color: #fff;
+}
+
+.deleteBtn {
+  background: var(--error-bg);
+  color: var(--error);
+  border: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.deleteBtn:hover {
+  background: var(--error);
+  color: #fff;
+}
+
+/* Stock Toggle */
+.stockToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition);
+}
+
+.stockToggleIn {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.stockToggleOut {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  overflow-y: auto;
+}
+
+.modal {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  width: 100%;
+  max-width: 560px;
+  box-shadow: var(--shadow-lg);
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: fadeIn 0.2s ease;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+  margin-top: var(--space-sm);
+}
+
+.modalCancelBtn {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.modalCancelBtn:hover {
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.modalSaveBtn {
+  flex: 2;
+  padding: 12px;
+  background: var(--brand-accent);
+  color: var(--brand-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.modalSaveBtn:hover {
+  background: var(--brand-accent-dark);
+}
+
+.modalSaveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Textarea */
+.formTextarea {
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--text-primary);
+  background: #fff;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  font-family: inherit;
+  width: 100%;
+  transition: border-color var(--transition);
+}
+
+.formTextarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(244,167,36,0.12);
+}
+
+/* Orders table */
+.orderStatus {
+  display: inline-flex;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.orderStatusPending {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.orderStatusConfirmed {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.orderStatusCancelled {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+/* Login page */
+.loginPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-primary);
+  padding: var(--space-md);
+}
+
+.loginCard {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  width: 100%;
+  max-width: 380px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.loginLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.loginLogoIcon {
+  width: 56px;
+  height: 56px;
+  background: var(--brand-primary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.loginSubtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 14px;
+  background: var(--brand-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.loginBtn:hover {
+  background: var(--brand-secondary);
+}
+
+.loginError {
+  background: var(--error-bg);
+  color: var(--error);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #fecaca;
+  text-align: center;
+}
+
+.imageUrlList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.imageUrlRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.imageUrlRow input {
+  flex: 1;
+}
+
+.removeImgBtn {
+  background: var(--error-bg);
+  color: var(--error);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  font-size: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.addImgBtn {
+  background: var(--info-bg);
+  color: var(--info);
+  border: none;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  align-self: flex-start;
+}
+
+.addImgBtn:hover {
+  background: var(--info);
+  color: #fff;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px var(--space-md);
+  color: var(--text-muted);
+  font-size: 14px;
+}
