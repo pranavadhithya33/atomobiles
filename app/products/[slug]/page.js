@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
 import PaymentSelector from '@/components/PaymentSelector';
+import LivePriceDisplay from '@/components/LivePriceDisplay';
 import { formatINR, calcDiscountPct, calcSavings, calcPrepaidPrice, calcHalfPayment } from '@/lib/utils';
 import styles from '@/styles/ProductDetail.module.css';
 import { ChevronRight, CheckCircle, AlertCircle, Clock, ShoppingBag, MessageCircle, Package } from 'lucide-react';
@@ -120,25 +121,8 @@ export default function ProductDetailPage() {
           <StockBadge stock={product.stock} />
         </div>
 
-        {/* Price Block */}
-        <div className={styles.priceBlock}>
-          {product.online_price > 0 && (
-            <div className={styles.priceLine}>
-              <span className={styles.priceLabel}>🛒 Online Market Price</span>
-              <span className={styles.priceOnline}>{formatINR(product.online_price)}</span>
-            </div>
-          )}
-          <div className={styles.priceLine}>
-            <span className={styles.priceLabel} style={{ fontWeight: 700, color:'#0a1628' }}>🏷️ Our Price</span>
-            <span className={styles.priceOur}>{formatINR(product.our_price)}</span>
-          </div>
-          {savings > 0 && (
-            <div className={styles.priceLine} style={{ borderTop:'1px solid var(--border)', paddingTop:8, marginTop:4 }}>
-              <span className={styles.priceLabel}>You Save</span>
-              <span className={styles.priceSavings}>🎉 {formatINR(savings)}</span>
-            </div>
-          )}
-        </div>
+        {/* Live Price Display */}
+        <LivePriceDisplay product={product} />
       </div>
 
       {/* Payment Selector */}

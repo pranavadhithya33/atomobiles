@@ -27,6 +27,10 @@ CREATE TABLE IF NOT EXISTS products (
   slug TEXT NOT NULL UNIQUE,
   images TEXT[] DEFAULT '{}',
   online_price NUMERIC(10,2) DEFAULT 0,
+  amazon_price NUMERIC(10,2) DEFAULT 0,
+  flipkart_price NUMERIC(10,2) DEFAULT 0,
+  amazon_url TEXT,
+  flipkart_url TEXT,
   our_price NUMERIC(10,2) NOT NULL,
   prepaid_discount_pct NUMERIC(5,2) DEFAULT 3,
   description TEXT,
@@ -115,13 +119,15 @@ ON CONFLICT (slug) DO NOTHING;
 -- ============================================================
 -- SEED DATA - Sample Products (Remove/Edit as needed)
 -- ============================================================
-INSERT INTO products (name, slug, images, online_price, our_price, prepaid_discount_pct, description, stock, category, featured)
+INSERT INTO products (name, slug, images, online_price, amazon_price, flipkart_price, our_price, prepaid_discount_pct, description, stock, category, featured)
 VALUES
   (
     'Samsung Galaxy A55 5G (8GB/128GB)',
     'samsung-galaxy-a55-5g-128gb',
     ARRAY['https://images.samsung.com/is/image/samsung/p6pim/in/sm-a556elgains/gallery/in-galaxy-a55-5g-sm-a556-sm-a556elgains-537967985.jpg'],
     38999,
+    38999,
+    38500,
     31999,
     3,
     'Samsung Galaxy A55 5G with 6.6" Super AMOLED Display, 50MP AI Camera, 5000mAh Battery, IP67 Rating. Available in Awesome Iceblue, Awesome Lilac, and Awesome Navy.',
@@ -134,6 +140,8 @@ VALUES
     'redmi-note-13-pro-5g-256gb',
     ARRAY['https://i01.appmifile.com/webfile/globalimg/products/m/redmi-note-13-pro-5g/overview/img_7.jpg'],
     27999,
+    27999,
+    27500,
     22499,
     3,
     'Redmi Note 13 Pro 5G with 200MP Camera, 6.67" AMOLED Display, 5100mAh Battery, 67W Turbo Charging. Snapdragon 7s Gen 2 Processor.',
@@ -146,6 +154,8 @@ VALUES
     'oneplus-nord-ce-4-lite-5g-128gb',
     ARRAY['https://image01.oneplus.net/ebp/202406/19/1-m00-4a-33-rb8bwmz1f8wabd5uaagrywfr-uk536.png'],
     19999,
+    19999,
+    19500,
     16499,
     3,
     'OnePlus Nord CE 4 Lite with 50MP AI Camera, 6.67" FHD+ Display, 5110mAh Battery with 80W SUPERVOOC Fast Charging. Snapdragon 695 5G.',

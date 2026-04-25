@@ -5,8 +5,9 @@ import styles from '@/styles/ProductCard.module.css';
 import { formatINR, calcDiscountPct, calcSavings } from '@/lib/utils';
 
 export default function ProductCard({ product }) {
-  const discountPct = calcDiscountPct(product.online_price, product.our_price);
-  const savings = calcSavings(product.online_price, product.our_price);
+  const maxCompetitor = Math.max(product.amazon_price || 0, product.flipkart_price || 0, product.online_price || 0);
+  const discountPct = maxCompetitor > 0 ? calcDiscountPct(maxCompetitor, product.our_price) : 0;
+  const savings = maxCompetitor > 0 ? calcSavings(maxCompetitor, product.our_price) : 0;
   const inStock = product.stock > 0;
 
   return (
@@ -46,8 +47,15 @@ export default function ProductCard({ product }) {
 
         <div className={styles.priceRow}>
           <span className={styles.ourPrice}>{formatINR(product.our_price)}</span>
-          {product.online_price > product.our_price && (
-            <span className={styles.originalPrice}>{formatINR(product.online_price)}</span>
+          {product.amazon_price > 0 && (
+            <span className={styles.originalPrice}>
+              <span className={styles.compName}>Amz:</span> {formatINR(product.amazon_price)}
+            </span>
+          )}
+          {product.flipkart_price > 0 && (
+            <span className={styles.originalPrice}>
+              <span className={styles.compName}>Fk:</span> {formatINR(product.flipkart_price)}
+            </span>
           )}
         </div>
 

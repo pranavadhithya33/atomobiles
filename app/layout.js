@@ -1,7 +1,6 @@
 // app/layout.js
 import '@/app/globals.css';
-import Header from '@/components/Header';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import ClientLayoutWrapper from '@/components/ClientLayoutWrapper';
 
 export const metadata = {
   title: 'Only Gadjets – Best Wholesale Mobile Deals',
@@ -28,31 +27,9 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
-        <Header />
-        <main className="page-wrapper">
+        <ClientLayoutWrapper>
           {children}
-        </main>
-        <WhatsAppButton />
-        <footer style={{
-          background: 'var(--bg-footer)',
-          color: 'rgba(255,255,255,0.7)',
-          padding: '24px 16px',
-          textAlign: 'center',
-          fontSize: 13,
-          marginTop: 32,
-        }}>
-          <div style={{ fontWeight: 700, color: '#fff', fontSize: 15, marginBottom: 6 }}>ONLY GADJETS</div>
-          <div>Wholesale Mobile Dealer · Best Prices Guaranteed</div>
-          <div style={{ marginTop: 8 }}>
-            <a href={`https://wa.me/917397189222`} target="_blank" rel="noopener noreferrer"
-              style={{ color: '#25d366', fontWeight: 600, fontSize: 13 }}>
-              📱 WhatsApp: +91 73971 89222
-            </a>
-          </div>
-          <div style={{ marginTop: 12, fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
-            © {new Date().getFullYear()} Only Gadjets. All rights reserved.
-          </div>
-        </footer>
+        </ClientLayoutWrapper>
       </body>
     </html>
   );

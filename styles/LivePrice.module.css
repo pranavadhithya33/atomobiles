@@ -1,0 +1,117 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+.pricesRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.competitorPrices {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.compPriceItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.compLabel {
+  font-weight: 500;
+  min-width: 65px;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.ourPriceBox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ourPriceLabel {
+  font-size: var(--text-sm);
+  color: var(--brand-accent-dark);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ourPriceValue {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: #b12704; /* Amazon-like price color */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  line-height: 1.1;
+}
+
+.discountBadge {
+  background: #cc0c39;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.savingsText {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.savingsAmount {
+  color: #cc0c39;
+  font-weight: 600;
+}
+
+.loadingText {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.liveIndicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--success);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--success);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}

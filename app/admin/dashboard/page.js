@@ -12,7 +12,8 @@ import {
 const CATEGORIES = ['Smartphones', 'Tablets', 'Accessories', 'Smartwatches', 'Audio', 'Other'];
 
 const EMPTY_PRODUCT = {
-  name: '', images: [''], online_price: '', our_price: '',
+  name: '', images: [''], online_price: '', amazon_price: '', flipkart_price: '',
+  amazon_url: '', flipkart_url: '', our_price: '',
   description: '', stock: 0, category: 'Smartphones',
   featured: false, prepaid_discount_pct: 3,
 };
@@ -70,6 +71,10 @@ export default function AdminDashboard() {
       name: p.name || '',
       images: p.images?.length ? p.images : [''],
       online_price: p.online_price || '',
+      amazon_price: p.amazon_price || '',
+      flipkart_price: p.flipkart_price || '',
+      amazon_url: p.amazon_url || '',
+      flipkart_url: p.flipkart_url || '',
       our_price: p.our_price || '',
       description: p.description || '',
       stock: p.stock ?? 0,
@@ -131,6 +136,10 @@ export default function AdminDashboard() {
         ...form,
         images: form.images.filter(Boolean),
         online_price: Number(form.online_price) || 0,
+        amazon_price: Number(form.amazon_price) || 0,
+        flipkart_price: Number(form.flipkart_price) || 0,
+        amazon_url: form.amazon_url || '',
+        flipkart_url: form.flipkart_url || '',
         our_price: Number(form.our_price),
         stock: Number(form.stock) || 0,
         prepaid_discount_pct: Number(form.prepaid_discount_pct) || 3,
@@ -275,7 +284,7 @@ export default function AdminDashboard() {
                       <th>Image</th>
                       <th>Name</th>
                       <th>Category</th>
-                      <th>Online Price</th>
+                      <th>Market Price</th>
                       <th>Our Price</th>
                       <th>Stock</th>
                       <th>Actions</th>
@@ -299,7 +308,9 @@ export default function AdminDashboard() {
                         </td>
                         <td style={{ fontSize:13, color:'var(--text-secondary)' }}>{p.category || '—'}</td>
                         <td style={{ fontSize:13, color:'#9aa3b2', textDecoration:'line-through' }}>
-                          {p.online_price ? formatINR(p.online_price) : '—'}
+                          {Math.max(p.amazon_price || 0, p.flipkart_price || 0, p.online_price || 0) > 0 
+                            ? formatINR(Math.max(p.amazon_price || 0, p.flipkart_price || 0, p.online_price || 0)) 
+                            : '—'}
                         </td>
                         <td style={{ fontWeight:700 }}>{formatINR(p.our_price)}</td>
                         <td>
@@ -440,14 +451,33 @@ export default function AdminDashboard() {
               {/* Prices */}
               <div className={styles.formGrid}>
                 <div className="form-group">
-                  <label className="form-label">Online Market Price (₹)</label>
-                  <input type="number" className="form-input" placeholder="e.g. 25999"
-                    value={form.online_price} onChange={e => handleFormChange('online_price', e.target.value)} />
-                </div>
-                <div className="form-group">
                   <label className="form-label">Our Price (₹) *</label>
                   <input type="number" className="form-input" placeholder="e.g. 21999"
                     value={form.our_price} onChange={e => handleFormChange('our_price', e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Amazon Price (Fallback)</label>
+                  <input type="number" className="form-input" placeholder="e.g. 25999"
+                    value={form.amazon_price} onChange={e => handleFormChange('amazon_price', e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Flipkart Price (Fallback)</label>
+                  <input type="number" className="form-input" placeholder="e.g. 24999"
+                    value={form.flipkart_price} onChange={e => handleFormChange('flipkart_price', e.target.value)} />
+                </div>
+              </div>
+
+              {/* Scraper URLs */}
+              <div className={styles.formGrid}>
+                <div className="form-group">
+                  <label className="form-label">Amazon URL (For live scraping)</label>
+                  <input type="url" className="form-input" placeholder="https://amazon.in/dp/..."
+                    value={form.amazon_url} onChange={e => handleFormChange('amazon_url', e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Flipkart URL (For live scraping)</label>
+                  <input type="url" className="form-input" placeholder="https://flipkart.com/..."
+                    value={form.flipkart_url} onChange={e => handleFormChange('flipkart_url', e.target.value)} />
                 </div>
               </div>
 
