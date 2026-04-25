@@ -30,6 +30,11 @@ export default function AdminDashboard() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
+  
+  // Importer state
+  const [importUrl, setImportUrl] = useState('');
+  const [importing, setImporting] = useState(false);
+  const [importMsg, setImportMsg] = useState('');
 
   // Auth check
   useEffect(() => {
@@ -189,6 +194,37 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleImport = async () => {
+    if (!importUrl.trim() || !importUrl.includes('amazon')) {
+      setImportMsg('⚠ Please enter a valid Amazon product URL');
+      return;
+    }
+    setImporting(true);
+    setImportMsg('⏳ Extracting product data from Amazon...');
+    
+    try {
+      const res = await fetch('/api/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: importUrl.trim() })
+      });
+      const data = await res.json();
+      
+      if (!res.ok) throw new Error(data.error || 'Import failed');
+      
+      setImportMsg(`✅ Successfully imported: ${data.product.name.slice(0, 30)}...`);
+      setImportUrl('');
+      await fetchProducts();
+      
+      // Clear success message after 4s
+      setTimeout(() => setImportMsg(''), 4000);
+    } catch (err) {
+      setImportMsg(`❌ Import Error: ${err.message}`);
+    } finally {
+      setImporting(false);
+    }
+  };
+
   const handleUpdateOrderStatus = async (id, newStatus) => {
     try {
       const res = await fetch(`/api/orders/${id}`, {
@@ -267,6 +303,36 @@ export default function AdminDashboard() {
               <button onClick={openAdd} className={styles.addBtn} id="add-product-btn">
                 <Plus size={16} /> Add Product
               </button>
+            </div>
+
+            {/* Quick Importer */}
+            <div style={{ background: 'var(--bg-highlight)', padding: '16px', borderRadius: '12px', marginBottom: '20px', border: '1px solid var(--border-focus)' }}>
+              <div style={{ fontWeight: 700, color: 'var(--brand-accent-dark)', marginBottom: '8px', fontSize: '14px' }}>
+                ⚡ Auto-Import from Amazon
+              </div>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                <input 
+                  type="url" 
+                  className="form-input" 
+                  style={{ flex: 1, minWidth: '200px' }} 
+                  placeholder="Paste Amazon product URL here..."
+                  value={importUrl}
+                  onChange={(e) => setImportUrl(e.target.value)}
+                />
+                <button 
+                  onClick={handleImport} 
+                  disabled={importing}
+                  className="btn btn-primary" 
+                  style={{ padding: '12px 20px', whiteSpace: 'nowrap' }}
+                >
+                  {importing ? 'Importing...' : 'Fetch & Add'}
+                </button>
+              </div>
+              {importMsg && (
+                <div style={{ marginTop: '8px', fontSize: '13px', fontWeight: 600, color: importMsg.includes('❌') || importMsg.includes('⚠') ? 'var(--error)' : 'var(--success)' }}>
+                  {importMsg}
+                </div>
+              )}
             </div>
 
             {loading ? (

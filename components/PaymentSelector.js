@@ -59,6 +59,47 @@ export default function PaymentSelector({ ourPrice, selectedOption, onSelect }) 
         )}
       </button>
 
+      {/* Option 2: Token Advance (30%) */}
+      <button
+        id="payment-token-advance"
+        className={`${styles.paymentOption} ${selectedOption === 'token_advance' ? styles.paymentOptionActive : ''}`}
+        onClick={() => onSelect('token_advance')}
+        type="button"
+        aria-pressed={selectedOption === 'token_advance'}
+      >
+        <div className={styles.paymentOptionHeader}>
+          <div className={styles.paymentRadio}>
+            {selectedOption === 'token_advance' && <div className={styles.paymentRadioDot} />}
+          </div>
+          <div className={styles.paymentOptionInfo}>
+            <div className={styles.paymentOptionName}>
+              <Tag size={15} strokeWidth={2} />
+              30% Token Advance
+            </div>
+            <div className={styles.paymentOptionDesc}>
+              Pay 30% now, remaining on delivery
+            </div>
+          </div>
+        </div>
+
+        {selectedOption === 'token_advance' && (
+          <div className={styles.paymentBreakdown}>
+            <div className={styles.paymentBreakdownRow}>
+              <span>Token Advance (30%)</span>
+              <strong>{formatINR(Math.round(ourPrice * 0.3))}</strong>
+            </div>
+            <div className={styles.paymentBreakdownRow}>
+              <span>Remaining on delivery</span>
+              <strong>{formatINR(ourPrice - Math.round(ourPrice * 0.3))}</strong>
+            </div>
+            <div className={`${styles.paymentBreakdownRow} ${styles.paymentTotal}`}>
+              <span>Total</span>
+              <strong>{formatINR(ourPrice)}</strong>
+            </div>
+          </div>
+        )}
+      </button>
+
       {/* Option 2: Full Prepaid */}
       <button
         id="payment-full-prepaid"
@@ -107,6 +148,11 @@ export default function PaymentSelector({ ourPrice, selectedOption, onSelect }) 
           <p>
             <Tag size={13} strokeWidth={2} />
             Pay <strong>{formatINR(halfAmount)}</strong> advance · ₹{ourPrice - halfAmount} on delivery
+          </p>
+        ) : selectedOption === 'token_advance' ? (
+          <p>
+            <Tag size={13} strokeWidth={2} />
+            Pay <strong>{formatINR(Math.round(ourPrice * 0.3))}</strong> token advance · ₹{ourPrice - Math.round(ourPrice * 0.3)} on delivery
           </p>
         ) : (
           <p style={{ color: '#16a34a' }}>

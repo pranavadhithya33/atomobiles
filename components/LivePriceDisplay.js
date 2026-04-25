@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { formatINR } from '@/lib/utils';
 import styles from '@/styles/LivePrice.module.css';
 
-export default function LivePriceDisplay({ product }) {
+export default function LivePriceDisplay({ product, onPriceUpdate, onStockUpdate }) {
   const [prices, setPrices] = useState({
     amazon: product.amazon_price || product.online_price || 0,
     flipkart: product.flipkart_price || product.online_price || 0,
@@ -26,6 +26,9 @@ export default function LivePriceDisplay({ product }) {
           if (data.price && data.price > 0 && isMounted) {
             newPrices.amazon = data.price;
             changed = true;
+          }
+          if (data.outOfStock && isMounted) {
+            if (onStockUpdate) onStockUpdate(false);
           }
         } catch (e) {
           console.error('Failed to fetch Amazon price');
@@ -64,8 +67,16 @@ export default function LivePriceDisplay({ product }) {
 
   // Determine highest competitor price to calculate maximum savings
   const maxCompetitorPrice = Math.max(prices.amazon, prices.flipkart);
-  const savings = maxCompetitorPrice > product.our_price ? maxCompetitorPrice - product.our_price : 0;
-  const savingsPercent = maxCompetitorPrice > 0 ? Math.round((savings / maxCompetitorPrice) * 100) : 0;
+  const calculatedOurPrice = maxCompetitorPrice > 0 ? Math.round(maxCompetitorPrice * 0.9) : product.our_price;
+  
+  useEffect(() => {
+    if (onPriceUpdate && calculatedOurPrice !== product.our_price) {
+      onPriceUpdate(calculatedOurPrice);
+    }
+  }, [calculatedOurPrice, product.our_price, onPriceUpdate]);
+
+  const savings = maxCompetitorPrice > calculatedOurPrice ? maxCompetitorPrice - calculatedOurPrice : 0;
+  const savingsPercent = 10; // Forced to 10% by new rule
 
   return (
     <div className={styles.container}>
@@ -89,7 +100,7 @@ export default function LivePriceDisplay({ product }) {
       <div className={styles.ourPriceBox}>
         <div className={styles.ourPriceLabel}>Our Wholesale Price</div>
         <div className={styles.ourPriceValue}>
-          {formatINR(product.our_price)}
+          {formatINR(calculatedOurPrice)}
           {savingsPercent > 0 && (
             <span className={styles.discountBadge}>-{savingsPercent}%</span>
           )}

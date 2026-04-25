@@ -107,6 +107,22 @@ function HomeContent() {
         ))}
       </div>
 
+      {/* Top Selling Section */}
+      {!loading && products.some(p => p.featured && p.stock > 0) && (
+        <div style={{ padding: '0 16px', marginTop: 20 }}>
+          <div className="section-header" style={{ marginBottom: 12 }}>
+            <h2 className="section-title">🔥 Top <span>Selling</span></h2>
+          </div>
+          <div className="product-grid" style={{ marginBottom: 20 }}>
+            {products
+              .filter(p => p.featured && p.stock > 0)
+              .slice(0, 4)
+              .map(p => <ProductCard key={`featured-${p.id}`} product={p} />)
+            }
+          </div>
+        </div>
+      )}
+
       {/* Category Filter */}
       {categories.length > 0 && (
         <div style={{ padding:'16px 16px 8px' }}>
@@ -184,7 +200,10 @@ function HomeContent() {
           </div>
         ) : (
           <div className="product-grid">
-            {products.map(p => <ProductCard key={p.id} product={p} />)}
+            {products
+              .filter(p => p.stock > 0)
+              .map(p => <ProductCard key={p.id} product={p} />)
+            }
           </div>
         )}
       </div>

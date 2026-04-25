@@ -44,6 +44,16 @@ export async function GET(request) {
                   $('div.hl05eU').first().text();
     }
 
+    // Detect Stock Status
+    let outOfStock = false;
+    const pageText = $('body').text().toLowerCase();
+    if (url.includes('amazon.in')) {
+      const availability = $('#availability span').text().toLowerCase();
+      outOfStock = availability.includes('currently unavailable') || availability.includes('out of stock');
+    } else if (url.includes('flipkart.com')) {
+      outOfStock = pageText.includes('this item is currently out of stock') || pageText.includes('sold out');
+    }
+
     if (!priceText) {
       return NextResponse.json({ price: null, error: 'Price element not found' });
     }
@@ -55,7 +65,7 @@ export async function GET(request) {
       return NextResponse.json({ price: null, error: 'Failed to parse price' });
     }
 
-    return NextResponse.json({ price: numericPrice });
+    return NextResponse.json({ price: numericPrice, outOfStock });
 
   } catch (error) {
     console.error('Scraping error:', error);

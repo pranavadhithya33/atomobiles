@@ -152,9 +152,14 @@ function OrderFormContent() {
     );
   }
 
-  const paymentLabel = paymentOption === 'full_prepaid'
-    ? `Full Prepaid (3% extra off)`
-    : `Half Payment + Cash on Delivery`;
+  let paymentLabel = '';
+  if (paymentOption === 'full_prepaid') {
+    paymentLabel = 'Full Prepaid (3% extra off)';
+  } else if (paymentOption === 'token_advance') {
+    paymentLabel = '30% Token Advance + Cash on Delivery';
+  } else {
+    paymentLabel = 'Half Payment + Cash on Delivery';
+  }
 
   return (
     <div className={styles.page}>

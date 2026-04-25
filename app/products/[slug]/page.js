@@ -6,7 +6,7 @@ import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
 import PaymentSelector from '@/components/PaymentSelector';
 import LivePriceDisplay from '@/components/LivePriceDisplay';
-import { formatINR, calcDiscountPct, calcSavings, calcPrepaidPrice, calcHalfPayment } from '@/lib/utils';
+import { formatINR, calcDiscountPct, calcSavings, calcPrepaidPrice, calcHalfPayment, calcTokenAdvance } from '@/lib/utils';
 import styles from '@/styles/ProductDetail.module.css';
 import { ChevronRight, CheckCircle, AlertCircle, Clock, ShoppingBag, MessageCircle, Package } from 'lucide-react';
 
@@ -26,6 +26,8 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [paymentOption, setPaymentOption] = useState('half_cod');
+  const [dynamicOurPrice, setDynamicOurPrice] = useState(0);
+  const [dynamicStock, setDynamicStock] = useState(true);
 
   useEffect(() => {
     fetch(`/api/products/${slug}`)
@@ -33,7 +35,12 @@ export default function ProductDetailPage() {
         if (!r.ok) throw new Error('Product not found');
         return r.json();
       })
-      .then(data => { setProduct(data); setLoading(false); })
+      .then(data => { 
+        setProduct(data); 
+        setDynamicOurPrice(data.our_price);
+        setDynamicStock(data.stock > 0);
+        setLoading(false); 
+      })
       .catch(err => { setError(err.message); setLoading(false); });
   }, [slug]);
 
@@ -56,18 +63,24 @@ export default function ProductDetailPage() {
 
   const discountPct = calcDiscountPct(product.online_price, product.our_price);
   const savings = calcSavings(product.online_price, product.our_price);
-  const prepaidPrice = calcPrepaidPrice(product.our_price, PREPAID_DISCOUNT_PCT);
-  const halfAmount = calcHalfPayment(product.our_price);
-  const inStock = product.stock > 0;
+  const prepaidPrice = calcPrepaidPrice(dynamicOurPrice, PREPAID_DISCOUNT_PCT);
+  const halfAmount = calcHalfPayment(dynamicOurPrice);
+  const tokenAdvanceAmount = calcTokenAdvance(dynamicOurPrice);
+  const inStock = dynamicStock;
 
   // Final price based on selection
-  const finalPrice = paymentOption === 'full_prepaid' ? prepaidPrice : product.our_price;
-  const advanceAmount = paymentOption === 'half_cod' ? halfAmount : null;
+  const finalPrice = paymentOption === 'full_prepaid' ? prepaidPrice : dynamicOurPrice;
+  const advanceAmount = paymentOption === 'half_cod' ? halfAmount : paymentOption === 'token_advance' ? tokenAdvanceAmount : null;
 
   // WhatsApp message
-  const paymentText = paymentOption === 'full_prepaid'
-    ? `Full Prepaid | Final Price: ₹${finalPrice}`
-    : `Half COD | Advance: ₹${halfAmount} | Remaining: ₹${product.our_price - halfAmount}`;
+  let paymentText = '';
+  if (paymentOption === 'full_prepaid') {
+    paymentText = `Full Prepaid | Final Price: ₹${finalPrice}`;
+  } else if (paymentOption === 'token_advance') {
+    paymentText = `30% Token Advance | Advance: ₹${tokenAdvanceAmount} | Remaining: ₹${dynamicOurPrice - tokenAdvanceAmount}`;
+  } else {
+    paymentText = `Half COD | Advance: ₹${halfAmount} | Remaining: ₹${dynamicOurPrice - halfAmount}`;
+  }
 
   const waMsg = `🛒 *Order Enquiry - ONLY GADJETS*\n\n📦 *Product:* ${product.name}\n💳 *Payment:* ${paymentText}\n💰 *Total:* ₹${finalPrice}\n\nPlease confirm availability.`;
   const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMsg)}`;
@@ -80,7 +93,7 @@ export default function ProductDetailPage() {
       productName: product.name,
       productSlug: product.slug,
       paymentOption,
-      basePrice: product.our_price,
+      basePrice: dynamicOurPrice,
       finalPrice,
       ...(advanceAmount && { advanceAmount }),
     });
@@ -122,12 +135,16 @@ export default function ProductDetailPage() {
         </div>
 
         {/* Live Price Display */}
-        <LivePriceDisplay product={product} />
+        <LivePriceDisplay 
+          product={product} 
+          onPriceUpdate={setDynamicOurPrice} 
+          onStockUpdate={setDynamicStock}
+        />
       </div>
 
       {/* Payment Selector */}
       <PaymentSelector
-        ourPrice={product.our_price}
+        ourPrice={dynamicOurPrice}
         selectedOption={paymentOption}
         onSelect={setPaymentOption}
       />
