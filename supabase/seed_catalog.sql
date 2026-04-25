@@ -1,29 +1,35 @@
--- Massive Catalog Seed
+-- Full Reset & Seed (V5)
+TRUNCATE categories, products CASCADE;
+
+-- Re-Seed Categories with correct slugs
+INSERT INTO categories (name, slug, icon, display_order) VALUES
+  ('Smartphones', 'smartphones', '📱', 1),
+  ('Tablets', 'tablets', '📟', 2),
+  ('Accessories', 'accessories', '🎧', 3),
+  ('Smartwatches', 'smartwatches', '⌚', 4),
+  ('Audio', 'audio', '🔊', 5),
+  ('Other', 'other', '✨', 6);
+
+-- Re-Seed Products with high-res images and correct category slugs
 INSERT INTO products (name, slug, images, amazon_price, our_price, stock, category, featured, amazon_url, description)
 VALUES
-  ('Apple iPhone 16 Pro Max (256GB)', 'iphone-16-pro-max-256', ARRAY['https://m.media-amazon.com/images/I/618m051S39L._SX679_.jpg'], 144900, 130410, 10, 'Smartphones', TRUE, 'https://www.amazon.in/dp/B0DGJ9N27P', 'Latest flagship iPhone with A18 Pro chip.'),
-  ('Apple iPhone 16 Pro (128GB)', 'iphone-16-pro-128', ARRAY['https://m.media-amazon.com/images/I/618m051S39L._SX679_.jpg'], 119900, 107910, 10, 'Smartphones', TRUE, 'https://www.amazon.in/dp/B0DGJC7F5P', 'Pro performance in a compact size.'),
-  ('Apple iPhone 15 Pro Max (256GB)', 'iphone-15-pro-max-256', ARRAY['https://m.media-amazon.com/images/I/81+GIkwqLIL._SX679_.jpg'], 139900, 125910, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0CHX7NNDL', 'Titanium design, A17 Pro chip.'),
-  ('Samsung Galaxy S24 Ultra (12GB/256GB)', 'samsung-s24-ultra-256', ARRAY['https://m.media-amazon.com/images/I/71RVuS3q9QL._SX679_.jpg'], 129999, 116999, 10, 'Smartphones', TRUE, 'https://www.amazon.in/dp/B0CSZ54L68', 'The ultimate AI smartphone.'),
-  ('Samsung Galaxy S24+ (12GB/256GB)', 'samsung-s24-plus-256', ARRAY['https://m.media-amazon.com/images/I/71RVuS3q9QL._SX679_.jpg'], 99999, 89999, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0CSZ4P1Y3', 'Powerful performance, stunning display.'),
-  ('OnePlus 12 (12GB/256GB)', 'oneplus-12-256', ARRAY['https://m.media-amazon.com/images/I/717v-e-rS+L._SX679_.jpg'], 64999, 58499, 10, 'Smartphones', TRUE, 'https://www.amazon.in/dp/B0CQYF6R1S', 'Smooth Beyond Belief.'),
-  ('Google Pixel 9 Pro XL (16GB/128GB)', 'google-pixel-9-pro-xl', ARRAY['https://m.media-amazon.com/images/I/61D2n2fG1hL._SX679_.jpg'], 124999, 112499, 10, 'Smartphones', TRUE, 'https://www.amazon.in/dp/B0D9SGFN2B', 'The smartest Pixel yet.'),
-  ('Xiaomi 14 (12GB/512GB)', 'xiaomi-14-512', ARRAY['https://m.media-amazon.com/images/I/71R2m-yO8LL._SX679_.jpg'], 69999, 62999, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0CWHNQY7R', 'Leica optics, compact flagship.'),
-  ('Apple iPhone 14 (128GB)', 'iphone-14-128', ARRAY['https://m.media-amazon.com/images/I/61BGE6iu4AL._SX679_.jpg'], 59900, 53910, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0BDK62PDX', 'Powerful iPhone for everyone.'),
-  ('Samsung Galaxy A55 5G (12GB/256GB)', 'samsung-a55-256', ARRAY['https://m.media-amazon.com/images/I/71gqWIRkH+L._SX679_.jpg'], 42999, 38699, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0CW48Y66R', 'Premium mid-range experience.'),
-  ('OnePlus Nord 4 (8GB/256GB)', 'oneplus-nord-4-256', ARRAY['https://m.media-amazon.com/images/I/61kYmJvD1FL._SX679_.jpg'], 32999, 29699, 10, 'Smartphones', TRUE, 'https://www.amazon.in/dp/B0D8X7G4F6', 'Metal design, pro performance.'),
-  ('Nothing Phone (2) (12GB/512GB)', 'nothing-phone-2-512', ARRAY['https://m.media-amazon.com/images/I/81d-UJDLCKL._SX679_.jpg'], 49999, 44999, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0CBKPKKB4', 'Unique glyph interface flagship.'),
-  ('Vivo V40 Pro (12GB/512GB)', 'vivo-v40-pro-512', ARRAY['https://m.media-amazon.com/images/I/61SjX-yL+KL._SX679_.jpg'], 55999, 50399, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0DCHM49H6', 'Zeiss portraits, ultra slim.'),
-  ('Realme GT 6 (16GB/512GB)', 'realme-gt-6-512', ARRAY['https://m.media-amazon.com/images/I/71T1yF-N-1L._SX679_.jpg'], 44999, 40499, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0D6F1R6G1', 'AI flagship killer.'),
-  ('Redmi Note 13 Pro+ 5G (12GB/512GB)', 'redmi-note-13-pro-plus-512', ARRAY['https://m.media-amazon.com/images/I/61BxiE7WPML._SX679_.jpg'], 35999, 32399, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0CNYFVNLR', '200MP camera, curved display.'),
-  ('Samsung Galaxy M55 5G (8GB/256GB)', 'samsung-m55-256', ARRAY['https://m.media-amazon.com/images/I/71Lm4rIm0cL._SX679_.jpg'], 29999, 26999, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0D2HFCJRD', 'Powerful M-series monster.'),
-  ('iQOO Neo 9 Pro (12GB/256GB)', 'iqoo-neo-9-pro-256', ARRAY['https://m.media-amazon.com/images/I/61cQ4tEJeSL._SX679_.jpg'], 39999, 35999, 10, 'Smartphones', TRUE, 'https://www.amazon.in/dp/B0CRS6NZXS', 'Built for hardcore gaming.'),
-  ('Samsung Galaxy Z Fold 6 (12GB/512GB)', 'samsung-z-fold-6-512', ARRAY['https://m.media-amazon.com/images/I/71Y6f-Z4-4L._SX679_.jpg'], 174999, 157499, 10, 'Smartphones', TRUE, 'https://www.amazon.in/dp/B0D8X6G7Y1', 'The ultimate foldable workstation.'),
-  ('Samsung Galaxy Z Flip 6 (12GB/256GB)', 'samsung-z-flip-6-256', ARRAY['https://m.media-amazon.com/images/I/71LzJWqaGxL._SX679_.jpg'], 109999, 98999, 10, 'Smartphones', TRUE, 'https://www.amazon.in/dp/B0D8X7X1C1', 'The most stylish foldable.'),
-  ('Apple iPhone 13 (128GB)', 'iphone-13-128', ARRAY['https://m.media-amazon.com/images/I/61eDXs96WXL._SX679_.jpg'], 49900, 44910, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B09G96KGZ9', 'Best value iPhone right now.'),
-  ('Redmi Note 13 5G (8GB/256GB)', 'redmi-note-13-256', ARRAY['https://m.media-amazon.com/images/I/61PxGqMpfkL._SX679_.jpg'], 18999, 17099, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0CNYGHV92', 'Affordable 5G powerhouse.'),
-  ('OnePlus Nord CE 4 (8GB/256GB)', 'oneplus-nord-ce-4-256', ARRAY['https://m.media-amazon.com/images/I/61QL2R4IPOL._SX679_.jpg'], 26999, 24299, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0D2LPRVGT', 'Fast charging, great display.'),
-  ('Motorola Edge 50 Pro (12GB/256GB)', 'motorola-edge-50-pro-256', ARRAY['https://m.media-amazon.com/images/I/61bOEjidPXL._SX679_.jpg'], 35999, 32399, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0CXTTDJ4K', 'True color curved display.'),
-  ('Vivo V40 (8GB/256GB)', 'vivo-v40-256', ARRAY['https://m.media-amazon.com/images/I/61pSjphZ-kL._SX679_.jpg'], 39999, 35999, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0DCHL7Z6K', 'Portrait master flagship.'),
-  ('iQOO Z9s Pro (12GB/256GB)', 'iqoo-z9s-pro-256', ARRAY['https://m.media-amazon.com/images/I/71mNIaFZ+VL._SX679_.jpg'], 28999, 26099, 10, 'Smartphones', FALSE, 'https://www.amazon.in/dp/B0D9SGFN2B', 'Ultra-slim performance king.')
+  -- SMARTPHONES
+  ('Apple iPhone 16 Pro Max (256GB, Desert Titanium)', 'iphone-16-pro-max-256', ARRAY['https://m.media-amazon.com/images/I/618m051S39L._SX679_.jpg'], 144900, 130410, 10, 'smartphones', TRUE, 'https://www.amazon.in/dp/B0DGJ9N27P', '6.9-inch Super Retina XDR display, A18 Pro chip, 48MP Fusion camera, Titanium design.'),
+  ('Samsung Galaxy S24 Ultra (12GB RAM, 256GB Storage, Titanium Gray)', 'samsung-s24-ultra-256', ARRAY['https://m.media-amazon.com/images/I/71RVuS3q9QL._SX679_.jpg'], 129999, 116999, 10, 'smartphones', TRUE, 'https://www.amazon.in/dp/B0CSZ54L68', 'Galaxy AI, 200MP Main Camera, 6.8-inch QHD+ Display, Snapdragon 8 Gen 3.'),
+  ('OnePlus 12 (12GB RAM, 256GB Storage, Silky Black)', 'oneplus-12-256', ARRAY['https://m.media-amazon.com/images/I/717v-e-rS+L._SX679_.jpg'], 64999, 58499, 10, 'smartphones', TRUE, 'https://www.amazon.in/dp/B0CQYF6R1S', 'Snapdragon 8 Gen 3, 50MP Hasselblad Camera, 5400mAh Battery, 100W SUPERVOOC.'),
+  
+  -- TABLETS
+  ('Apple iPad Pro 11-inch (M4 Chip, OLED, 256GB)', 'ipad-pro-m4-11-256', ARRAY['https://m.media-amazon.com/images/I/61YpY7G6VBL._SX679_.jpg'], 99900, 89910, 10, 'tablets', TRUE, 'https://www.amazon.in/dp/B0D3CH9P9N', 'Ultra Retina XDR display, M4 chip, Ultra-thin design, Apple Pencil Pro support.'),
+  ('Samsung Galaxy Tab S9 Ultra (12GB/256GB, 5G)', 'samsung-tab-s9-ultra-5g', ARRAY['https://m.media-amazon.com/images/I/51f9M7-K7WL._SX679_.jpg'], 119999, 107999, 10, 'tablets', FALSE, 'https://www.amazon.in/dp/B0CC9H5W6R', '14.6-inch Dynamic AMOLED 2X, S Pen included, Snapdragon 8 Gen 2, IP68.'),
+
+  -- SMARTWATCHES
+  ('Apple Watch Ultra 2 (GPS + Cellular, 49mm)', 'apple-watch-ultra-2', ARRAY['https://m.media-amazon.com/images/I/91z56VzX56L._SX679_.jpg'], 89900, 80910, 10, 'smartwatches', TRUE, 'https://www.amazon.in/dp/B0DGFY3QW2', 'The most rugged and capable Apple Watch. 3000 nits display, S9 SiP.'),
+  ('Samsung Galaxy Watch Ultra (LTE, 47mm)', 'samsung-watch-ultra-47', ARRAY['https://m.media-amazon.com/images/I/71Lm4rIm0cL._SX679_.jpg'], 59999, 53999, 10, 'smartwatches', TRUE, 'https://www.amazon.in/dp/B0D8X8X1C1', 'Titanium design, Dual-frequency GPS, Advanced fitness tracking.'),
+
+  -- ACCESSORIES
+  ('Apple AirPods Pro (2nd Generation) with USB-C', 'apple-airpods-pro-2', ARRAY['https://m.media-amazon.com/images/I/61f1YfLf4eL._SX679_.jpg'], 24900, 22410, 10, 'accessories', TRUE, 'https://www.amazon.in/dp/B0CHX7NNDL', 'Active Noise Cancellation, Transparency mode, Adaptive Audio, Spatial Audio.'),
+  ('Sony WH-1000XM5 Wireless Noise Cancelling Headphones', 'sony-wh-1000xm5', ARRAY['https://m.media-amazon.com/images/I/51SKu69u2SL._SX679_.jpg'], 29990, 26991, 10, 'accessories', FALSE, 'https://www.amazon.in/dp/B0B1GC8V9F', 'Industry-leading noise cancellation, 30-hour battery life, Multipoint connection.'),
+
+  -- OTHER
+  ('Apple 20W USB-C Power Adapter', 'apple-20w-adapter', ARRAY['https://m.media-amazon.com/images/I/219m051S39L._SX679_.jpg'], 1900, 1710, 50, 'other', FALSE, 'https://www.amazon.in/dp/B08L5TNJHG', 'Fast, efficient charging at home, in the office, or on the go.')
 ON CONFLICT (slug) DO NOTHING;

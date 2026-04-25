@@ -117,6 +117,7 @@ export default function Header() {
                         src={product.images[0]}
                         alt={product.name}
                         className={styles.searchResultImg}
+                        referrerPolicy="no-referrer"
                       />
                     ) : (
                       <div className={styles.searchResultImg} style={{ background: '#f0f2f5', display:'flex', alignItems:'center', justifyContent:'center' }}>

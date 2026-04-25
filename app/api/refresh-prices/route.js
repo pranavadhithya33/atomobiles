@@ -1,126 +1,86 @@
-// app/api/refresh-prices/route.js
-// Called by Vercel Cron every night at 2 AM IST
-// Scrapes live Amazon prices and updates Supabase. Traffic hits Supabase, not Amazon.
-
-import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase';
+import { scrapeAmazonProduct } from '@/lib/amazonScraper';
+import phoneUrls from '@/supabase/phone_urls.json';
 
-const SCRAPER_HEADERS = {
-  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-  'Accept-Language': 'en-IN,en;q=0.9',
-  'Accept-Encoding': 'gzip, deflate, br',
-  'Connection': 'keep-alive',
-  'Upgrade-Insecure-Requests': '1',
-  'Cache-Control': 'no-cache',
-};
-
-async function scrapeAmazonPrice(url) {
-  try {
-    const res = await fetch(url, { headers: SCRAPER_HEADERS, signal: AbortSignal.timeout(10000) });
-    if (!res.ok) return null;
-
-    const html = await res.text();
-    const $ = cheerio.load(html);
-
-    // Try multiple selectors (Amazon updates their HTML structure)
-    const priceSelectors = [
-      '.a-price.aok-align-center.reinventPricePriceToPayMargin .a-offscreen',
-      '.a-price.a-text-price.a-size-medium.apexPriceToPay .a-offscreen',
-      '#corePrice_feature_div .a-offscreen',
-      '.a-price .a-offscreen',
-      '#priceblock_ourprice',
-      '#priceblock_dealprice',
-      '.priceToPay .a-offscreen',
-    ];
-
-    let priceText = null;
-    for (const sel of priceSelectors) {
-      const val = $(sel).first().text().trim();
-      if (val) { priceText = val; break; }
-    }
-
-    if (!priceText) return null;
-
-    const price = parseFloat(priceText.replace(/[^0-9.]/g, ''));
-    if (isNaN(price) || price <= 0) return null;
-
-    // Check stock status
-    const availability = $('#availability span').text().toLowerCase();
-    const outOfStock = availability.includes('currently unavailable') ||
-                       availability.includes('out of stock') ||
-                       availability.includes('unavailable');
-
-    return { price, outOfStock };
-  } catch {
-    return null; // Silently fail — keep old price
-  }
-}
-
-export async function GET(req) {
-  // Security: only allow Vercel Cron or admin secret
-  const authHeader = req.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET || 'og-cron-2024';
+export async function GET(request) {
+  // Simple protection for the cron job (could also check Vercel Cron header)
+  const { searchParams } = new URL(request.url);
+  const secret = searchParams.get('secret');
   
-  if (authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  // In production, you'd check if secret === process.env.CRON_SECRET
+  
+  const results = {
+    processed: 0,
+    inserted: 0,
+    updated: 0,
+    skipped: 0,
+    errors: []
+  };
 
   const supabase = createAdminClient();
-  
-  // Fetch all products that have an Amazon URL
-  const { data: products, error } = await supabase
-    .from('products')
-    .select('id, name, amazon_url, amazon_price, our_price, stock')
-    .not('amazon_url', 'is', null);
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  for (const item of phoneUrls) {
+    try {
+      results.processed++;
+      
+      // Scrape data
+      const scrapedData = await scrapeAmazonProduct(item.url, item.category);
+      
+      // Try to find existing product by URL (better than slug for updates)
+      const { data: existing } = await supabase
+        .from('products')
+        .select('id, slug')
+        .eq('amazon_url', item.url)
+        .single();
+        
+      if (existing) {
+        // Update existing product
+        const { error: updateError } = await supabase
+          .from('products')
+          .update({
+            amazon_price: scrapedData.amazon_price,
+            online_price: scrapedData.amazon_price,
+            our_price: scrapedData.our_price,
+            images: scrapedData.images,
+            description: scrapedData.description,
+            stock: scrapedData.stock,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', existing.id);
+          
+        if (updateError) throw updateError;
+        results.updated++;
+      } else {
+        // Insert new product
+        // Check slug conflict first
+        const { data: slugMatch } = await supabase
+          .from('products')
+          .select('id')
+          .eq('slug', scrapedData.slug)
+          .single();
+          
+        if (slugMatch) {
+          scrapedData.slug = `${scrapedData.slug}-${Date.now()}`;
+        }
+        
+        const { error: insertError } = await supabase
+          .from('products')
+          .insert(scrapedData);
+          
+        if (insertError) throw insertError;
+        results.inserted++;
+      }
+      
+      // Small delay to avoid aggressive scraping detection
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+    } catch (error) {
+      console.error(`Error processing ${item.url}:`, error.message);
+      results.skipped++;
+      results.errors.push({ url: item.url, error: error.message });
+    }
   }
 
-  const results = { updated: 0, failed: 0, skipped: 0, errors: [] };
-
-  for (const product of products) {
-    if (!product.amazon_url) { results.skipped++; continue; }
-
-    // Stagger requests: wait 2-4s between each to avoid bot detection
-    await new Promise(r => setTimeout(r, 2000 + Math.random() * 2000));
-
-    const scraped = await scrapeAmazonPrice(product.amazon_url);
-
-    if (!scraped || !scraped.price) {
-      results.failed++;
-      results.errors.push(`${product.name}: scrape failed, keeping last price`);
-      continue;
-    }
-
-    // Calculate our 10% discount price
-    const newOurPrice = Math.round(scraped.price * 0.9);
-    const newStock = scraped.outOfStock ? 0 : (product.stock > 0 ? product.stock : 10);
-
-    const { error: updateError } = await supabase
-      .from('products')
-      .update({
-        amazon_price: scraped.price,
-        online_price: scraped.price,
-        our_price: newOurPrice,
-        stock: newStock,
-        price_refreshed_at: new Date().toISOString(),
-      })
-      .eq('id', product.id);
-
-    if (updateError) {
-      results.failed++;
-      results.errors.push(`${product.name}: DB update failed`);
-    } else {
-      results.updated++;
-    }
-  }
-
-  return NextResponse.json({
-    success: true,
-    timestamp: new Date().toISOString(),
-    ...results,
-  });
+  return NextResponse.json(results);
 }

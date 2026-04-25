@@ -26,6 +26,7 @@ export default function ProductCard({ product }) {
             alt={product.name}
             className={styles.image}
             loading="lazy"
+            referrerPolicy="no-referrer"
           />
         ) : (
           <div className={styles.imagePlaceholder}>
@@ -47,14 +48,20 @@ export default function ProductCard({ product }) {
         <h3 className={styles.name}>{product.name}</h3>
 
         <div className={styles.priceRow}>
-          {/* Our wholesale price — always highlighted */}
-          <span className={styles.ourPrice}>{formatINR(ourPrice)}</span>
+          {/* Our wholesale price */}
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600, textTransform: 'uppercase' }}>Our Price</span>
+            <span className={styles.ourPrice}>{formatINR(ourPrice)}</span>
+          </div>
 
-          {/* Amazon price struck through */}
-          {product.amazon_price > 0 && (
-            <span className={styles.originalPrice}>
-              <span className={styles.compName}>Amazon:</span> {formatINR(product.amazon_price)}
-            </span>
+          {/* Online price struck through */}
+          {marketPrice > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600, textTransform: 'uppercase' }}>Online Price</span>
+              <span className={styles.originalPrice} style={{ textDecoration: 'line-through' }}>
+                {formatINR(marketPrice)}
+              </span>
+            </div>
           )}
         </div>
 

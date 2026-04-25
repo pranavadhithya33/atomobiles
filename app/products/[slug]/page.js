@@ -6,7 +6,7 @@ import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
 import PaymentSelector from '@/components/PaymentSelector';
 import LivePriceDisplay from '@/components/LivePriceDisplay';
-import { formatINR, calcDiscountPct, calcSavings, calcPrepaidPrice, calcHalfPayment, calcTokenAdvance } from '@/lib/utils';
+import { formatINR, calcDiscountPct, calcSavings, calcPaymentDetails } from '@/lib/utils';
 import styles from '@/styles/ProductDetail.module.css';
 import { ChevronRight, CheckCircle, AlertCircle, Clock, ShoppingBag, MessageCircle, Package } from 'lucide-react';
 
@@ -63,23 +63,17 @@ export default function ProductDetailPage() {
 
   const discountPct = calcDiscountPct(product.online_price, product.our_price);
   const savings = calcSavings(product.online_price, product.our_price);
-  const prepaidPrice = calcPrepaidPrice(dynamicOurPrice, PREPAID_DISCOUNT_PCT);
-  const halfAmount = calcHalfPayment(dynamicOurPrice);
-  const tokenAdvanceAmount = calcTokenAdvance(dynamicOurPrice);
+  const { finalPrice, advance: advanceAmount } = calcPaymentDetails(dynamicOurPrice, paymentOption);
   const inStock = dynamicStock;
-
-  // Final price based on selection
-  const finalPrice = paymentOption === 'full_prepaid' ? prepaidPrice : dynamicOurPrice;
-  const advanceAmount = paymentOption === 'half_cod' ? halfAmount : paymentOption === 'token_advance' ? tokenAdvanceAmount : null;
 
   // WhatsApp message
   let paymentText = '';
   if (paymentOption === 'full_prepaid') {
     paymentText = `Full Prepaid | Final Price: ₹${finalPrice}`;
   } else if (paymentOption === 'token_advance') {
-    paymentText = `30% Token Advance | Advance: ₹${tokenAdvanceAmount} | Remaining: ₹${dynamicOurPrice - tokenAdvanceAmount}`;
+    paymentText = `30% Token Advance | Advance: ₹${advanceAmount} | Remaining: ₹${finalPrice - advanceAmount}`;
   } else {
-    paymentText = `Half COD | Advance: ₹${halfAmount} | Remaining: ₹${dynamicOurPrice - halfAmount}`;
+    paymentText = `Half COD | Advance: ₹${advanceAmount} | Remaining: ₹${finalPrice - advanceAmount}`;
   }
 
   const waMsg = `🛒 *Order Enquiry - ONLY GADJETS*\n\n📦 *Product:* ${product.name}\n💳 *Payment:* ${paymentText}\n💰 *Total:* ₹${finalPrice}\n\nPlease confirm availability.`;

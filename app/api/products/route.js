@@ -12,8 +12,7 @@ export async function GET(req) {
 
     let query = supabase
       .from('products')
-      .select('id, name, slug, images, online_price, amazon_price, flipkart_price, amazon_url, our_price, stock, category, featured, prepaid_discount_pct, price_refreshed_at, description')
-      .gt('stock', 0); // Only show in-stock products
+      .select('id, name, slug, images, online_price, amazon_price, flipkart_price, amazon_url, our_price, stock, category, featured, description');
 
     if (search) {
       query = query.textSearch('fts', search.trim().split(/\s+/).join(' & '));
@@ -50,7 +49,7 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { name, images, online_price, our_price, description, stock, category, featured, prepaid_discount_pct } = body;
+    const { name, images, online_price, our_price, description, stock, category, featured } = body;
 
     // Generate slug from name
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now();
@@ -58,7 +57,7 @@ export async function POST(req) {
     const adminSupabase = createAdminClient();
     const { data, error } = await adminSupabase
       .from('products')
-      .insert([{ name, slug, images, online_price, our_price, description, stock, category, featured: featured || false, prepaid_discount_pct: prepaid_discount_pct || 3 }])
+      .insert([{ name, slug, images, online_price, our_price, description, stock, category, featured: featured || false }])
       .select()
       .single();
 

@@ -82,16 +82,10 @@ export default function LivePriceDisplay({ product, onPriceUpdate, onStockUpdate
     <div className={styles.container}>
       <div className={styles.pricesRow}>
         <div className={styles.competitorPrices}>
-          {prices.amazon > 0 && (
+          {maxCompetitorPrice > 0 && (
             <div className={styles.compPriceItem}>
-              <span className={styles.compLabel}>Amazon:</span>
-              <span className={styles.strikethrough}>{formatINR(prices.amazon)}</span>
-            </div>
-          )}
-          {prices.flipkart > 0 && (
-            <div className={styles.compPriceItem}>
-              <span className={styles.compLabel}>Flipkart:</span>
-              <span className={styles.strikethrough}>{formatINR(prices.flipkart)}</span>
+              <span className={styles.compLabel}>Online Price:</span>
+              <span className={styles.strikethrough}>{formatINR(maxCompetitorPrice)}</span>
             </div>
           )}
         </div>

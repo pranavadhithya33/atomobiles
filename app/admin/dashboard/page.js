@@ -9,12 +9,19 @@ import {
   LogOut, Check, X, RefreshCw, TrendingUp, Users
 } from 'lucide-react';
 
-const CATEGORIES = ['Smartphones', 'Tablets', 'Accessories', 'Smartwatches', 'Audio', 'Other'];
+const CATEGORIES = [
+  { label: 'Smartphones', value: 'smartphones' },
+  { label: 'Tablets', value: 'tablets' },
+  { label: 'Accessories', value: 'accessories' },
+  { label: 'Smartwatches', value: 'smartwatches' },
+  { label: 'Audio', value: 'audio' },
+  { label: 'Other', value: 'other' }
+];
 
 const EMPTY_PRODUCT = {
   name: '', images: [''], online_price: '', amazon_price: '', flipkart_price: '',
   amazon_url: '', flipkart_url: '', our_price: '',
-  description: '', stock: 0, category: 'Smartphones',
+  description: '', stock: 0, category: 'smartphones',
   featured: false, prepaid_discount_pct: 3,
 };
 
@@ -83,7 +90,7 @@ export default function AdminDashboard() {
       our_price: p.our_price || '',
       description: p.description || '',
       stock: p.stock ?? 0,
-      category: p.category || 'Smartphones',
+      category: p.category || 'smartphones',
       featured: p.featured || false,
       prepaid_discount_pct: p.prepaid_discount_pct || 3,
     });
@@ -307,9 +314,13 @@ export default function AdminDashboard() {
 
             {/* Quick Importer */}
             <div style={{ background: 'var(--bg-highlight)', padding: '16px', borderRadius: '12px', marginBottom: '20px', border: '1px solid var(--border-focus)' }}>
-              <div style={{ fontWeight: 700, color: 'var(--brand-accent-dark)', marginBottom: '8px', fontSize: '14px' }}>
-                ⚡ Auto-Import from Amazon
+              <div style={{ fontWeight: 800, color: 'var(--brand-primary)', marginBottom: '12px', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <RefreshCw size={18} className={importing ? 'spin' : ''} />
+                One-Click Auto-Upload from Amazon
               </div>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+                Paste any Amazon India product URL. We will automatically fetch the <b>Title, High-Res Images, Live Price, and Specs</b>, apply your 10% discount, and add it to your store.
+              </p>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <input 
                   type="url" 
@@ -334,6 +345,31 @@ export default function AdminDashboard() {
                 </div>
               )}
             </div>
+
+            {/* Bulk Refresh Button */}
+            <button 
+              className="btn btn-outline"
+              style={{ width: '100%', marginBottom: '20px', display: 'flex', justifyContent: 'center', gap: '8px', padding: '12px', border: '1px solid var(--border)' }}
+              onClick={async () => {
+                if (!confirm('This will refresh prices for all products in our master list. This may take several minutes. Proceed?')) return;
+                setImporting(true);
+                setImportMsg('⏳ Refreshing all products... please wait.');
+                try {
+                  const res = await fetch('/api/refresh-prices');
+                  const data = await res.json();
+                  setImportMsg(`✅ Refresh Complete! Updated: ${data.updated}, New: ${data.inserted}, Skipped: ${data.skipped}`);
+                  fetchProducts();
+                } catch (err) {
+                  setImportMsg('❌ Refresh failed: ' + err.message);
+                } finally {
+                  setImporting(false);
+                }
+              }}
+              disabled={importing}
+            >
+              <RefreshCw size={18} className={importing ? 'spin' : ''} />
+              {importing ? 'Syncing Catalog...' : 'Manual Bulk Refresh (10-Day Sync)'}
+            </button>
 
             {loading ? (
               <div style={{ textAlign:'center', padding:32, color:'var(--text-muted)' }}>Loading…</div>
@@ -510,7 +546,7 @@ export default function AdminDashboard() {
               <div className="form-group">
                 <label className="form-label">Category</label>
                 <select className="form-input" value={form.category} onChange={e => handleFormChange('category', e.target.value)}>
-                  {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                  {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
                 </select>
               </div>
 
@@ -535,10 +571,43 @@ export default function AdminDashboard() {
 
               {/* Scraper URLs */}
               <div className={styles.formGrid}>
-                <div className="form-group">
+                <div className="form-group" style={{ position: 'relative' }}>
                   <label className="form-label">Amazon URL (For live scraping)</label>
-                  <input type="url" className="form-input" placeholder="https://amazon.in/dp/..."
-                    value={form.amazon_url} onChange={e => handleFormChange('amazon_url', e.target.value)} />
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <input type="url" className="form-input" placeholder="https://amazon.in/dp/..."
+                      value={form.amazon_url} onChange={e => handleFormChange('amazon_url', e.target.value)} />
+                    <button type="button" className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: 12 }} 
+                      onClick={async () => {
+                        if (!form.amazon_url) return alert('Enter URL first');
+                        setImporting(true);
+                        try {
+                          const res = await fetch('/api/import', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ url: form.amazon_url, category: form.category })
+                          });
+                          const data = await res.json();
+                          if (!res.ok) throw new Error(data.error);
+                          // Update form with fetched data
+                          setForm(prev => ({
+                            ...prev,
+                            name: data.product.name,
+                            amazon_price: data.product.amazon_price,
+                            online_price: data.product.amazon_price,
+                            our_price: data.product.our_price,
+                            description: data.product.description,
+                            images: data.product.images?.length ? data.product.images : prev.images,
+                            stock: data.product.stock
+                          }));
+                          alert('Data fetched successfully!');
+                        } catch (err) { alert('Fetch failed: ' + err.message); }
+                        finally { setImporting(false); }
+                      }}
+                      disabled={importing}
+                    >
+                      {importing ? '...' : 'Fetch'}
+                    </button>
+                  </div>
                 </div>
                 <div className="form-group">
                   <label className="form-label">Flipkart URL (For live scraping)</label>

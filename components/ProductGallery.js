@@ -37,6 +37,7 @@ export default function ProductGallery({ images, name }) {
           src={validImages[active]}
           alt={`${name} - Image ${active + 1}`}
           className={styles.mainImage}
+          referrerPolicy="no-referrer"
         />
 
         {validImages.length > 1 && (
@@ -61,7 +62,7 @@ export default function ProductGallery({ images, name }) {
               onClick={() => setActive(idx)}
               aria-label={`View image ${idx + 1}`}
             >
-              <img src={img} alt={`Thumbnail ${idx + 1}`} />
+              <img src={img} alt={`Thumbnail ${idx + 1}`} referrerPolicy="no-referrer" />
             </button>
           ))}
         </div>
