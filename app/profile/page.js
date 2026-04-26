@@ -90,7 +90,7 @@ export default function ProfilePage() {
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ background: 'rgba(244, 167, 36, 0.1)', color: '#f4a724', padding: '8px 16px', borderRadius: '12px', fontSize: '12px', fontWeight: '800', border: '1px solid rgba(244, 167, 36, 0.2)' }}>
-                ₹100 Spent = 10 Coins
+                ₹1 Spent = 10 Coins
               </div>
             </div>
           </div>
