@@ -97,6 +97,43 @@ export async function POST(req) {
       .single();
 
     if (error) throw error;
+
+    // --- NEW: SuperCoins Logic ---
+    if (userId && data) {
+      try {
+        // Calculate coins: ₹100 = 10 coins
+        const earnedCoins = Math.floor(final_price / 100) * 10;
+        
+        if (earnedCoins > 0) {
+          // Increment coins in profiles table
+          await adminSupabase.rpc('increment_coins', { 
+            user_id: userId, 
+            amount: earnedCoins 
+          });
+          
+          // Fallback if RPC doesn't exist yet
+          const { data: profile } = await adminSupabase
+            .from('profiles')
+            .select('coins_balance')
+            .eq('id', userId)
+            .single();
+            
+          if (profile) {
+            await adminSupabase
+              .from('profiles')
+              .update({ 
+                coins_balance: (profile.coins_balance || 0) + earnedCoins,
+                total_orders: adminSupabase.rpc('increment', { row_id: userId }) // Just a hint
+              })
+              .eq('id', userId);
+          }
+        }
+      } catch (coinErr) {
+        console.error('Error adding coins:', coinErr);
+        // Don't fail the order if coins fail
+      }
+    }
+
     return NextResponse.json(data, { status: 201 });
   } catch (err) {
     console.error('Order create error:', err);

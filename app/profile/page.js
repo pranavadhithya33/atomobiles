@@ -70,6 +70,31 @@ export default function ProfilePage() {
             </button>
           </div>
 
+          {/* SuperCoins Banner */}
+          <div style={{ 
+            background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', 
+            borderRadius: '24px', 
+            padding: '32px', 
+            marginBottom: '32px', 
+            border: '1px solid rgba(244, 167, 36, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+          }}>
+            <div>
+              <div style={{ color: '#94a3b8', fontSize: '14px', fontWeight: '600', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Your SuperCoins Balance</div>
+              <div style={{ fontSize: '42px', fontWeight: '900', color: '#fff', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ color: '#f4a724' }}>🪙</span> {profile?.coins_balance || 0}
+              </div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ background: 'rgba(244, 167, 36, 0.1)', color: '#f4a724', padding: '8px 16px', borderRadius: '12px', fontSize: '12px', fontWeight: '800', border: '1px solid rgba(244, 167, 36, 0.2)' }}>
+                ₹100 Spent = 10 Coins
+              </div>
+            </div>
+          </div>
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
             {/* Profile Info */}
             <div style={cardStyle}>

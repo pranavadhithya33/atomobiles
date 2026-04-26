@@ -1,5 +1,5 @@
 'use client';
-// Header redesign v3 - Triggering redeploy
+// Header redesign v5 - SuperCoins & Orders Update - 2026-04-26-1758
 
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
@@ -19,18 +19,43 @@ export default function Header() {
   const debounceRef = useRef(null);
   const pathname = usePathname();
   const [user, setUser] = useState(null);
+  const [coins, setCoins] = useState(0);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
+      if (session?.user) {
+        fetchCoins(session.user.id);
+      }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
+      if (session?.user) {
+        fetchCoins(session.user.id);
+      } else {
+        setCoins(0);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const fetchCoins = async (userId) => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('coins_balance')
+      .eq('id', userId)
+      .single();
+    if (data) setCoins(data.coins_balance || 0);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setCoins(0);
+    window.location.href = '/';
+  };
 
   useEffect(() => {
     fetch('/api/categories')
@@ -101,12 +126,28 @@ export default function Header() {
         background: 'rgba(255,255,255,0.02)',
         borderBottom: '1px solid rgba(255,255,255,0.05)'
       }}>
-        {/* Fixed Options */}
-        <Link href="/login" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap', padding: '6px 12px', borderRadius: '20px', background: user ? 'rgba(255,255,255,0.08)' : 'rgba(244, 167, 36, 0.15)', border: user ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(244, 167, 36, 0.3)' }}>
-          <User size={16} /> {user ? (user.user_metadata?.name?.split(' ')[0] || 'Profile') : 'Login'}
-        </Link>
+        {/* Auth Options */}
+        {!user ? (
+          <Link href="/login" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap', padding: '6px 14px', borderRadius: '20px', background: 'rgba(244, 167, 36, 0.2)', border: '1px solid rgba(244, 167, 36, 0.4)' }}>
+            <User size={16} /> Login / Signup
+          </Link>
+        ) : (
+          <>
+            <Link href="/profile" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#f4a724', whiteSpace: 'nowrap', padding: '6px 14px', borderRadius: '20px', background: 'rgba(244, 167, 36, 0.1)', border: '1px solid rgba(244, 167, 36, 0.3)' }}>
+              <LayoutGrid size={16} /> My Orders
+            </Link>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '800', color: '#fff', padding: '6px 12px', borderRadius: '20px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', whiteSpace: 'nowrap' }}>
+              <span style={{ fontSize: '14px' }}>🪙</span> {coins}
+            </div>
+            <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '600' }}>
+              <LogOut size={14} /> Logout
+            </button>
+          </>
+        )}
 
-        <Link href="/track" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#f4a724', whiteSpace: 'nowrap', padding: '6px 12px', borderRadius: '20px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)', flexShrink: 0 }} />
+
+        <Link href="/track" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#fff', opacity: 0.8, whiteSpace: 'nowrap', padding: '6px 12px', borderRadius: '20px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
           <Truck size={16} /> Track
         </Link>
 
