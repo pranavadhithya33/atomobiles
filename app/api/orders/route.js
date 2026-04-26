@@ -101,7 +101,25 @@ export async function POST(req) {
     // --- NEW: SuperCoins Logic ---
     if (userId && data) {
       try {
-        // Calculate coins: ₹100 = 10 coins
+        const { coins_redeemed } = body;
+        
+        // 1. If coins were redeemed, subtract them from user balance
+        if (coins_redeemed && coins_redeemed > 0) {
+          await adminSupabase.rpc('decrement_coins', { 
+            user_id: userId, 
+            amount: coins_redeemed 
+          });
+          
+          // Fallback if RPC doesn't exist
+          const { data: profile } = await adminSupabase.from('profiles').select('coins_balance').eq('id', userId).single();
+          if (profile) {
+            await adminSupabase.from('profiles').update({ 
+              coins_balance: Math.max(0, (profile.coins_balance || 0) - coins_redeemed) 
+            }).eq('id', userId);
+          }
+        }
+
+        // 2. Calculate newly earned coins: ₹100 = 10 coins
         const earnedCoins = Math.floor(final_price / 100) * 10;
         
         if (earnedCoins > 0) {
@@ -111,26 +129,16 @@ export async function POST(req) {
             amount: earnedCoins 
           });
           
-          // Fallback if RPC doesn't exist yet
-          const { data: profile } = await adminSupabase
-            .from('profiles')
-            .select('coins_balance')
-            .eq('id', userId)
-            .single();
-            
+          // Fallback if RPC doesn't exist
+          const { data: profile } = await adminSupabase.from('profiles').select('coins_balance').eq('id', userId).single();
           if (profile) {
-            await adminSupabase
-              .from('profiles')
-              .update({ 
-                coins_balance: (profile.coins_balance || 0) + earnedCoins,
-                total_orders: adminSupabase.rpc('increment', { row_id: userId }) // Just a hint
-              })
-              .eq('id', userId);
+            await adminSupabase.from('profiles').update({ 
+              coins_balance: (profile.coins_balance || 0) + earnedCoins
+            }).eq('id', userId);
           }
         }
       } catch (coinErr) {
-        console.error('Error adding coins:', coinErr);
-        // Don't fail the order if coins fail
+        console.error('Error handling coins:', coinErr);
       }
     }
 

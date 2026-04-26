@@ -32,6 +32,8 @@ function OrderFormContent() {
   const [orderData, setOrderData] = useState(null);
   const [submitError, setSubmitError] = useState('');
   const [user, setUser] = useState(null);
+  const [userCoins, setUserCoins] = useState(0);
+  const [useCoins, setUseCoins] = useState(false);
 
   // Fetch user profile on load
   useEffect(() => {
@@ -53,6 +55,7 @@ function OrderFormContent() {
             fullName: profile.name || prev.fullName,
             phone: profile.phone || prev.phone
           }));
+          setUserCoins(profile.coins_balance || 0);
         }
       }
     }
@@ -108,9 +111,10 @@ function OrderFormContent() {
           product_slug: productSlug,
           payment_option: paymentOption,
           base_price: basePrice,
-          discount_amount: basePrice - finalPrice,
-          final_price: finalPrice,
+          discount_amount: (basePrice - finalPrice) + (useCoins ? userCoins : 0),
+          final_price: useCoins ? (finalPrice - userCoins) : finalPrice,
           advance_amount: advanceAmount || null,
+          coins_redeemed: useCoins ? userCoins : 0,
         }),
       });
 
@@ -248,6 +252,42 @@ function OrderFormContent() {
         </div>
       </div>
       
+      {/* Coin Redemption */}
+      {user && userCoins > 0 && (
+        <div style={{ background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', border: '1px solid rgba(244, 167, 36, 0.3)', borderRadius: '16px', padding: '16px', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ fontSize: '24px' }}>🪙</div>
+              <div>
+                <div style={{ fontSize: '14px', fontWeight: '800', color: '#fff' }}>Use your OG Coins</div>
+                <div style={{ fontSize: '12px', color: '#94a3b8' }}>You have {userCoins} coins (₹{userCoins})</div>
+              </div>
+            </div>
+            <button 
+              type="button"
+              onClick={() => setUseCoins(!useCoins)}
+              style={{ 
+                padding: '8px 16px', 
+                borderRadius: '8px', 
+                background: useCoins ? '#f4a724' : 'rgba(255,255,255,0.05)', 
+                color: useCoins ? '#000' : '#fff',
+                border: '1px solid rgba(255,255,255,0.1)',
+                fontSize: '12px',
+                fontWeight: '800',
+                cursor: 'pointer'
+              }}
+            >
+              {useCoins ? 'Applied ✓' : 'Apply Coins'}
+            </button>
+          </div>
+          {useCoins && (
+            <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '12px', color: '#f4a724', fontWeight: '700' }}>
+              🎉 Extra ₹{userCoins} discount applied!
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Auth Notice for Guests */}
       {!user && (
         <div style={{ background: 'rgba(244, 167, 36, 0.05)', border: '1px solid rgba(244, 167, 36, 0.2)', borderRadius: '16px', padding: '16px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
