@@ -40,6 +40,10 @@ function HomeContent() {
 
   return (
     <div style={{ paddingBottom: 80 }}>
+      {/* Version Indicator for Debugging */}
+      <div style={{ background: '#f4a724', color: '#0a1628', fontSize: '10px', textAlign: 'center', padding: '2px', fontWeight: 'bold' }}>
+        BUILD_VER: 2026-04-26-1700
+      </div>
       {/* Hero Banner */}
       <div style={{
         background: 'linear-gradient(135deg, #0a1628 0%, #1a3a6e 60%, #0a1628 100%)',
