@@ -29,13 +29,11 @@ export default function ProfilePage() {
       
       setProfile(profileData);
 
-      // Fetch orders
-      const { data: ordersData } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .order('created_at', { ascending: false });
-
+      // Fetch orders via API to ensure reliability
+      const ordersRes = await fetch('/api/orders', {
+        headers: { 'Authorization': `Bearer ${session.access_token}` }
+      });
+      const ordersData = await ordersRes.json();
       setOrders(ordersData || []);
       setLoading(false);
     }

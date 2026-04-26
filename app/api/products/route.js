@@ -15,7 +15,7 @@ export async function GET(req) {
       .select('id, name, slug, images, online_price, amazon_price, flipkart_price, amazon_url, our_price, stock, category, featured, description');
 
     if (search) {
-      query = query.textSearch('fts', search.trim().split(/\s+/).join(' & '));
+      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
     }
     if (category) {
       query = query.eq('category', category);
