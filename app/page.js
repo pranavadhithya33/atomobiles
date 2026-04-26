@@ -4,16 +4,21 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import ProductCard, { SkeletonCard } from '@/components/ProductCard';
-import { Smartphone, Tag, Star, TrendingUp, ChevronRight, Zap } from 'lucide-react';
+import { Smartphone, Tag, Star, TrendingUp, ChevronRight, Zap, Truck } from 'lucide-react';
 
 function HomeContent() {
   const searchParams = useSearchParams();
-  const categoryFilter = searchParams.get('category') || '';
+  const categoryFilter = searchParams.get('cat') || searchParams.get('category') || '';
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState(categoryFilter);
+  const [activeCategory, setActiveCategory] = useState('');
+
+  // Sync state with URL params
+  useEffect(() => {
+    setActiveCategory(categoryFilter);
+  }, [categoryFilter]);
 
   useEffect(() => {
     fetch('/api/categories')
@@ -231,6 +236,23 @@ function HomeContent() {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Track Order CTA */}
+      <div style={{ padding:'24px 16px 0' }}>
+        <div style={{ background:'#fff', border:'1px solid #e2e8f0', borderRadius:20, padding:'24px', textAlign:'center', boxShadow:'0 4px 12px rgba(0,0,0,0.03)' }}>
+          <div style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', width:48, height:48, background:'#e0f2fe', borderRadius:12, marginBottom:16 }}>
+            <Truck size={24} color="#0ea5e9" />
+          </div>
+          <h2 style={{ fontSize:18, fontWeight:800, marginBottom:8, color:'#0a1628' }}>Track Your Shipment</h2>
+          <p style={{ fontSize:13, color:'#64748b', marginBottom:16 }}>Check your delivery status and download your invoice instantly.</p>
+          <Link href="/track" style={{ 
+            display:'block', width:'100%', padding:'14px', background:'#0a1628', color:'#fff', 
+            borderRadius:12, fontWeight:700, fontSize:14, textDecoration:'none' 
+          }}>
+            Track Order Now
+          </Link>
         </div>
       </div>
     </div>

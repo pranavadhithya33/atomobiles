@@ -73,8 +73,20 @@ CREATE TABLE IF NOT EXISTS orders (
   discount_amount NUMERIC(10,2) DEFAULT 0,
   final_price NUMERIC(10,2) NOT NULL,
   advance_amount NUMERIC(10,2),
-  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'shipped', 'delivered', 'cancelled')),
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'shipped', 'delivered', 'cancelled', 'delayed')),
   notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ============================================================
+-- REVIEWS TABLE
+-- ============================================================
+CREATE TABLE IF NOT EXISTS reviews (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+  user_name TEXT NOT NULL,
+  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  comment TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -105,6 +117,18 @@ CREATE POLICY "Service role full access categories" ON categories USING (auth.ro
 
 DROP POLICY IF EXISTS "Service role full access orders" ON orders;
 CREATE POLICY "Service role full access orders" ON orders USING (auth.role() = 'service_role');
+
+-- Allow public read on reviews
+ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public read reviews" ON reviews;
+CREATE POLICY "Public read reviews" ON reviews FOR SELECT USING (TRUE);
+
+-- Allow public insert on reviews
+DROP POLICY IF EXISTS "Anyone can add reviews" ON reviews;
+CREATE POLICY "Anyone can add reviews" ON reviews FOR INSERT WITH CHECK (TRUE);
+
+DROP POLICY IF EXISTS "Service role full access reviews" ON reviews;
+CREATE POLICY "Service role full access reviews" ON reviews USING (auth.role() = 'service_role');
 
 -- ============================================================
 -- SEED DATA - Sample Categories

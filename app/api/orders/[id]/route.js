@@ -1,28 +1,52 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
 import { createAdminClient } from '@/lib/supabase';
 
-// Public GET endpoint to fetch order details for tracking (requires exact UUID)
+// Public GET endpoint to fetch order details for tracking
 export async function GET(req, context) {
   try {
     const { id } = await context.params;
-    
-    // We use the admin client because the regular user doesn't have RLS access to orders
-    // The exact UUID acts as the secure secret key for tracking.
     const adminSupabase = createAdminClient();
     
-    const { data, error } = await adminSupabase
+    // First attempt: Exact match
+    let { data, error } = await adminSupabase
       .from('orders')
       .select('*')
       .eq('id', id)
-      .single();
+      .maybeSingle();
 
-    if (error) {
-      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    // Second attempt: Short ID match (if id is 8 chars long)
+    if (!data && id.length === 8) {
+      const searchId = id.toLowerCase();
+      const { data: list, error: searchError } = await adminSupabase
+        .from('orders')
+        .select('*')
+        .filter('id', 'ilike', `${searchId}%`)
+        .limit(1);
+      
+      if (!searchError && list && list.length > 0) {
+        data = list[0];
+      }
     }
 
+    // Third attempt: If ilike fails on UUID (depends on Supabase version), use range
+    if (!data && id.length === 8) {
+      const searchId = id.toLowerCase();
+      const { data: list, error: searchError } = await adminSupabase
+        .from('orders')
+        .select('*')
+        .gte('id', `${searchId}-0000-0000-0000-000000000000`)
+        .lte('id', `${searchId}-ffff-ffff-ffff-ffffffffffff`)
+        .limit(1);
+      
+      if (!searchError && list && list.length > 0) {
+        data = list[0];
+      }
+    }
+
+    if (!data) return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     return NextResponse.json(data);
   } catch (err) {
+    console.error('Order fetch error:', err);
     return NextResponse.json({ error: 'Failed to fetch order details' }, { status: 500 });
   }
 }
@@ -32,22 +56,17 @@ export async function PUT(req, context) {
   try {
     const { id } = await context.params;
     const body = await req.json();
-    
-    // Using admin client
     const adminSupabase = createAdminClient();
-    
-    const { data, error } = await adminSupabase
+
+    const { data: order, error } = await adminSupabase
       .from('orders')
       .update({ status: body.status })
       .eq('id', id)
       .select()
       .single();
 
-    if (error) {
-      throw error;
-    }
-
-    return NextResponse.json({ success: true, order: data });
+    if (error) throw error;
+    return NextResponse.json({ success: true, order });
   } catch (err) {
     return NextResponse.json({ error: err.message || 'Failed to update order' }, { status: 500 });
   }

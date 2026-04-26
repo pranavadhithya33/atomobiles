@@ -6,29 +6,33 @@ export async function POST(request) {
   try {
     const { url, category } = await request.json();
 
-    if (!url || (!url.includes('amazon.in') && !url.includes('amazon.com'))) {
-      return NextResponse.json({ error: 'Please provide a valid Amazon India/US product URL' }, { status: 400 });
+    if (!url || !url.includes('amazon')) {
+      return NextResponse.json({ error: 'Please provide a valid Amazon India product URL' }, { status: 400 });
     }
 
     const scrapedData = await scrapeAmazonProduct(url, category);
-    
-    // Save to Supabase
+
+    // Save to Supabase — deduplicate slug if needed
     const supabase = createAdminClient();
-    
-    // Check if slug exists
-    const { data: existing } = await supabase.from('products').select('id').eq('slug', scrapedData.slug).single();
-    
-    let result;
+    const { data: existing } = await supabase
+      .from('products')
+      .select('id')
+      .eq('slug', scrapedData.slug)
+      .single();
+
     if (existing) {
-       scrapedData.slug = `${scrapedData.slug}-${Date.now()}`;
-       result = await supabase.from('products').insert(scrapedData).select().single();
-    } else {
-       result = await supabase.from('products').insert(scrapedData).select().single();
+      scrapedData.slug = `${scrapedData.slug}-${Date.now()}`;
     }
 
-    if (result.error) throw new Error(result.error.message);
+    const { data, error } = await supabase
+      .from('products')
+      .insert(scrapedData)
+      .select()
+      .single();
 
-    return NextResponse.json({ success: true, product: result.data });
+    if (error) throw new Error(error.message);
+
+    return NextResponse.json({ success: true, product: data });
 
   } catch (error) {
     console.error('Import error:', error);

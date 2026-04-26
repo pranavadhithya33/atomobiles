@@ -6,8 +6,9 @@ import styles from '@/styles/Admin.module.css';
 import { formatINR } from '@/lib/utils';
 import {
   Smartphone, Package, ShoppingBag, Plus, Edit2, Trash2,
-  LogOut, Check, X, RefreshCw, TrendingUp, Users
+  LogOut, Check, X, RefreshCw, TrendingUp, Users, Star, MessageSquare, FileText
 } from 'lucide-react';
+import { generateInvoice } from '@/lib/invoiceGenerator';
 
 const CATEGORIES = [
   { label: 'Smartphones', value: 'smartphones' },
@@ -43,6 +44,10 @@ export default function AdminDashboard() {
   const [importing, setImporting] = useState(false);
   const [importMsg, setImportMsg] = useState('');
 
+  // Reviews moderation state
+  const [pendingReviews, setPendingReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+
   // Auth check
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -58,10 +63,18 @@ export default function AdminDashboard() {
   const fetchOrders = () => {
     return fetch('/api/orders').then(r => r.json()).then(setOrders);
   };
+  const fetchPendingReviews = () => {
+    setReviewsLoading(true);
+    return fetch('/api/reviews?status=pending')
+      .then(r => r.json())
+      .then(data => setPendingReviews(Array.isArray(data) ? data : []))
+      .catch(() => setPendingReviews([]))
+      .finally(() => setReviewsLoading(false));
+  };
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([fetchProducts(), fetchOrders()]).finally(() => setLoading(false));
+    Promise.all([fetchProducts(), fetchOrders(), fetchPendingReviews()]).finally(() => setLoading(false));
   }, []);
 
   const handleLogout = () => {
@@ -223,7 +236,6 @@ export default function AdminDashboard() {
       setImportUrl('');
       await fetchProducts();
       
-      // Clear success message after 4s
       setTimeout(() => setImportMsg(''), 4000);
     } catch (err) {
       setImportMsg(`❌ Import Error: ${err.message}`);
@@ -300,6 +312,12 @@ export default function AdminDashboard() {
           >
             <ShoppingBag size={15} /> Orders ({orders.length})
           </button>
+          <button
+            className={`${styles.tab} ${activeTab === 'reviews' ? styles.tabActive : ''}`}
+            onClick={() => { setActiveTab('reviews'); fetchPendingReviews(); }}
+          >
+            <MessageSquare size={15} /> Reviews {pendingReviews.length > 0 && <span style={{ background: '#ef4444', color: '#fff', fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 99, marginLeft: 4 }}>{pendingReviews.length}</span>}
+          </button>
         </div>
 
         {/* Products Tab */}
@@ -312,8 +330,8 @@ export default function AdminDashboard() {
               </button>
             </div>
 
-            {/* Quick Importer */}
-            <div style={{ background: 'var(--bg-highlight)', padding: '16px', borderRadius: '12px', marginBottom: '20px', border: '1px solid var(--border-focus)' }}>
+            {/* Amazon Quick Importer */}
+            <div style={{ background: 'var(--bg-highlight)', padding: '16px', borderRadius: '12px', marginBottom: '16px', border: '1px solid var(--border-focus)' }}>
               <div style={{ fontWeight: 800, color: 'var(--brand-primary)', marginBottom: '12px', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <RefreshCw size={18} className={importing ? 'spin' : ''} />
                 One-Click Auto-Upload from Amazon
@@ -503,12 +521,15 @@ export default function AdminDashboard() {
                             className={`${styles.orderStatus} ${
                               o.status === 'shipped' || o.status === 'delivered' ? styles.orderStatusConfirmed :
                               o.status === 'cancelled' ? styles.orderStatusCancelled :
+                              o.status === 'delayed' ? styles.orderStatusDelayed :
                               styles.orderStatusPending
                             }`}
                             style={{ padding: '4px 24px 4px 10px', appearance: 'auto', cursor: 'pointer', border: '1px solid transparent' }}
                           >
                             <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
                             <option value="shipped">Shipped</option>
+                            <option value="delayed">Delayed</option>
                             <option value="delivered">Delivered</option>
                             <option value="cancelled">Cancelled</option>
                           </select>
@@ -524,6 +545,86 @@ export default function AdminDashboard() {
             )}
           </div>
         )}
+
+        {/* Reviews Moderation Tab */}
+        {activeTab === 'reviews' && (
+          <div>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Review Moderation</h2>
+              <button onClick={fetchPendingReviews} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-secondary)', display:'flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600 }}>
+                <RefreshCw size={14} /> Refresh
+              </button>
+            </div>
+
+            {reviewsLoading ? (
+              <div style={{ textAlign:'center', padding:32, color:'var(--text-muted)' }}>Loading…</div>
+            ) : pendingReviews.length === 0 ? (
+              <div className={styles.emptyState}>
+                <div style={{ fontSize:40, marginBottom:12 }}>✅</div>
+                <p>No pending reviews. All caught up!</p>
+              </div>
+            ) : (
+              <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
+                {pendingReviews.map(review => (
+                  <div key={review.id} style={{ background:'#fff', border:'1px solid var(--border)', borderRadius:'12px', padding:'16px', boxShadow:'0 1px 3px rgba(0,0,0,0.04)' }}>
+                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'10px' }}>
+                      <div>
+                        <div style={{ fontWeight:700, fontSize:14, color:'var(--text-primary)', marginBottom:4 }}>{review.user_name}</div>
+                        <div style={{ display:'flex', alignItems:'center', gap:4 }}>
+                          {[1,2,3,4,5].map(s => (
+                            <Star key={s} size={14} fill={s <= review.rating ? '#facc15' : '#e5e7eb'} color={s <= review.rating ? '#facc15' : '#e5e7eb'} />
+                          ))}
+                          <span style={{ fontSize:12, color:'var(--text-muted)', marginLeft:6 }}>
+                            {new Date(review.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'2-digit' })}
+                          </span>
+                        </div>
+                      </div>
+                      <div style={{ display:'flex', gap:8 }}>
+                        <button
+                          onClick={async () => {
+                            await fetch('/api/reviews', {
+                              method: 'PUT',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ id: review.id, status: 'approved' })
+                            });
+                            fetchPendingReviews();
+                          }}
+                          style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#16a34a', color:'#fff', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
+                        >
+                          <Check size={14} /> Approve
+                        </button>
+                        <button
+                          onClick={async () => {
+                            await fetch('/api/reviews', {
+                              method: 'PUT',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ id: review.id, status: 'rejected' })
+                            });
+                            fetchPendingReviews();
+                          }}
+                          style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#ef4444', color:'#fff', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
+                        >
+                          <X size={14} /> Reject
+                        </button>
+                      </div>
+                    </div>
+                    {review.comment && (
+                      <div style={{ fontSize:13, color:'var(--text-secondary)', lineHeight:1.5, background:'#f8fafc', padding:'10px 12px', borderRadius:8, border:'1px solid #f1f5f9' }}>
+                        "{review.comment}"
+                      </div>
+                    )}
+                    {review.product_id && (
+                      <div style={{ fontSize:11, color:'var(--text-muted)', marginTop:8 }}>
+                        Product ID: {review.product_id.slice(0,8)}...
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
       </div>
 
       {/* Add/Edit Modal */}

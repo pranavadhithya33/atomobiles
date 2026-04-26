@@ -6,11 +6,11 @@ import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
 import PaymentSelector from '@/components/PaymentSelector';
 import LivePriceDisplay from '@/components/LivePriceDisplay';
+import ReviewsSection from '@/components/ReviewsSection';
 import { formatINR, calcDiscountPct, calcSavings, calcPaymentDetails } from '@/lib/utils';
 import styles from '@/styles/ProductDetail.module.css';
-import { ChevronRight, CheckCircle, AlertCircle, Clock, ShoppingBag, MessageCircle, Package } from 'lucide-react';
+import { ChevronRight, CheckCircle, AlertCircle, Clock, ShoppingBag, MessageCircle, Package, Star } from 'lucide-react';
 
-const PREPAID_DISCOUNT_PCT = 3;
 const WHATSAPP_NUMBER = '917397189222';
 
 function StockBadge({ stock }) {
@@ -28,6 +28,7 @@ export default function ProductDetailPage() {
   const [paymentOption, setPaymentOption] = useState('half_cod');
   const [dynamicOurPrice, setDynamicOurPrice] = useState(0);
   const [dynamicStock, setDynamicStock] = useState(true);
+  const [reviewStats, setReviewStats] = useState({ avg: 0, count: 0 });
 
   useEffect(() => {
     fetch(`/api/products/${slug}`)
@@ -35,11 +36,11 @@ export default function ProductDetailPage() {
         if (!r.ok) throw new Error('Product not found');
         return r.json();
       })
-      .then(data => { 
-        setProduct(data); 
+      .then(data => {
+        setProduct(data);
         setDynamicOurPrice(data.our_price);
         setDynamicStock(data.stock > 0);
-        setLoading(false); 
+        setLoading(false);
       })
       .catch(err => { setError(err.message); setLoading(false); });
   }, [slug]);
@@ -79,7 +80,6 @@ export default function ProductDetailPage() {
   const waMsg = `🛒 *Order Enquiry - ONLY GADJETS*\n\n📦 *Product:* ${product.name}\n💳 *Payment:* ${paymentText}\n💰 *Total:* ₹${finalPrice}\n\nPlease confirm availability.`;
   const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMsg)}`;
 
-  // Navigate to order page
   const handleBuyNow = () => {
     if (!inStock) return;
     const params = new URLSearchParams({
@@ -97,16 +97,18 @@ export default function ProductDetailPage() {
   return (
     <div className={styles.detailPage}>
       {/* Breadcrumb */}
-      <nav className={styles.breadcrumb} aria-label="breadcrumb">
-        <Link href="/">Home</Link>
-        <ChevronRight size={12} />
+      <nav className={styles.breadcrumb}>
+        <Link href="/" className={styles.breadcrumbLink}>Home</Link>
+        <ChevronRight size={14} className={styles.breadcrumbSep} />
         {product.category && (
           <>
-            <Link href={`/?category=${product.category}`}>{product.category}</Link>
-            <ChevronRight size={12} />
+            <Link href={`/?cat=${product.category}`} className={styles.breadcrumbLink}>
+              {product.category}
+            </Link>
+            <ChevronRight size={14} className={styles.breadcrumbSep} />
           </>
         )}
-        <span>{product.name}</span>
+        <span className={styles.breadcrumbCurrent}>{product.name}</span>
       </nav>
 
       {/* Gallery */}
@@ -117,7 +119,16 @@ export default function ProductDetailPage() {
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:8, flexWrap:'wrap' }}>
           <div style={{ flex:1 }}>
             {product.category && <div className={styles.productCategory}>{product.category}</div>}
-            <h1 className={styles.productName}>{product.name}</h1>
+            <h1 className={styles.productName} style={{ marginBottom: '8px' }}>{product.name}</h1>
+            {reviewStats.count > 0 ? (
+              <a href="#reviews-section" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#16a34a', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '13px', fontWeight: '700', textDecoration: 'none' }}>
+                {reviewStats.avg} ★ <span style={{ fontSize: '11px', opacity: 0.85 }}>({reviewStats.count})</span>
+              </a>
+            ) : (
+              <a href="#reviews-section" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#9aa3b2', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '13px', fontWeight: '700', textDecoration: 'none' }}>
+                No reviews yet
+              </a>
+            )}
           </div>
           {discountPct > 0 && (
             <span className={styles.discountBadgeLarge}>{discountPct}% OFF</span>
@@ -129,9 +140,9 @@ export default function ProductDetailPage() {
         </div>
 
         {/* Live Price Display */}
-        <LivePriceDisplay 
-          product={product} 
-          onPriceUpdate={setDynamicOurPrice} 
+        <LivePriceDisplay
+          product={product}
+          onPriceUpdate={setDynamicOurPrice}
           onStockUpdate={setDynamicStock}
         />
       </div>
@@ -177,6 +188,29 @@ export default function ProductDetailPage() {
           </h2>
           <p className={styles.descText}>{product.description}</p>
         </div>
+      )}
+
+      {/* Reviews */}
+      <div id="reviews-section">
+        <ReviewsSection productId={product.id} onStatsChange={setReviewStats} />
+      </div>
+
+      {/* Floating Review Badge — real data */}
+      {reviewStats.count > 0 && (
+        <a
+          href="#reviews-section"
+          style={{
+            position: 'fixed', bottom: '24px', right: '24px', background: '#fff',
+            padding: '8px 16px', borderRadius: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none',
+            color: '#111', fontWeight: '700', border: '1px solid #e5e7eb', zIndex: 100
+          }}
+        >
+          <span style={{ display: 'flex', alignItems: 'center', gap: '2px', color: '#16a34a' }}>
+            {reviewStats.avg} <Star size={14} fill="currentColor" />
+          </span>
+          <span style={{ fontSize: '12px', color: '#666', fontWeight: '500' }}>{reviewStats.count} Reviews</span>
+        </a>
       )}
     </div>
   );

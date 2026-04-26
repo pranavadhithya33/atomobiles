@@ -427,6 +427,11 @@
   color: var(--error);
 }
 
+.orderStatusDelayed {
+  background: #fef3c7;
+  color: #d97706;
+}
+
 /* Login page */
 .loginPage {
   min-height: 100vh;

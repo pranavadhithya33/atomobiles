@@ -5,7 +5,9 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from '@/styles/OrderForm.module.css';
 import { formatINR, validatePhone, validatePincode, buildWhatsAppUrl } from '@/lib/utils';
-import { CheckCircle, ArrowLeft, ShoppingBag, User, Phone, MapPin, Hash, CreditCard } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { CheckCircle, ArrowLeft, ShoppingBag, User, Phone, MapPin, Hash, CreditCard, Download } from 'lucide-react';
+import { generateInvoice } from '@/lib/invoiceGenerator';
 
 const WHATSAPP_NUMBER = '917397189222';
 
@@ -27,7 +29,35 @@ function OrderFormContent() {
   const [submitted, setSubmitted] = useState(false);
   const [orderId, setOrderId] = useState('');
   const [fullOrderId, setFullOrderId] = useState('');
+  const [orderData, setOrderData] = useState(null);
   const [submitError, setSubmitError] = useState('');
+  const [user, setUser] = useState(null);
+
+  // Fetch user profile on load
+  useEffect(() => {
+    async function loadUser() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUser(session.user);
+        
+        // Auto-fill form if profile exists
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('name, phone')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (profile) {
+          setForm(prev => ({
+            ...prev,
+            fullName: profile.name || prev.fullName,
+            phone: profile.phone || prev.phone
+          }));
+        }
+      }
+    }
+    loadUser();
+  }, []);
 
   // Redirect if no product
   useEffect(() => {
@@ -59,9 +89,15 @@ function OrderFormContent() {
     setSubmitError('');
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const headers = { 'Content-Type': 'application/json' };
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+
       const res = await fetch('/api/orders', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           full_name: form.fullName.trim(),
           phone: form.phone.trim(),
@@ -83,6 +119,7 @@ function OrderFormContent() {
 
       setOrderId(data.id?.slice(0, 8)?.toUpperCase() || 'N/A');
       setFullOrderId(data.id || '');
+      setOrderData(data);
       setSubmitted(true);
 
       // Auto-open WhatsApp
@@ -139,10 +176,17 @@ function OrderFormContent() {
               💬 Confirm on WhatsApp
             </a>
             {fullOrderId && (
-              <Link href={`/track/${fullOrderId}`} className="btn btn-primary btn-full btn-lg" style={{ background: '#f8f9fa', color: '#1a1a2e', border: '1px solid #e2e8f0' }}>
+              <Link href={`/track/${orderId}`} className="btn btn-primary btn-full btn-lg" style={{ background: '#f8f9fa', color: '#1a1a2e', border: '1px solid #e2e8f0' }}>
                 📍 Track Order Live
               </Link>
             )}
+            <button 
+              onClick={() => generateInvoice(orderData)}
+              className="btn btn-full btn-lg" 
+              style={{ background: '#fff', color: '#1a1a2e', border: '1px solid #e2e8f0', marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+            >
+              <Download size={18} /> Download Invoice
+            </button>
             <Link href="/" className="btn btn-secondary btn-full" style={{ marginTop: 12 }}>
               ← Continue Shopping
             </Link>
@@ -203,6 +247,22 @@ function OrderFormContent() {
           <strong style={{ color:'var(--text-primary)', fontSize:19 }}>{formatINR(finalPrice)}</strong>
         </div>
       </div>
+      
+      {/* Auth Notice for Guests */}
+      {!user && (
+        <div style={{ background: 'rgba(244, 167, 36, 0.05)', border: '1px solid rgba(244, 167, 36, 0.2)', borderRadius: '16px', padding: '16px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ fontSize: '20px' }}>🪙</div>
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#fff' }}>Login to earn OG Coins</div>
+              <div style={{ fontSize: '12px', color: '#9aa3b2' }}>Earn 1 coin per ₹100 spent on this order.</div>
+            </div>
+          </div>
+          <Link href={`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`} style={{ fontSize: '12px', fontWeight: '800', color: '#f4a724', textDecoration: 'none', background: '#1a1a2e', padding: '8px 16px', borderRadius: '8px', border: '1px solid #2d2d3f' }}>
+            Login Now
+          </Link>
+        </div>
+      )}
 
       {/* Form */}
       <form onSubmit={handleSubmit} noValidate>
