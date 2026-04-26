@@ -75,23 +75,6 @@ export default function SignupPage() {
     }
   };
 
-  if (success) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0f', padding: '24px' }}>
-        <div style={{ background: '#13131a', border: '1px solid #1e1e2e', borderRadius: '20px', padding: '40px', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>✅</div>
-          <h2 style={{ color: '#fff', fontSize: '22px', fontWeight: '800', marginBottom: '12px' }}>Account Created!</h2>
-          <p style={{ color: '#9aa3b2', fontSize: '14px', marginBottom: '24px' }}>
-            Check your email <strong style={{ color: '#f4a724' }}>{form.email}</strong> and click the confirmation link to activate your account.
-          </p>
-          <Link href="/login" style={{ display: 'block', padding: '14px', background: '#f4a724', color: '#000', borderRadius: '12px', fontWeight: '800', textDecoration: 'none' }}>
-            Go to Login →
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   const inputStyle = {
     width: '100%', padding: '12px 16px', background: '#1a1a2e',
     border: '1px solid #2d2d3f', borderRadius: '10px', color: '#fff',

@@ -29,11 +29,9 @@ function LoginForm() {
 
       if (signInError) {
         if (signInError.message.includes('Invalid login credentials') || signInError.message.includes('invalid_credentials')) {
-          setError('Wrong email or password. Please try again, or create a new account.');
-        } else if (signInError.message.includes('Email not confirmed')) {
-          setError('Please check your email and click the confirmation link before logging in.');
+          setError('Incorrect email or password.');
         } else {
-          setError(signInError.message);
+          setError('Login failed. Please check your credentials.');
         }
         setLoading(false);
         return;
