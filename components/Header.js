@@ -1,4 +1,5 @@
 'use client';
+// Header redesign v3 - Triggering redeploy
 
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
