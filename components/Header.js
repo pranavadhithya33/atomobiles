@@ -134,12 +134,15 @@ export default function Header() {
         ) : (
           <>
             <Link href="/profile" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#f4a724', whiteSpace: 'nowrap', padding: '6px 14px', borderRadius: '20px', background: 'rgba(244, 167, 36, 0.1)', border: '1px solid rgba(244, 167, 36, 0.3)' }}>
-              <LayoutGrid size={16} /> My Orders
+              <LayoutGrid size={16} /> Orders
+            </Link>
+            <Link href="/profile" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap', padding: '6px 14px', borderRadius: '20px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <User size={16} /> Profile
             </Link>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '800', color: '#fff', padding: '6px 12px', borderRadius: '20px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', whiteSpace: 'nowrap' }}>
               <span style={{ fontSize: '14px' }}>🪙</span> {coins}
             </div>
-            <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '600' }}>
+            <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '600', marginLeft: '4px' }}>
               <LogOut size={14} /> Logout
             </button>
           </>
