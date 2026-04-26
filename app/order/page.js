@@ -111,10 +111,10 @@ function OrderFormContent() {
           product_slug: productSlug,
           payment_option: paymentOption,
           base_price: basePrice,
-          discount_amount: (basePrice - finalPrice) + (useCoins ? Math.floor(userCoins / 1000) : 0),
-          final_price: useCoins ? (finalPrice - Math.floor(userCoins / 1000)) : finalPrice,
+          discount_amount: (basePrice - finalPrice) + (useCoins ? userCoins : 0),
+          final_price: useCoins ? (finalPrice - userCoins) : finalPrice,
           advance_amount: advanceAmount || null,
-          coins_redeemed: useCoins ? (Math.floor(userCoins / 1000) * 1000) : 0,
+          coins_redeemed: useCoins ? userCoins : 0,
         }),
       });
 
@@ -260,7 +260,7 @@ function OrderFormContent() {
               <div style={{ fontSize: '24px' }}>🪙</div>
               <div>
                 <div style={{ fontSize: '14px', fontWeight: '800', color: '#fff' }}>Use your OG Coins</div>
-                <div style={{ fontSize: '12px', color: '#94a3b8' }}>You have {userCoins} coins (Value: ₹{Math.floor(userCoins / 1000)})</div>
+                <div style={{ fontSize: '12px', color: '#94a3b8' }}>You have {userCoins} coins (Value: ₹{userCoins})</div>
               </div>
             </div>
             <button 
@@ -282,7 +282,7 @@ function OrderFormContent() {
           </div>
           {useCoins && (
             <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '12px', color: '#f4a724', fontWeight: '700' }}>
-              🎉 Extra ₹{Math.floor(userCoins / 1000)} discount applied!
+              🎉 Extra ₹{userCoins} discount applied!
             </div>
           )}
         </div>
@@ -295,7 +295,7 @@ function OrderFormContent() {
             <div style={{ fontSize: '20px' }}>🪙</div>
             <div>
               <div style={{ fontSize: '13px', fontWeight: '700', color: '#fff' }}>Login to earn OG Coins</div>
-              <div style={{ fontSize: '12px', color: '#9aa3b2' }}>Earn 10 coins per ₹1 spent on this order.</div>
+              <div style={{ fontSize: '12px', color: '#9aa3b2' }}>Earn 1 coin per ₹1000 spent on this order.</div>
             </div>
           </div>
           <Link href={`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`} style={{ fontSize: '12px', fontWeight: '800', color: '#f4a724', textDecoration: 'none', background: '#1a1a2e', padding: '8px 16px', borderRadius: '8px', border: '1px solid #2d2d3f' }}>

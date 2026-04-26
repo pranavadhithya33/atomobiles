@@ -119,8 +119,8 @@ export async function POST(req) {
           }
         }
 
-        // 2. Calculate newly earned coins: ₹1 spent = 10 coins (e.g., ₹100 = 1000 coins)
-        const earnedCoins = Math.floor(final_price * 10);
+        // 2. Calculate newly earned coins: ₹1000 spent = 1 coin
+        const earnedCoins = Math.floor(final_price / 1000);
         
         if (earnedCoins > 0) {
           // Increment coins in profiles table

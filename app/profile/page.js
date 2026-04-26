@@ -90,7 +90,7 @@ export default function ProfilePage() {
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ background: 'rgba(244, 167, 36, 0.1)', color: '#f4a724', padding: '8px 16px', borderRadius: '12px', fontSize: '12px', fontWeight: '800', border: '1px solid rgba(244, 167, 36, 0.2)' }}>
-                ₹1 Spent = 10 Coins
+                ₹1000 Spent = 1 Coin
               </div>
             </div>
           </div>
@@ -165,7 +165,9 @@ export default function ProfilePage() {
 
                   <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '12px', color: '#9aa3b2', marginBottom: '4px' }}>Amount</div>
+                      <div style={{ fontSize: '12px', color: '#9aa3b2' }}>
+                        🪙 <strong style={{ color: '#60a5fa' }}>OG Coins</strong> — Earn 1 coin per ₹1000 spent, redeem on next orders.
+                      </div>
                       <div style={{ fontWeight: '800', fontSize: '15px' }}>{formatINR(order.final_price)}</div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
