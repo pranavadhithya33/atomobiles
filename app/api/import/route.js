@@ -1,16 +1,20 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase';
 import { scrapeAmazonProduct } from '@/lib/amazonScraper';
+import { scrapeFlipkartProduct } from '@/lib/flipkartScraper';
 
 export async function POST(request) {
   try {
     const { url, category } = await request.json();
 
-    if (!url || !url.includes('amazon')) {
-      return NextResponse.json({ error: 'Please provide a valid Amazon India product URL' }, { status: 400 });
+    if (!url || (!url.includes('amazon') && !url.includes('flipkart'))) {
+      return NextResponse.json({ error: 'Please provide a valid Amazon or Flipkart India product URL' }, { status: 400 });
     }
 
-    const scrapedData = await scrapeAmazonProduct(url, category);
+    const isFlipkart = url.includes('flipkart');
+    const scrapedData = isFlipkart 
+      ? await scrapeFlipkartProduct(url, category)
+      : await scrapeAmazonProduct(url, category);
 
     // Save to Supabase — deduplicate slug if needed
     const supabase = createAdminClient();
