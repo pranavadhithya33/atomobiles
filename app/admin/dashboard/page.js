@@ -215,12 +215,15 @@ export default function AdminDashboard() {
   };
 
   const handleImport = async () => {
-    if (!importUrl.trim() || !importUrl.includes('amazon')) {
-      setImportMsg('⚠ Please enter a valid Amazon product URL');
+    const isAmazon = importUrl.includes('amazon');
+    const isFlipkart = importUrl.includes('flipkart');
+
+    if (!importUrl.trim() || (!isAmazon && !isFlipkart)) {
+      setImportMsg('⚠ Please enter a valid Amazon or Flipkart product URL');
       return;
     }
     setImporting(true);
-    setImportMsg('⏳ Extracting product data from Amazon...');
+    setImportMsg(`⏳ Extracting product data from ${isFlipkart ? 'Flipkart' : 'Amazon'}...`);
     
     try {
       const res = await fetch('/api/import', {
@@ -334,17 +337,17 @@ export default function AdminDashboard() {
             <div style={{ background: 'var(--bg-highlight)', padding: '16px', borderRadius: '12px', marginBottom: '16px', border: '1px solid var(--border-focus)' }}>
               <div style={{ fontWeight: 800, color: 'var(--brand-primary)', marginBottom: '12px', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <RefreshCw size={18} className={importing ? 'spin' : ''} />
-                One-Click Auto-Upload from Amazon
+                One-Click Auto-Upload from Amazon/Flipkart
               </div>
               <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
-                Paste any Amazon India product URL. We will automatically fetch the <b>Title, High-Res Images, Live Price, and Specs</b>, apply your 10% discount, and add it to your store.
+                Paste any Amazon India or Flipkart product URL. We will automatically fetch the <b>Title, High-Res Images, Live Price, and Specs</b>, apply your 10% discount, and add it to your store.
               </p>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <input 
                   type="url" 
                   className="form-input" 
                   style={{ flex: 1, minWidth: '200px' }} 
-                  placeholder="Paste Amazon product URL here..."
+                  placeholder="Paste Amazon or Flipkart product URL here..."
                   value={importUrl}
                   onChange={(e) => setImportUrl(e.target.value)}
                 />
@@ -710,10 +713,43 @@ export default function AdminDashboard() {
                     </button>
                   </div>
                 </div>
-                <div className="form-group">
+                <div className="form-group" style={{ position: 'relative' }}>
                   <label className="form-label">Flipkart URL (For live scraping)</label>
-                  <input type="url" className="form-input" placeholder="https://flipkart.com/..."
-                    value={form.flipkart_url} onChange={e => handleFormChange('flipkart_url', e.target.value)} />
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <input type="url" className="form-input" placeholder="https://flipkart.com/..."
+                      value={form.flipkart_url} onChange={e => handleFormChange('flipkart_url', e.target.value)} />
+                    <button type="button" className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: 12 }} 
+                      onClick={async () => {
+                        if (!form.flipkart_url) return alert('Enter URL first');
+                        setImporting(true);
+                        try {
+                          const res = await fetch('/api/import', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ url: form.flipkart_url, category: form.category })
+                          });
+                          const data = await res.json();
+                          if (!res.ok) throw new Error(data.error);
+                          // Update form with fetched data
+                          setForm(prev => ({
+                            ...prev,
+                            name: data.product.name,
+                            flipkart_price: data.product.flipkart_price,
+                            online_price: data.product.flipkart_price,
+                            our_price: data.product.our_price,
+                            description: data.product.description,
+                            images: data.product.images?.length ? data.product.images : prev.images,
+                            stock: data.product.stock
+                          }));
+                          alert('Data fetched successfully!');
+                        } catch (err) { alert('Fetch failed: ' + err.message); }
+                        finally { setImporting(false); }
+                      }}
+                      disabled={importing}
+                    >
+                      {importing ? '...' : 'Fetch'}
+                    </button>
+                  </div>
                 </div>
               </div>
 
