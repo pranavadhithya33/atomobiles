@@ -212,14 +212,9 @@ export default function CartPage() {
         
         <button 
           onClick={() => {
-            const first = cart[0];
+            if (cart.length === 0) return;
             const params = new URLSearchParams({
-              productId: first.id,
-              productName: first.name,
-              productSlug: first.slug,
-              paymentOption: first.paymentOption,
-              basePrice: first.basePrice,
-              finalPrice: first.basePrice, // This will be recalculated on the order page
+              fromCart: 'true',
               ...(useCoins && { redeemedCoins: coinsToRedeem })
             });
             window.location.href = `/order?${params.toString()}`;

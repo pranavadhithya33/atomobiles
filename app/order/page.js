@@ -4,25 +4,27 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from '@/styles/OrderForm.module.css';
-import { formatINR, validatePhone, validatePincode, buildWhatsAppUrl } from '@/lib/utils';
+import { formatINR, validatePhone, validatePincode, buildWhatsAppUrl, calcPaymentDetails } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
-import { CheckCircle, ArrowLeft, ShoppingBag, User, Phone, MapPin, Hash, CreditCard, Download } from 'lucide-react';
+import { CheckCircle, ArrowLeft, ShoppingBag, User, Phone, MapPin, Hash, CreditCard, Download, Trash2, ChevronRight } from 'lucide-react';
 import { generateInvoice } from '@/lib/invoiceGenerator';
+import { useCart } from '@/context/CartContext';
 
 const WHATSAPP_NUMBER = '917397189222';
 
 function OrderFormContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { cart, clearCart } = useCart();
 
+  const isFromCart = searchParams.get('fromCart') === 'true';
   const productId = searchParams.get('productId') || '';
   const productName = searchParams.get('productName') || '';
   const productSlug = searchParams.get('productSlug') || '';
-  const paymentOption = searchParams.get('paymentOption') || 'half_cod';
-  const basePrice = parseInt(searchParams.get('basePrice') || '0');
-  const finalPrice = parseInt(searchParams.get('finalPrice') || '0');
-  const advanceAmount = parseInt(searchParams.get('advanceAmount') || '0');
+  const initialPaymentOption = searchParams.get('paymentOption') || 'half_cod';
+  const urlBasePrice = parseInt(searchParams.get('basePrice') || '0');
 
+  const [selectedPayment, setSelectedPayment] = useState(initialPaymentOption);
   const [form, setForm] = useState({ fullName: '', phone: '', address: '', pincode: '' });
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -35,20 +37,38 @@ function OrderFormContent() {
   const [userCoins, setUserCoins] = useState(0);
   const [useCoins, setUseCoins] = useState(searchParams.get('redeemedCoins') ? true : false);
 
+  // Calculate prices based on current selection
+  const items = isFromCart ? cart : [{
+    id: productId,
+    name: productName,
+    slug: productSlug,
+    basePrice: urlBasePrice,
+    quantity: 1
+  }];
+
+  const totals = items.reduce((acc, item) => {
+    const details = calcPaymentDetails(item.basePrice, selectedPayment);
+    return {
+      baseTotal: acc.baseTotal + (item.basePrice * (item.quantity || 1)),
+      finalTotal: acc.finalTotal + (details.finalPrice * (item.quantity || 1)),
+      advanceTotal: acc.advanceTotal + (details.advance * (item.quantity || 1)),
+      discountTotal: acc.discountTotal + (details.discount * (item.quantity || 1))
+    };
+  }, { baseTotal: 0, finalTotal: 0, advanceTotal: 0, discountTotal: 0 });
+
+  const finalOrderPrice = useCoins ? Math.max(0, totals.finalTotal - userCoins) : totals.finalTotal;
+
   // Fetch user profile on load
   useEffect(() => {
     async function loadUser() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
         setUser(session.user);
-        
-        // Auto-fill form if profile exists
         const { data: profile } = await supabase
           .from('profiles')
           .select('name, phone, coins_balance')
           .eq('id', session.user.id)
           .single();
-        
         if (profile) {
           setForm(prev => ({
             ...prev,
@@ -62,12 +82,15 @@ function OrderFormContent() {
     loadUser();
   }, []);
 
-  // Redirect if no product
+  // Redirect if no products
   useEffect(() => {
-    if (!productId || !finalPrice) {
+    if (!isFromCart && (!productId || !urlBasePrice)) {
       router.replace('/');
     }
-  }, [productId, finalPrice, router]);
+    if (isFromCart && cart.length === 0 && !submitted) {
+      router.replace('/cart');
+    }
+  }, [productId, urlBasePrice, isFromCart, cart, router, submitted]);
 
   const validate = () => {
     const errs = {};
@@ -106,15 +129,22 @@ function OrderFormContent() {
           phone: form.phone.trim(),
           address: form.address.trim(),
           pincode: form.pincode.trim(),
-          product_id: productId,
-          product_name: productName,
-          product_slug: productSlug,
-          payment_option: paymentOption,
-          base_price: basePrice,
-          discount_amount: (basePrice - finalPrice) + (useCoins ? userCoins : 0),
-          final_price: useCoins ? (finalPrice - userCoins) : finalPrice,
-          advance_amount: advanceAmount || null,
+          product_id: isFromCart ? 'cart_order' : productId,
+          product_name: isFromCart ? `${items.length} items from cart` : productName,
+          product_slug: isFromCart ? 'cart' : productSlug,
+          payment_option: selectedPayment,
+          base_price: totals.baseTotal,
+          discount_amount: totals.discountTotal + (useCoins ? userCoins : 0),
+          final_price: finalOrderPrice,
+          advance_amount: totals.advanceTotal || null,
           coins_redeemed: useCoins ? userCoins : 0,
+          items: items.map(i => ({
+            id: i.id,
+            name: i.name,
+            slug: i.slug,
+            price: i.basePrice,
+            quantity: i.quantity || 1
+          }))
         }),
       });
 
@@ -125,20 +155,22 @@ function OrderFormContent() {
       setFullOrderId(data.id || '');
       setOrderData(data);
       setSubmitted(true);
+      
+      if (isFromCart) clearCart();
 
       // Auto-open WhatsApp
       const waUrl = buildWhatsAppUrl(WHATSAPP_NUMBER, {
-        name: form.fullName,
-        phone: form.phone,
-        address: form.address,
-        pincode: form.pincode,
-        productName,
-        paymentOption,
-        finalPrice: useCoins ? (finalPrice - userCoins) : finalPrice,
-        advanceAmount,
-        orderId: data.id || '',
+        name: form.fullName.trim(),
+        phone: form.phone.trim(),
+        address: form.address.trim(),
+        pincode: form.pincode.trim(),
+        productName: isFromCart ? `${items.length} Items (Cart Order)` : productName,
+        paymentOption: selectedPayment,
+        finalPrice: finalOrderPrice,
+        advanceAmount: totals.advanceTotal,
+        orderId: data.id
       });
-      setTimeout(() => window.open(waUrl, '_blank'), 800);
+      window.open(waUrl, '_blank');
 
     } catch (err) {
       setSubmitError(err.message || 'Something went wrong. Please try again.');
@@ -224,69 +256,129 @@ function OrderFormContent() {
       {/* Order Summary */}
       <div className={styles.summaryCard}>
         <div className={styles.summaryTitle}>Order Summary</div>
-        <div className={styles.summaryRow}>
-          <span>Product</span>
-          <strong style={{ fontSize:13, maxWidth:180, textAlign:'right' }}>{productName}</strong>
+        
+        <div style={{ display: 'grid', gap: '12px', marginBottom: '20px' }}>
+          {items.map((item, idx) => (
+            <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: '12px', borderBottom: idx === items.length - 1 ? 'none' : '1px solid rgba(0,0,0,0.05)' }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>{item.name}</div>
+                <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Quantity: {item.quantity || 1}</div>
+              </div>
+              <div style={{ fontSize: '14px', fontWeight: '800' }}>{formatINR(item.basePrice * (item.quantity || 1))}</div>
+            </div>
+          ))}
         </div>
-        <div className={styles.summaryRow}>
-          <span>Payment</span>
-          <span className={styles.summaryPaymentTag}>
-            {paymentOption === 'full_prepaid' ? '✅ Full Prepaid' : '🚚 Half + COD'}
-          </span>
+
+        {/* Payment Selection */}
+        <div style={{ marginBottom: '20px', padding: '16px', background: '#f8fafc', borderRadius: '12px', border: '1px solid var(--border)' }}>
+          <div style={{ fontSize: '13px', fontWeight: '800', marginBottom: '12px', color: 'var(--text-primary)' }}>Choose Payment Method</div>
+          <div style={{ display: 'grid', gap: '8px' }}>
+            {[
+              { id: 'half_cod', label: '🚚 Half COD', sub: 'Pay 50% now, 50% on delivery' },
+              { id: 'full_prepaid', label: '✅ Full Prepaid', sub: 'Extra ₹2,000 OFF per item' },
+              { id: 'token_advance', label: '🎫 Token Advance', sub: 'Pay 30% now, rest on delivery' }
+            ].map((opt) => (
+              <label key={opt.id} style={{ 
+                display: 'block', 
+                padding: '10px 12px', 
+                borderRadius: '8px', 
+                border: '1.5px solid',
+                borderColor: selectedPayment === opt.id ? 'var(--brand-accent)' : 'var(--border)',
+                background: selectedPayment === opt.id ? 'var(--brand-accent-light)' : '#fff',
+                cursor: 'pointer',
+                transition: '0.2s'
+              }}>
+                <input 
+                  type="radio" 
+                  name="payment_option" 
+                  checked={selectedPayment === opt.id}
+                  onChange={() => setSelectedPayment(opt.id)}
+                  style={{ display: 'none' }}
+                />
+                <div style={{ fontSize: '13px', fontWeight: '700', color: selectedPayment === opt.id ? 'var(--brand-accent-dark)' : 'var(--text-primary)' }}>{opt.label}</div>
+                <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{opt.sub}</div>
+              </label>
+            ))}
+          </div>
         </div>
-        {paymentOption === 'half_cod' && advanceAmount > 0 && (
+
+        <div className={styles.summaryRow}>
+          <span>Subtotal</span>
+          <strong>{formatINR(totals.baseTotal)}</strong>
+        </div>
+        
+        {totals.discountTotal > 0 && (
           <div className={styles.summaryRow}>
-            <span>Advance (Pay Now)</span>
-            <strong style={{ color:'var(--brand-accent-dark)' }}>{formatINR(advanceAmount)}</strong>
+            <span style={{ color: 'var(--success)' }}>Bulk Discount</span>
+            <strong style={{ color: 'var(--success)' }}>- {formatINR(totals.discountTotal)}</strong>
           </div>
         )}
-        {paymentOption === 'half_cod' && advanceAmount > 0 && (
+
+        {useCoins && (
           <div className={styles.summaryRow}>
-            <span>On Delivery</span>
-            <strong>{formatINR(finalPrice - advanceAmount)}</strong>
+            <span style={{ color: 'var(--brand-accent-dark)' }}>OG Coins Applied</span>
+            <strong style={{ color: 'var(--brand-accent-dark)' }}>- {formatINR(userCoins)}</strong>
           </div>
         )}
+
+        <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)', margin: '12px 0' }} />
+
         <div className={styles.summaryRow}>
-          <span>Total Amount</span>
-          <strong style={{ color:'var(--text-primary)', fontSize:19 }}>
-            {formatINR(useCoins ? (finalPrice - userCoins) : finalPrice)}
+          <span style={{ fontSize: '15px', fontWeight: '700' }}>Payable Amount</span>
+          <strong style={{ color: 'var(--text-primary)', fontSize: '20px' }}>
+            {formatINR(finalOrderPrice)}
           </strong>
         </div>
+
+        {selectedPayment !== 'full_prepaid' && (
+          <>
+            <div className={styles.summaryRow} style={{ marginTop: '12px', opacity: 0.8 }}>
+              <span style={{ fontSize: '13px' }}>Advance (Pay Now)</span>
+              <strong style={{ fontSize: '14px' }}>{formatINR(totals.advanceTotal)}</strong>
+            </div>
+            <div className={styles.summaryRow} style={{ opacity: 0.8 }}>
+              <span style={{ fontSize: '13px' }}>On Delivery</span>
+              <strong style={{ fontSize: '14px' }}>{formatINR(finalOrderPrice - totals.advanceTotal)}</strong>
+            </div>
+          </>
+        )}
       </div>
       
-      {/* Coin Redemption */}
+      {/* Coin Redemption Section */}
       {user && userCoins > 0 && (
-        <div style={{ background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', border: '1px solid rgba(244, 167, 36, 0.3)', borderRadius: '16px', padding: '16px', marginBottom: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ fontSize: '24px' }}>🪙</div>
-              <div>
-                <div style={{ fontSize: '14px', fontWeight: '800', color: '#fff' }}>Use your OG Coins</div>
-                <div style={{ fontSize: '12px', color: '#94a3b8' }}>You have {userCoins} coins (Value: ₹{userCoins})</div>
-              </div>
+        <div style={{ 
+          background: useCoins ? 'var(--brand-accent-light)' : '#fff', 
+          border: '1.5px solid',
+          borderColor: useCoins ? 'var(--brand-accent)' : 'var(--border)',
+          borderRadius: '16px', 
+          padding: '16px', 
+          marginBottom: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ fontSize: '24px' }}>🪙</div>
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)' }}>Redeem OG Coins</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>You have ₹{userCoins} savings available</div>
             </div>
-            <button 
-              type="button"
-              onClick={() => setUseCoins(!useCoins)}
-              style={{ 
-                padding: '8px 16px', 
-                borderRadius: '8px', 
-                background: useCoins ? '#f4a724' : 'rgba(255,255,255,0.05)', 
-                color: useCoins ? '#000' : '#fff',
-                border: '1px solid rgba(255,255,255,0.1)',
-                fontSize: '12px',
-                fontWeight: '800',
-                cursor: 'pointer'
-              }}
-            >
-              {useCoins ? 'Applied ✓' : 'Apply Coins'}
-            </button>
           </div>
-          {useCoins && (
-            <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '12px', color: '#f4a724', fontWeight: '700' }}>
-              🎉 Extra ₹{userCoins} discount applied!
-            </div>
-          )}
+          <button 
+            type="button"
+            onClick={() => setUseCoins(!useCoins)}
+            style={{ 
+              padding: '8px 16px', 
+              borderRadius: '8px', 
+              background: useCoins ? 'var(--brand-accent)' : '#f1f5f9', 
+              color: useCoins ? '#000' : 'var(--text-primary)',
+              fontSize: '12px',
+              fontWeight: '800',
+              cursor: 'pointer'
+            }}
+          >
+            {useCoins ? 'Applied ✓' : 'Use Coins'}
+          </button>
         </div>
       )}
 

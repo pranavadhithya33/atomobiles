@@ -62,7 +62,7 @@ export async function POST(req) {
       }
     }
 
-    const { coins_redeemed } = body;
+    const { coins_redeemed, items } = body;
 
     const orderData = {
       full_name: full_name.trim(),
@@ -80,6 +80,7 @@ export async function POST(req) {
       status: 'pending',
       user_id: userId,
       coins_redeemed: coins_redeemed || 0,
+      items: items || null // Bulk items support
     };
 
     const { data, error } = await adminSupabase
