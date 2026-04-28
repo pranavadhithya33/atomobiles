@@ -132,7 +132,7 @@ function OrderFormContent() {
           phone: form.phone.trim(),
           address: form.address.trim(),
           pincode: form.pincode.trim(),
-          product_id: isFromCart ? 'cart_order' : productId,
+          product_id: isFromCart ? null : productId,
           product_name: isFromCart ? `${items.length} items from cart` : productName,
           product_slug: isFromCart ? 'cart' : productSlug,
           payment_option: selectedPayment,
