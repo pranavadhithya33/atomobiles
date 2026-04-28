@@ -182,13 +182,14 @@ export default function ProductDetailPage() {
           disabled={!inStock || addedToCart}
           className={`${styles.ctaBtn}`}
           style={{ 
-            background: addedToCart ? '#16a34a' : 'rgba(255,255,255,0.05)', 
-            border: '1px solid rgba(255,255,255,0.1)',
-            color: '#fff',
+            background: addedToCart ? '#16a34a' : 'rgba(244, 167, 36, 0.1)', 
+            border: addedToCart ? '2px solid #16a34a' : '2px solid #f4a724',
+            color: addedToCart ? '#fff' : '#f4a724',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px'
+            gap: '8px',
+            fontWeight: '800'
           }}
           id="add-to-cart-btn"
         >
