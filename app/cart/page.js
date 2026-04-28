@@ -35,28 +35,30 @@ export default function CartPage() {
 
   return (
     <div style={{ padding: '24px 16px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '24px', color: '#fff', letterSpacing: '-0.5px' }}>
+      <h1 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '24px', color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
         Your Shopping Cart
       </h1>
 
       <div style={{ display: 'grid', gap: '16px' }}>
         {cart.map((item) => (
           <div key={`${item.id}-${item.paymentOption}`} style={{ 
-            background: 'rgba(255,255,255,0.03)', 
-            border: '1px solid rgba(255,255,255,0.08)', 
+            background: 'var(--bg-card)', 
+            border: '1px solid var(--border)', 
             borderRadius: '16px', 
             padding: '16px',
             display: 'flex',
             gap: '16px',
-            alignItems: 'center'
+            alignItems: 'center',
+            boxShadow: 'var(--shadow-sm)'
           }}>
             <div style={{ 
               width: '80px', 
               height: '80px', 
-              background: '#fff', 
+              background: '#f8fafc', 
               borderRadius: '12px', 
               overflow: 'hidden',
-              flexShrink: 0
+              flexShrink: 0,
+              border: '1px solid var(--border)'
             }}>
               <img 
                 src={item.image} 
@@ -67,28 +69,28 @@ export default function CartPage() {
             </div>
 
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '15px', fontWeight: '700', color: '#fff', marginBottom: '4px' }}>
+              <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '4px' }}>
                 {item.name}
               </div>
               <div style={{ fontSize: '12px', color: '#f4a724', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 {item.paymentOption === 'full_prepaid' ? 'Full Prepaid' : item.paymentOption === 'token_advance' ? 'Token Advance' : 'Half COD'}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ fontSize: '17px', fontWeight: '800', color: '#fff' }}>
+                <div style={{ fontSize: '17px', fontWeight: '800', color: 'var(--text-primary)' }}>
                   {formatINR(item.basePrice * item.quantity)}
                 </div>
                 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.05)', padding: '4px 12px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#f8fafc', padding: '4px 12px', borderRadius: '24px', border: '1px solid var(--border)' }}>
                   <button 
                     onClick={() => updateQuantity(item.id, item.paymentOption, item.quantity - 1)}
-                    style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '4px' }}
+                    style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', padding: '4px' }}
                   >
                     <Minus size={14} />
                   </button>
-                  <span style={{ fontSize: '14px', fontWeight: '700', minWidth: '20px', textAlign: 'center' }}>{item.quantity}</span>
+                  <span style={{ fontSize: '14px', fontWeight: '700', minWidth: '20px', textAlign: 'center', color: 'var(--text-primary)' }}>{item.quantity}</span>
                   <button 
                     onClick={() => updateQuantity(item.id, item.paymentOption, item.quantity + 1)}
-                    style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '4px' }}
+                    style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', padding: '4px' }}
                   >
                     <Plus size={14} />
                   </button>
@@ -99,7 +101,7 @@ export default function CartPage() {
             <button 
               onClick={() => removeFromCart(item.id, item.paymentOption)}
               style={{ 
-                background: 'rgba(239, 68, 68, 0.1)', 
+                background: 'rgba(239, 68, 68, 0.08)', 
                 border: 'none', 
                 color: '#ef4444', 
                 padding: '10px', 
@@ -116,12 +118,13 @@ export default function CartPage() {
       <div style={{ 
         marginTop: '32px', 
         padding: '24px', 
-        background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', 
+        background: 'var(--brand-primary)', 
         borderRadius: '24px',
-        border: '1px solid rgba(244, 167, 36, 0.2)'
+        border: '1px solid rgba(244, 167, 36, 0.2)',
+        boxShadow: 'var(--shadow-lg)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <span style={{ color: '#9aa3b2', fontSize: '15px' }}>Subtotal ({cartCount} items)</span>
+          <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '15px' }}>Subtotal ({cartCount} items)</span>
           <span style={{ color: '#fff', fontSize: '24px', fontWeight: '900' }}>{formatINR(cartTotal)}</span>
         </div>
         <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', marginBottom: '24px' }}>
