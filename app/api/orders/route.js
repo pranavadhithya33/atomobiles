@@ -93,53 +93,48 @@ export async function POST(req) {
     // --- OG Coins Logic ---
     if (userId && data) {
       try {
-        // 1. If coins were redeemed, record transaction and update balance
-        if (coins_redeemed && coins_redeemed > 0) {
-          // Add transaction record
-          await adminSupabase.from('coin_transactions').insert({
-            user_id: userId,
-            order_id: data.id,
-            coins_redeemed: coins_redeemed,
-            description: `Redeemed on order #${data.id.slice(0,8).toUpperCase()}`
-          });
-
-          // Update balance (decrement)
-          const { data: profile } = await adminSupabase.from('profiles').select('coins_balance').eq('id', userId).single();
-          if (profile) {
-            await adminSupabase.from('profiles').update({ 
-              coins_balance: Math.max(0, (profile.coins_balance || 0) - coins_redeemed) 
-            }).eq('id', userId);
-          }
-        }
-
-        // 2. Calculate newly earned coins: ₹1000 spent = 1 coin
-        const earnedCoins = Math.floor(final_price / 1000);
+        // 1. Fetch current profile state
+        const { data: profile } = await adminSupabase
+          .from('profiles')
+          .select('coins_balance, total_orders')
+          .eq('id', userId)
+          .single();
         
-        if (earnedCoins > 0) {
-          // Add transaction record
-          await adminSupabase.from('coin_transactions').insert({
-            user_id: userId,
-            order_id: data.id,
-            coins_earned: earnedCoins,
-            description: `Earned from order #${data.id.slice(0,8).toUpperCase()}`
-          });
-
-          // Update balance (increment)
-          const { data: profile } = await adminSupabase.from('profiles').select('coins_balance, total_orders').eq('id', userId).single();
-          if (profile) {
-            await adminSupabase.from('profiles').update({ 
-              coins_balance: (profile.coins_balance || 0) + earnedCoins,
-              total_orders: (profile.total_orders || 0) + 1
-            }).eq('id', userId);
+        if (profile) {
+          const currentBalance = profile.coins_balance || 0;
+          const currentOrders = profile.total_orders || 0;
+          
+          // Calculate earnings: ₹1000 spent = 1 coin
+          const earnedCoins = Math.floor(final_price / 1000);
+          const redeemedAmount = coins_redeemed || 0;
+          
+          // Calculate new balance
+          const newBalance = Math.max(0, currentBalance - redeemedAmount + earnedCoins);
+          
+          // 2. Record transactions
+          if (redeemedAmount > 0) {
+            await adminSupabase.from('coin_transactions').insert({
+              user_id: userId,
+              order_id: data.id,
+              coins_redeemed: redeemedAmount,
+              description: `Redeemed on order #${data.id.slice(0,8).toUpperCase()}`
+            });
           }
-        } else if (userId) {
-          // Just update total orders if no coins earned
-          const { data: profile } = await adminSupabase.from('profiles').select('total_orders').eq('id', userId).single();
-          if (profile) {
-            await adminSupabase.from('profiles').update({ 
-              total_orders: (profile.total_orders || 0) + 1
-            }).eq('id', userId);
+          
+          if (earnedCoins > 0) {
+            await adminSupabase.from('coin_transactions').insert({
+              user_id: userId,
+              order_id: data.id,
+              coins_earned: earnedCoins,
+              description: `Earned from order #${data.id.slice(0,8).toUpperCase()}`
+            });
           }
+          
+          // 3. Final update to profile (SINGLE UPDATE)
+          await adminSupabase.from('profiles').update({
+            coins_balance: newBalance,
+            total_orders: currentOrders + 1
+          }).eq('id', userId);
         }
       } catch (coinErr) {
         console.error('Error handling coins:', coinErr);
