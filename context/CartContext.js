@@ -191,6 +191,7 @@ export function CartProvider({ children }) {
   return (
     <CartContext.Provider value={{ 
       cart, 
+      isLoaded,
       addToCart, 
       removeFromCart, 
       updateQuantity, 

@@ -15,7 +15,7 @@ const WHATSAPP_NUMBER = '917397189222';
 function OrderFormContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, isLoaded } = useCart();
 
   const isFromCart = searchParams.get('fromCart') === 'true';
   const productId = searchParams.get('productId') || '';
@@ -84,13 +84,16 @@ function OrderFormContent() {
 
   // Redirect if no products
   useEffect(() => {
+    // Only check for empty cart after context has loaded
+    if (!isLoaded) return;
+
     if (!isFromCart && (!productId || !urlBasePrice)) {
       router.replace('/');
     }
     if (isFromCart && cart.length === 0 && !submitted) {
       router.replace('/cart');
     }
-  }, [productId, urlBasePrice, isFromCart, cart, router, submitted]);
+  }, [productId, urlBasePrice, isFromCart, cart, router, submitted, isLoaded]);
 
   const validate = () => {
     const errs = {};
