@@ -23,42 +23,11 @@ export function CartProvider({ children }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  // 2. Load Cart
+  // 2. Load and Sync Cart
   useEffect(() => {
-    async function loadCart() {
-      if (user) {
-        // Fetch from Database
-        const { data, error } = await supabase
-          .from('cart_items')
-          .select(`
-            id,
-            quantity,
-            payment_option,
-            product:products (
-              id,
-              name,
-              slug,
-              images,
-              our_price
-            )
-          `)
-          .eq('user_id', user.id);
-
-        if (!error && data) {
-          const dbCart = data.map(item => ({
-            dbId: item.id, // Supabase PK
-            id: item.product.id,
-            name: item.product.name,
-            slug: item.product.slug,
-            image: item.product.images?.[0],
-            basePrice: item.product.our_price,
-            paymentOption: item.payment_option,
-            quantity: item.quantity
-          }));
-          setCart(dbCart);
-        }
-      } else {
-        // Fetch from localStorage for guests
+    async function loadAndSyncCart() {
+      if (!user) {
+        // Guest mode: load from localStorage
         const savedCart = localStorage.getItem('og_cart');
         if (savedCart) {
           try {
@@ -67,58 +36,71 @@ export function CartProvider({ children }) {
             console.error('Failed to parse cart:', e);
           }
         }
+        setIsLoaded(true);
+        return;
+      }
+
+      // Logged in mode: Sync guest items then load from DB
+      try {
+        const savedCart = localStorage.getItem('og_cart');
+        if (savedCart) {
+          const guestItems = JSON.parse(savedCart);
+          if (guestItems && guestItems.length > 0) {
+            console.log('Syncing guest items to account...');
+            for (const item of guestItems) {
+              await supabase.from('cart_items').upsert({
+                user_id: user.id,
+                product_id: item.id,
+                payment_option: item.paymentOption,
+                quantity: item.quantity
+              }, { onConflict: 'user_id, product_id, payment_option' });
+            }
+            localStorage.removeItem('og_cart');
+          }
+        }
+      } catch (e) {
+        console.error('Cart sync failed:', e);
+      }
+
+      // Fetch final cart from DB
+      const { data, error } = await supabase
+        .from('cart_items')
+        .select(`
+          id,
+          quantity,
+          payment_option,
+          product:products (
+            id,
+            name,
+            slug,
+            images,
+            our_price
+          )
+        `)
+        .eq('user_id', user.id);
+
+      if (!error && data) {
+        const dbCart = data.map(item => ({
+          dbId: item.id,
+          id: item.product.id,
+          name: item.product.name,
+          slug: item.product.slug,
+          image: item.product.images?.[0],
+          basePrice: item.product.our_price,
+          paymentOption: item.payment_option,
+          quantity: item.quantity
+        }));
+        setCart(dbCart);
       }
       setIsLoaded(true);
     }
-    loadCart();
+    
+    if (isLoaded || !isLoaded) { // Run on mount and user change
+      loadAndSyncCart();
+    }
   }, [user]);
 
-  // 3. Sync Guest Cart to DB on Login
-  useEffect(() => {
-    if (isLoaded && user && cart.length > 0) {
-      const savedCart = localStorage.getItem('og_cart');
-      if (savedCart) {
-        try {
-          const guestItems = JSON.parse(savedCart);
-          if (guestItems.length > 0) {
-            const sync = async () => {
-              for (const item of guestItems) {
-                await supabase.from('cart_items').upsert({
-                  user_id: user.id,
-                  product_id: item.id,
-                  payment_option: item.paymentOption,
-                  quantity: item.quantity
-                }, { onConflict: 'user_id, product_id, payment_option' });
-              }
-              localStorage.removeItem('og_cart');
-              // Re-load cart to get DB IDs
-              const { data } = await supabase
-                .from('cart_items')
-                .select(`id, quantity, payment_option, product:products(id, name, slug, images, our_price)`)
-                .eq('user_id', user.id);
-              if (data) {
-                setCart(data.map(i => ({
-                  dbId: i.id,
-                  id: i.product.id,
-                  name: i.product.name,
-                  slug: i.product.slug,
-                  image: i.product.images?.[0],
-                  basePrice: i.product.our_price,
-                  paymentOption: i.payment_option,
-                  quantity: i.quantity
-                })));
-              }
-            };
-            sync();
-          }
-        } catch (e) {
-          console.error('Sync failed:', e);
-        }
-      }
-    }
-  }, [user, isLoaded]);
-
-  // 4. Save Guest Cart to localStorage
+  // 3. Save Guest Cart to localStorage
   useEffect(() => {
     if (isLoaded && !user) {
       localStorage.setItem('og_cart', JSON.stringify(cart));

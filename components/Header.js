@@ -156,20 +156,34 @@ export default function Header() {
           <Truck size={16} /> Track
         </Link>
 
-        <Link href="/cart" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap', padding: '6px 14px', borderRadius: '20px', background: 'rgba(244, 167, 36, 0.1)', border: '1px solid rgba(244, 167, 36, 0.3)', position: 'relative' }}>
-          <ShoppingCart size={16} color="#f4a724" /> Cart
+        <Link href="/cart" style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '6px', 
+          fontSize: '13px', 
+          fontWeight: '800', 
+          color: '#000', 
+          whiteSpace: 'nowrap', 
+          padding: '8px 16px', 
+          borderRadius: '20px', 
+          background: '#f4a724', 
+          border: '1px solid #f4a724', 
+          position: 'relative',
+          boxShadow: '0 4px 12px rgba(244, 167, 36, 0.3)'
+        }}>
+          <ShoppingCart size={16} strokeWidth={3} /> Cart
           {cartCount > 0 && (
             <span style={{ 
               position: 'absolute', 
-              top: '-6px', 
-              right: '-6px', 
-              background: '#f4a724', 
-              color: '#000', 
-              fontSize: '10px', 
-              fontWeight: '800', 
-              padding: '2px 6px', 
-              borderRadius: '10px',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+              top: '-8px', 
+              right: '-8px', 
+              background: '#000', 
+              color: '#f4a724', 
+              fontSize: '11px', 
+              fontWeight: '900', 
+              padding: '2px 7px', 
+              borderRadius: '12px',
+              border: '2px solid #f4a724'
             }}>
               {cartCount}
             </span>
