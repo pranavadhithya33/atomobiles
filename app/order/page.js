@@ -45,7 +45,7 @@ function OrderFormContent() {
         // Auto-fill form if profile exists
         const { data: profile } = await supabase
           .from('profiles')
-          .select('name, phone')
+          .select('name, phone, coins_balance')
           .eq('id', session.user.id)
           .single();
         
