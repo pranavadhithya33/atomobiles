@@ -33,7 +33,7 @@ function OrderFormContent() {
   const [submitError, setSubmitError] = useState('');
   const [user, setUser] = useState(null);
   const [userCoins, setUserCoins] = useState(0);
-  const [useCoins, setUseCoins] = useState(false);
+  const [useCoins, setUseCoins] = useState(searchParams.get('redeemedCoins') ? true : false);
 
   // Fetch user profile on load
   useEffect(() => {

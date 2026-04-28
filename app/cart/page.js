@@ -1,13 +1,37 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { formatINR } from '@/lib/utils';
+import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { Trash2, ShoppingBag, Plus, Minus, ArrowRight, ShoppingCart } from 'lucide-react';
-import styles from '@/styles/ProductDetail.module.css'; // Reusing some styles
+import { Trash2, ShoppingBag, Plus, Minus, ArrowRight, ShoppingCart, CheckCircle } from 'lucide-react';
+import styles from '@/styles/ProductDetail.module.css';
 
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, cartTotal, cartCount } = useCart();
+  const [userCoins, setUserCoins] = useState(0);
+  const [useCoins, setUseCoins] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    async function loadUser() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUser(session.user);
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('coins_balance')
+          .eq('id', session.user.id)
+          .single();
+        if (profile) setUserCoins(profile.coins_balance || 0);
+      }
+    }
+    loadUser();
+  }, []);
+
+  const discountedTotal = useCoins ? Math.max(0, cartTotal - userCoins) : cartTotal;
+  const coinsToRedeem = useCoins ? Math.min(cartTotal, userCoins) : 0;
 
   if (cart.length === 0) {
     return (
@@ -123,19 +147,71 @@ export default function CartPage() {
         border: '1px solid rgba(244, 167, 36, 0.2)',
         boxShadow: 'var(--shadow-lg)'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        {/* OG Coins Section */}
+        {userCoins > 0 && (
+          <div style={{ 
+            background: 'rgba(255,255,255,0.05)', 
+            padding: '16px', 
+            borderRadius: '16px', 
+            marginBottom: '20px',
+            border: useCoins ? '1px solid var(--brand-accent)' : '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '20px' }}>🪙</span>
+                <div>
+                  <div style={{ color: '#fff', fontSize: '14px', fontWeight: '700' }}>Use your OG Coins</div>
+                  <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px' }}>Balance: {userCoins} coins (₹{userCoins})</div>
+                </div>
+              </div>
+              <button 
+                onClick={() => setUseCoins(!useCoins)}
+                style={{ 
+                  background: useCoins ? 'var(--brand-accent)' : 'rgba(255,255,255,0.1)',
+                  color: useCoins ? '#000' : '#fff',
+                  padding: '6px 14px',
+                  borderRadius: '12px',
+                  fontSize: '13px',
+                  fontWeight: '800',
+                  transition: '0.2s'
+                }}
+              >
+                {useCoins ? 'Applied' : 'Apply'}
+              </button>
+            </div>
+            {useCoins && (
+              <div style={{ marginTop: '10px', color: 'var(--brand-accent)', fontSize: '12px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <CheckCircle size={14} /> You are saving ₹{coinsToRedeem}!
+              </div>
+            )}
+          </div>
+        )}
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
           <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '15px' }}>Subtotal ({cartCount} items)</span>
-          <span style={{ color: '#fff', fontSize: '24px', fontWeight: '900' }}>{formatINR(cartTotal)}</span>
+          <span style={{ color: '#fff', fontSize: '18px', fontWeight: '700' }}>{formatINR(cartTotal)}</span>
         </div>
+
+        {useCoins && (
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <span style={{ color: 'var(--brand-accent)', fontSize: '15px' }}>OG Coins Discount</span>
+            <span style={{ color: 'var(--brand-accent)', fontSize: '18px', fontWeight: '700' }}>- {formatINR(coinsToRedeem)}</span>
+          </div>
+        )}
+
+        <div style={{ width: '100%', height: '1px', background: 'rgba(255,255,255,0.1)', margin: '16px 0' }} />
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <span style={{ color: '#fff', fontSize: '17px', fontWeight: '700' }}>Total Amount</span>
+          <span style={{ color: '#fff', fontSize: '28px', fontWeight: '900', color: 'var(--brand-accent)' }}>{formatINR(discountedTotal)}</span>
+        </div>
+
         <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', marginBottom: '24px' }}>
-          Taxes and shipping calculated at checkout. OG Coins can be applied in the next step.
+          Taxes and shipping calculated at checkout.
         </p>
         
-        {/* Bulk Checkout Link - For now, we'll just link to the first item for simplicity or explain it's coming soon */}
         <button 
           onClick={() => {
-            // For now, let's just alert that multi-item checkout is in progress
-            // or we can just redirect to the first item's checkout page
             const first = cart[0];
             const params = new URLSearchParams({
               productId: first.id,
@@ -143,7 +219,8 @@ export default function CartPage() {
               productSlug: first.slug,
               paymentOption: first.paymentOption,
               basePrice: first.basePrice,
-              finalPrice: first.basePrice, // Simplification
+              finalPrice: first.basePrice, // This will be recalculated on the order page
+              ...(useCoins && { redeemedCoins: coinsToRedeem })
             });
             window.location.href = `/order?${params.toString()}`;
           }}
