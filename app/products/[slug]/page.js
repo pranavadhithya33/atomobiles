@@ -9,7 +9,8 @@ import LivePriceDisplay from '@/components/LivePriceDisplay';
 import ReviewsSection from '@/components/ReviewsSection';
 import { formatINR, calcDiscountPct, calcSavings, calcPaymentDetails } from '@/lib/utils';
 import styles from '@/styles/ProductDetail.module.css';
-import { ChevronRight, CheckCircle, AlertCircle, Clock, ShoppingBag, MessageCircle, Package, Star } from 'lucide-react';
+import { ChevronRight, CheckCircle, AlertCircle, Clock, ShoppingBag, MessageCircle, Package, Star, ShoppingCart } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
 
 const WHATSAPP_NUMBER = '917397189222';
 
@@ -29,6 +30,8 @@ export default function ProductDetailPage() {
   const [dynamicOurPrice, setDynamicOurPrice] = useState(0);
   const [dynamicStock, setDynamicStock] = useState(true);
   const [reviewStats, setReviewStats] = useState({ avg: 0, count: 0 });
+  const { addToCart } = useCart();
+  const [addedToCart, setAddedToCart] = useState(false);
 
   useEffect(() => {
     fetch(`/api/products/${slug}`)
@@ -92,6 +95,13 @@ export default function ProductDetailPage() {
       ...(advanceAmount && { advanceAmount }),
     });
     router.push(`/order?${params.toString()}`);
+  };
+
+  const handleAddToCart = () => {
+    if (!inStock) return;
+    addToCart(product, 1, paymentOption);
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
   };
 
   return (
@@ -165,6 +175,25 @@ export default function ProductDetailPage() {
         >
           <ShoppingBag size={20} strokeWidth={2.5} />
           {inStock ? `Place Order · ${formatINR(finalPrice)}` : 'Out of Stock'}
+        </button>
+
+        <button
+          onClick={handleAddToCart}
+          disabled={!inStock || addedToCart}
+          className={`${styles.ctaBtn}`}
+          style={{ 
+            background: addedToCart ? '#16a34a' : 'rgba(255,255,255,0.05)', 
+            border: '1px solid rgba(255,255,255,0.1)',
+            color: '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
+          }}
+          id="add-to-cart-btn"
+        >
+          {addedToCart ? <CheckCircle size={20} /> : <ShoppingCart size={20} />}
+          {addedToCart ? 'Added to Cart' : 'Add to Cart'}
         </button>
 
         <a

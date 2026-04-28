@@ -3,13 +3,14 @@
 import { usePathname } from 'next/navigation';
 import Header from '@/components/Header';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import { CartProvider } from '@/context/CartContext';
 
 export default function ClientLayoutWrapper({ children }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
 
   return (
-    <>
+    <CartProvider>
       {!isAdmin && <Header />}
       
       <main className={isAdmin ? '' : 'page-wrapper'}>
@@ -41,6 +42,6 @@ export default function ClientLayoutWrapper({ children }) {
           </div>
         </footer>
       )}
-    </>
+    </CartProvider>
   );
 }

@@ -4,10 +4,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Search, Smartphone, Truck, User, LogOut, LayoutGrid } from 'lucide-react';
+import { Search, Smartphone, Truck, User, LogOut, LayoutGrid, ShoppingCart } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import styles from '@/styles/Header.module.css';
 import { formatINR } from '@/lib/utils';
+import { useCart } from '@/context/CartContext';
 
 export default function Header() {
   const [query, setQuery] = useState('');
@@ -20,6 +21,7 @@ export default function Header() {
   const pathname = usePathname();
   const [user, setUser] = useState(null);
   const [coins, setCoins] = useState(0);
+  const { cartCount } = useCart();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -152,6 +154,26 @@ export default function Header() {
 
         <Link href="/track" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#fff', opacity: 0.8, whiteSpace: 'nowrap', padding: '6px 12px', borderRadius: '20px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
           <Truck size={16} /> Track
+        </Link>
+
+        <Link href="/cart" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap', padding: '6px 14px', borderRadius: '20px', background: 'rgba(244, 167, 36, 0.1)', border: '1px solid rgba(244, 167, 36, 0.3)', position: 'relative' }}>
+          <ShoppingCart size={16} color="#f4a724" /> Cart
+          {cartCount > 0 && (
+            <span style={{ 
+              position: 'absolute', 
+              top: '-6px', 
+              right: '-6px', 
+              background: '#f4a724', 
+              color: '#000', 
+              fontSize: '10px', 
+              fontWeight: '800', 
+              padding: '2px 6px', 
+              borderRadius: '10px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+            }}>
+              {cartCount}
+            </span>
+          )}
         </Link>
 
         <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)', flexShrink: 0 }} />
