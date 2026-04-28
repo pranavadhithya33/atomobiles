@@ -186,10 +186,10 @@ function OrderFormContent() {
       phone: form.phone,
       address: form.address,
       pincode: form.pincode,
-      productName,
-      paymentOption,
-      finalPrice: useCoins ? (finalPrice - userCoins) : finalPrice,
-      advanceAmount,
+      productName: isFromCart ? `${items.length} Items (Cart Order)` : productName,
+      paymentOption: selectedPayment,
+      finalPrice: finalOrderPrice,
+      advanceAmount: totals.advanceTotal,
       orderId: fullOrderId,
     });
 
@@ -233,9 +233,9 @@ function OrderFormContent() {
   }
 
   let paymentLabel = '';
-  if (paymentOption === 'full_prepaid') {
-    paymentLabel = 'Full Prepaid (3% extra off)';
-  } else if (paymentOption === 'token_advance') {
+  if (selectedPayment === 'full_prepaid') {
+    paymentLabel = 'Full Prepaid (₹2,000 off per item)';
+  } else if (selectedPayment === 'token_advance') {
     paymentLabel = '30% Token Advance + Cash on Delivery';
   } else {
     paymentLabel = 'Half Payment + Cash on Delivery';
@@ -244,8 +244,8 @@ function OrderFormContent() {
   return (
     <div className={styles.page}>
       {/* Back */}
-      <Link href={productSlug ? `/products/${productSlug}` : '/'} style={{ display:'inline-flex', alignItems:'center', gap:6, color:'var(--text-secondary)', fontSize:14, fontWeight:600 }}>
-        <ArrowLeft size={16} /> Back to Product
+      <Link href={isFromCart ? '/cart' : (productSlug ? `/products/${productSlug}` : '/')} style={{ display:'inline-flex', alignItems:'center', gap:6, color:'var(--text-secondary)', fontSize:14, fontWeight:600 }}>
+        <ArrowLeft size={16} /> Back to {isFromCart ? 'Cart' : 'Product'}
       </Link>
 
       <div>
@@ -388,13 +388,11 @@ function OrderFormContent() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ fontSize: '20px' }}>🪙</div>
             <div>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: '#fff' }}>Login to earn OG Coins</div>
-              <div style={{ fontSize: '12px', color: '#9aa3b2' }}>Earn 1 coin per ₹1000 spent on this order.</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>Login to earn OG Coins</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Earn 1 coin per ₹1000 spent on this order.</div>
             </div>
           </div>
-          <Link href={`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`} style={{ fontSize: '12px', fontWeight: '800', color: '#f4a724', textDecoration: 'none', background: '#1a1a2e', padding: '8px 16px', borderRadius: '8px', border: '1px solid #2d2d3f' }}>
-            Login Now
-          </Link>
+          <Link href={typeof window !== 'undefined' ? `/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}` : '/login'} className="btn btn-outline" style={{ padding: '8px 16px', fontSize: '12px' }}>Login Now</Link>
         </div>
       )}
 
@@ -406,7 +404,6 @@ function OrderFormContent() {
             Personal Details
           </div>
 
-          {/* Full Name */}
           <div className="form-group">
             <label htmlFor="fullName" className="form-label">Full Name *</label>
             <input
@@ -421,7 +418,6 @@ function OrderFormContent() {
             {errors.fullName && <span className="form-error">⚠ {errors.fullName}</span>}
           </div>
 
-          {/* Phone */}
           <div className="form-group">
             <label htmlFor="phone" className="form-label">Phone Number *</label>
             <input
@@ -443,7 +439,6 @@ function OrderFormContent() {
             Delivery Address
           </div>
 
-          {/* Address */}
           <div className="form-group">
             <label htmlFor="address" className="form-label">Full Address *</label>
             <textarea
@@ -459,7 +454,6 @@ function OrderFormContent() {
             {errors.address && <span className="form-error">⚠ {errors.address}</span>}
           </div>
 
-          {/* Pincode */}
           <div className="form-group">
             <label htmlFor="pincode" className="form-label">Pincode *</label>
             <input
@@ -489,7 +483,7 @@ function OrderFormContent() {
           <div className="form-group">
             <label className="form-label">Final Price (Auto-calculated)</label>
             <div className={styles.readOnlyField} style={{ fontWeight:700, fontSize:17, color:'var(--text-primary)' }}>
-              {formatINR(useCoins ? (finalPrice - userCoins) : finalPrice)}
+              {formatINR(finalOrderPrice)}
             </div>
           </div>
         </div>
@@ -507,7 +501,7 @@ function OrderFormContent() {
           {submitting ? (
             <><div className={styles.spinner} /> Processing…</>
           ) : (
-            <><ShoppingBag size={18} /> Place Order — {formatINR(useCoins ? (finalPrice - userCoins) : finalPrice)}</>
+            <><ShoppingBag size={18} /> Place Order — {formatINR(finalOrderPrice)}</>
           )}
         </button>
 
