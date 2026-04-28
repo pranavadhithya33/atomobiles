@@ -62,6 +62,8 @@ export async function POST(req) {
       }
     }
 
+    const { coins_redeemed } = body;
+
     const orderData = {
       full_name: full_name.trim(),
       phone: phone.trim(),
@@ -76,19 +78,9 @@ export async function POST(req) {
       final_price,
       advance_amount: advance_amount || null,
       status: 'pending',
+      user_id: userId,
+      coins_redeemed: coins_redeemed || 0,
     };
-
-    // Safely add user_id only if column exists
-    if (userId) {
-      try {
-        const { error: checkError } = await adminSupabase.from('orders').select('user_id').limit(1);
-        if (!checkError) {
-          orderData.user_id = userId;
-        }
-      } catch (e) {
-        console.log('user_id column probably missing, skipping association');
-      }
-    }
 
     const { data, error } = await adminSupabase
       .from('orders')
@@ -98,19 +90,20 @@ export async function POST(req) {
 
     if (error) throw error;
 
-    // --- NEW: SuperCoins Logic ---
+    // --- OG Coins Logic ---
     if (userId && data) {
       try {
-        const { coins_redeemed } = body;
-        
-        // 1. If coins were redeemed, subtract them from user balance
+        // 1. If coins were redeemed, record transaction and update balance
         if (coins_redeemed && coins_redeemed > 0) {
-          await adminSupabase.rpc('decrement_coins', { 
-            user_id: userId, 
-            amount: coins_redeemed 
+          // Add transaction record
+          await adminSupabase.from('coin_transactions').insert({
+            user_id: userId,
+            order_id: data.id,
+            coins_redeemed: coins_redeemed,
+            description: `Redeemed on order #${data.id.slice(0,8).toUpperCase()}`
           });
-          
-          // Fallback if RPC doesn't exist
+
+          // Update balance (decrement)
           const { data: profile } = await adminSupabase.from('profiles').select('coins_balance').eq('id', userId).single();
           if (profile) {
             await adminSupabase.from('profiles').update({ 
@@ -123,17 +116,28 @@ export async function POST(req) {
         const earnedCoins = Math.floor(final_price / 1000);
         
         if (earnedCoins > 0) {
-          // Increment coins in profiles table
-          await adminSupabase.rpc('increment_coins', { 
-            user_id: userId, 
-            amount: earnedCoins 
+          // Add transaction record
+          await adminSupabase.from('coin_transactions').insert({
+            user_id: userId,
+            order_id: data.id,
+            coins_earned: earnedCoins,
+            description: `Earned from order #${data.id.slice(0,8).toUpperCase()}`
           });
-          
-          // Fallback if RPC doesn't exist
-          const { data: profile } = await adminSupabase.from('profiles').select('coins_balance').eq('id', userId).single();
+
+          // Update balance (increment)
+          const { data: profile } = await adminSupabase.from('profiles').select('coins_balance, total_orders').eq('id', userId).single();
           if (profile) {
             await adminSupabase.from('profiles').update({ 
-              coins_balance: (profile.coins_balance || 0) + earnedCoins
+              coins_balance: (profile.coins_balance || 0) + earnedCoins,
+              total_orders: (profile.total_orders || 0) + 1
+            }).eq('id', userId);
+          }
+        } else if (userId) {
+          // Just update total orders if no coins earned
+          const { data: profile } = await adminSupabase.from('profiles').select('total_orders').eq('id', userId).single();
+          if (profile) {
+            await adminSupabase.from('profiles').update({ 
+              total_orders: (profile.total_orders || 0) + 1
             }).eq('id', userId);
           }
         }

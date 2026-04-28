@@ -134,7 +134,7 @@ function OrderFormContent() {
         pincode: form.pincode,
         productName,
         paymentOption,
-        finalPrice,
+        finalPrice: useCoins ? (finalPrice - userCoins) : finalPrice,
         advanceAmount,
         orderId: data.id || '',
       });
@@ -156,7 +156,7 @@ function OrderFormContent() {
       pincode: form.pincode,
       productName,
       paymentOption,
-      finalPrice,
+      finalPrice: useCoins ? (finalPrice - userCoins) : finalPrice,
       advanceAmount,
       orderId: fullOrderId,
     });
@@ -248,7 +248,9 @@ function OrderFormContent() {
         )}
         <div className={styles.summaryRow}>
           <span>Total Amount</span>
-          <strong style={{ color:'var(--text-primary)', fontSize:19 }}>{formatINR(finalPrice)}</strong>
+          <strong style={{ color:'var(--text-primary)', fontSize:19 }}>
+            {formatINR(useCoins ? (finalPrice - userCoins) : finalPrice)}
+          </strong>
         </div>
       </div>
       
@@ -395,7 +397,7 @@ function OrderFormContent() {
           <div className="form-group">
             <label className="form-label">Final Price (Auto-calculated)</label>
             <div className={styles.readOnlyField} style={{ fontWeight:700, fontSize:17, color:'var(--text-primary)' }}>
-              {formatINR(finalPrice)}
+              {formatINR(useCoins ? (finalPrice - userCoins) : finalPrice)}
             </div>
           </div>
         </div>
@@ -413,7 +415,7 @@ function OrderFormContent() {
           {submitting ? (
             <><div className={styles.spinner} /> Processing…</>
           ) : (
-            <><ShoppingBag size={18} /> Place Order — {formatINR(finalPrice)}</>
+            <><ShoppingBag size={18} /> Place Order — {formatINR(useCoins ? (finalPrice - userCoins) : finalPrice)}</>
           )}
         </button>
 
