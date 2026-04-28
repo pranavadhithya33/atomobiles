@@ -109,6 +109,10 @@ export function CartProvider({ children }) {
 
   const addToCart = async (product, quantity = 1, paymentOption = 'half_cod') => {
     if (user) {
+      // Get existing item to calculate new quantity
+      const existing = cart.find(item => item.id === product.id && item.paymentOption === paymentOption);
+      const newQuantity = (existing ? existing.quantity : 0) + quantity;
+
       // Upsert to Database
       const { data, error } = await supabase
         .from('cart_items')
@@ -116,12 +120,10 @@ export function CartProvider({ children }) {
           user_id: user.id,
           product_id: product.id,
           payment_option: paymentOption,
-          quantity: quantity // For simplicity, we just set it. We could increment if we fetch first.
-        }, { onConflict: 'user_id, product_id, payment_option' })
-        .select();
+          quantity: newQuantity
+        }, { onConflict: 'user_id, product_id, payment_option' });
       
-      // Refresh cart to get latest data with quantity sum or just optimistic update
-      // For speed, let's do optimistic update
+      if (error) console.error('Error adding to cart:', error);
     }
 
     setCart(prev => {
