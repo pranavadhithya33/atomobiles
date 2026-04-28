@@ -7,17 +7,20 @@ const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [user, setUser] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [authLoaded, setAuthLoaded] = useState(false);
 
   // 1. Auth State Listener
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
+      setAuthLoaded(true);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
+      setAuthLoaded(true);
     });
 
     return () => subscription.unsubscribe();
@@ -25,6 +28,8 @@ export function CartProvider({ children }) {
 
   // 2. Load and Sync Cart
   useEffect(() => {
+    if (!authLoaded) return; // Wait for auth status
+
     async function loadAndSyncCart() {
       if (!user) {
         // Guest mode: load from localStorage
@@ -98,7 +103,7 @@ export function CartProvider({ children }) {
     if (isLoaded || !isLoaded) { // Run on mount and user change
       loadAndSyncCart();
     }
-  }, [user]);
+  }, [user, authLoaded]);
 
   // 3. Save Guest Cart to localStorage
   useEffect(() => {
