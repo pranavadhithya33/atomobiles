@@ -49,7 +49,11 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { name, images, online_price, our_price, description, stock, category, featured } = body;
+    const { 
+      name, images, online_price, amazon_price, flipkart_price, 
+      amazon_url, flipkart_url, our_price, description, stock, 
+      category, featured, prepaid_discount_pct 
+    } = body;
 
     // Generate slug from name
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now();
@@ -57,7 +61,20 @@ export async function POST(req) {
     const adminSupabase = createAdminClient();
     const { data, error } = await adminSupabase
       .from('products')
-      .insert([{ name, slug, images, online_price, our_price, description, stock, category, featured: featured || false }])
+      .insert([{ 
+        name, slug, images, 
+        online_price: Number(online_price) || 0, 
+        amazon_price: Number(amazon_price) || 0, 
+        flipkart_price: Number(flipkart_price) || 0,
+        amazon_url: amazon_url || '',
+        flipkart_url: flipkart_url || '',
+        our_price: Number(our_price), 
+        description, 
+        stock: Number(stock) || 0, 
+        category, 
+        featured: featured || false,
+        prepaid_discount_pct: Number(prepaid_discount_pct) || 3
+      }])
       .select()
       .single();
 

@@ -31,7 +31,7 @@ export async function PUT(req, { params }) {
     const body = await req.json();
 
     const updateData = {};
-    const fields = ['name', 'images', 'online_price', 'our_price', 'description', 'stock', 'category', 'featured', 'prepaid_discount_pct'];
+    const fields = ['name', 'images', 'online_price', 'amazon_price', 'flipkart_price', 'amazon_url', 'flipkart_url', 'our_price', 'description', 'stock', 'category', 'featured', 'prepaid_discount_pct'];
     fields.forEach(f => { if (body[f] !== undefined) updateData[f] = body[f]; });
 
     const adminSupabase = createAdminClient();

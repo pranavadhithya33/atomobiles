@@ -662,6 +662,11 @@ export default function AdminDashboard() {
                     value={form.our_price} onChange={e => handleFormChange('our_price', e.target.value)} />
                 </div>
                 <div className="form-group">
+                  <label className="form-label">Online Price (General)</label>
+                  <input type="number" className="form-input" placeholder="e.g. 26999"
+                    value={form.online_price} onChange={e => handleFormChange('online_price', e.target.value)} />
+                </div>
+                <div className="form-group">
                   <label className="form-label">Amazon Price (Fallback)</label>
                   <input type="number" className="form-input" placeholder="e.g. 25999"
                     value={form.amazon_price} onChange={e => handleFormChange('amazon_price', e.target.value)} />
