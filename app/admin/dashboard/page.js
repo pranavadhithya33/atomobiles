@@ -73,7 +73,7 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true); // Avoid calling setState synchronously in effect body
     Promise.all([fetchProducts(), fetchOrders(), fetchPendingReviews()]).finally(() => setLoading(false));
   }, []);
 
@@ -397,7 +397,7 @@ export default function AdminDashboard() {
             ) : products.length === 0 ? (
               <div className={styles.emptyState}>
                 <div style={{ fontSize:40, marginBottom:12 }}>📱</div>
-                <p>No products yet. Click "Add Product" to get started.</p>
+                <p>No products yet. Click &quot;Add Product&quot; to get started.</p>
               </div>
             ) : (
               <div className={styles.tableWrap}>
@@ -613,7 +613,7 @@ export default function AdminDashboard() {
                     </div>
                     {review.comment && (
                       <div style={{ fontSize:13, color:'var(--text-secondary)', lineHeight:1.5, background:'#f8fafc', padding:'10px 12px', borderRadius:8, border:'1px solid #f1f5f9' }}>
-                        "{review.comment}"
+                        &quot;{review.comment}&quot;
                       </div>
                     )}
                     {review.product_id && (
