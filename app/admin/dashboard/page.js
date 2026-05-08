@@ -19,11 +19,21 @@ const CATEGORIES = [
   { label: 'Other', value: 'other' }
 ];
 
+const RAM_OPTIONS = [4, 6, 8, 12];
+const STORAGE_OPTIONS = [64, 128, 256, 512];
+
+// Build the default 16-combo variant grid
+const buildEmptyVariants = () =>
+  RAM_OPTIONS.flatMap(ram =>
+    STORAGE_OPTIONS.map(storage => ({ ram, storage, price: '', enabled: false }))
+  );
+
 const EMPTY_PRODUCT = {
   name: '', images: [''], online_price: '', amazon_price: '', flipkart_price: '',
   amazon_url: '', flipkart_url: '', our_price: '',
   description: '', stock: 0, category: 'smartphones',
   featured: false, prepaid_discount_pct: 3,
+  variants: buildEmptyVariants(),
 };
 
 export default function AdminDashboard() {
@@ -90,8 +100,23 @@ export default function AdminDashboard() {
     setShowModal(true);
   };
 
-  const openEdit = (p) => {
+  const openEdit = async (p) => {
     setEditProduct(p);
+    // Start with empty grid, then overlay existing saved variants
+    const grid = buildEmptyVariants();
+    try {
+      const res = await fetch(`/api/products/${p.id}/variants?all=true`);
+      const saved = await res.json();
+      if (Array.isArray(saved)) {
+        saved.forEach(sv => {
+          const idx = grid.findIndex(g => g.ram === sv.ram && g.storage === sv.storage);
+          if (idx !== -1) {
+            grid[idx] = { ram: sv.ram, storage: sv.storage, price: sv.price, enabled: sv.enabled };
+          }
+        });
+      }
+    } catch { /* ignore, keep empty grid */ }
+
     setForm({
       name: p.name || '',
       images: p.images?.length ? p.images : [''],
@@ -106,6 +131,7 @@ export default function AdminDashboard() {
       category: p.category || 'smartphones',
       featured: p.featured || false,
       prepaid_discount_pct: p.prepaid_discount_pct || 3,
+      variants: grid,
     });
     setSaveError('');
     setShowModal(true);
@@ -169,6 +195,8 @@ export default function AdminDashboard() {
         stock: Number(form.stock) || 0,
         prepaid_discount_pct: Number(form.prepaid_discount_pct) || 3,
       };
+      // Don't send variants in the product payload
+      delete payload.variants;
 
       const url = editProduct ? `/api/products/${editProduct.id}` : '/api/products';
       const method = editProduct ? 'PUT' : 'POST';
@@ -180,6 +208,16 @@ export default function AdminDashboard() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Save failed');
+
+      // Save variants
+      const productId = data.id || editProduct?.id;
+      if (productId && form.variants?.length) {
+        await fetch(`/api/products/${productId}/variants`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ variants: form.variants }),
+        });
+      }
 
       await fetchProducts();
       closeModal();
@@ -819,6 +857,78 @@ export default function AdminDashboard() {
                   style={{ width:16, height:16, accentColor:'var(--brand-accent)' }} />
                 Mark as Featured product
               </label>
+
+              {/* ---- Variants Grid ---- */}
+              <div style={{ background: 'var(--bg-highlight, #f8fafc)', border: '1px solid var(--border)', borderRadius: 12, padding: 16, marginTop: 4 }}>
+                <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--brand-primary)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  📦 RAM &amp; Storage Variants
+                </div>
+                <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 14 }}>
+                  Set a price for each combination. Toggle the eye icon to show/hide that combo from customers. Leave price empty to skip.
+                </p>
+
+                {/* Column headers */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 110px 44px', gap: 6, marginBottom: 6, padding: '0 4px' }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>RAM</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Storage</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Price (₹)</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Show</div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 320, overflowY: 'auto' }}>
+                  {(form.variants || buildEmptyVariants()).map((v, idx) => (
+                    <div
+                      key={`${v.ram}-${v.storage}`}
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr 110px 44px',
+                        gap: 6,
+                        alignItems: 'center',
+                        padding: '6px 8px',
+                        borderRadius: 8,
+                        background: v.enabled ? 'rgba(244,167,36,0.06)' : '#fff',
+                        border: v.enabled ? '1px solid rgba(244,167,36,0.25)' : '1px solid var(--border)',
+                        opacity: v.price ? 1 : 0.65,
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{v.ram} GB</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{v.storage} GB</span>
+                      <input
+                        type="number"
+                        className="form-input"
+                        style={{ padding: '5px 8px', fontSize: 13, height: 34 }}
+                        placeholder="e.g. 21999"
+                        value={v.price}
+                        onChange={e => {
+                          const updated = [...(form.variants || buildEmptyVariants())];
+                          updated[idx] = { ...updated[idx], price: e.target.value };
+                          handleFormChange('variants', updated);
+                        }}
+                      />
+                      <button
+                        type="button"
+                        title={v.enabled ? 'Visible to customers — click to hide' : 'Hidden from customers — click to show'}
+                        onClick={() => {
+                          const updated = [...(form.variants || buildEmptyVariants())];
+                          updated[idx] = { ...updated[idx], enabled: !updated[idx].enabled };
+                          handleFormChange('variants', updated);
+                        }}
+                        style={{
+                          width: 36, height: 34, borderRadius: 8,
+                          border: 'none', cursor: 'pointer',
+                          background: v.enabled ? '#16a34a' : '#e5e7eb',
+                          color: v.enabled ? '#fff' : '#9aa3b2',
+                          fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          transition: 'all 0.15s',
+                        }}
+                      >
+                        {v.enabled ? '👁' : '🚫'}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {saveError && <div className="notice notice-error">⚠ {saveError}</div>}
 

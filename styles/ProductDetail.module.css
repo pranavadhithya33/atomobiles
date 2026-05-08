@@ -464,3 +464,107 @@
   text-overflow: ellipsis;
   max-width: 180px;
 }
+
+/* ---- Variant Selector ---- */
+.variantSection {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.variantSectionTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.variantRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.variantLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.variantChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 2px solid var(--border);
+  background: var(--bg-page);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  line-height: 1;
+}
+
+.chip:hover:not(.chipDisabled) {
+  border-color: var(--brand-accent);
+  color: var(--brand-accent);
+  background: var(--brand-accent-light, rgba(244,167,36,0.08));
+  transform: translateY(-1px);
+}
+
+.chipActive {
+  border-color: var(--brand-accent) !important;
+  background: var(--brand-accent) !important;
+  color: var(--brand-primary) !important;
+  box-shadow: 0 2px 8px rgba(244,167,36,0.35);
+}
+
+.chipDisabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.variantPriceHint {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.variantSelectedPrice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(244,167,36,0.08), rgba(244,167,36,0.04));
+  border: 1.5px solid rgba(244,167,36,0.3);
+  border-radius: 10px;
+}
+
+.variantSelectedLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.variantSelectedValue {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--brand-accent);
+  letter-spacing: -0.5px;
+}
+

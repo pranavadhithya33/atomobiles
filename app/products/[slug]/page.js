@@ -33,6 +33,11 @@ export default function ProductDetailPage() {
   const { addToCart } = useCart();
   const [addedToCart, setAddedToCart] = useState(false);
 
+  // Variant state
+  const [variants, setVariants] = useState([]);
+  const [selectedRam, setSelectedRam] = useState(null);
+  const [selectedStorage, setSelectedStorage] = useState(null);
+
   useEffect(() => {
     fetch(`/api/products/${slug}`)
       .then(r => {
@@ -44,9 +49,59 @@ export default function ProductDetailPage() {
         setDynamicOurPrice(data.our_price);
         setDynamicStock(data.stock > 0);
         setLoading(false);
+        // Fetch variants for this product
+        return fetch(`/api/products/${data.id}/variants`);
       })
+      .then(r => r.json())
+      .then(v => { if (Array.isArray(v)) setVariants(v); })
       .catch(err => { setError(err.message); setLoading(false); });
   }, [slug]);
+
+  // Derived variant data
+  const hasVariants = variants.length > 0;
+
+  // Unique sorted storage options that have at least one enabled variant
+  const storageOptions = hasVariants
+    ? [...new Set(variants.map(v => v.storage))].sort((a, b) => a - b)
+    : [];
+
+  // RAM options available for the currently selected storage (or all unique RAMs)
+  const ramOptions = hasVariants
+    ? [...new Set(
+        variants
+          .filter(v => selectedStorage == null || v.storage === selectedStorage)
+          .map(v => v.ram)
+      )].sort((a, b) => a - b)
+    : [];
+
+  // Is a specific RAM available for the selected storage?
+  const isRamAvailable = (ram) =>
+    variants.some(v => v.storage === selectedStorage && v.ram === ram);
+
+  // Handle chip clicks
+  const handleStorageClick = (storage) => {
+    setSelectedStorage(storage);
+    // If current RAM is not available for new storage, clear it
+    const available = variants.some(v => v.storage === storage && v.ram === selectedRam);
+    if (!available) setSelectedRam(null);
+  };
+
+  const handleRamClick = (ram) => {
+    setSelectedRam(ram);
+  };
+
+  // When both are selected, update price
+  useEffect(() => {
+    if (!hasVariants) return;
+    if (selectedStorage != null && selectedRam != null) {
+      const match = variants.find(v => v.storage === selectedStorage && v.ram === selectedRam);
+      if (match) setDynamicOurPrice(Number(match.price));
+    } else if (hasVariants) {
+      // Show lowest variant price as "starting from"
+      const lowest = Math.min(...variants.map(v => Number(v.price)));
+      setDynamicOurPrice(lowest);
+    }
+  }, [selectedStorage, selectedRam, variants, hasVariants]);
 
   if (loading) return (
     <div className={styles.detailPage}>
@@ -149,12 +204,70 @@ export default function ProductDetailPage() {
           <StockBadge stock={product.stock} />
         </div>
 
-        {/* Live Price Display */}
-        <LivePriceDisplay
-          product={product}
-          onPriceUpdate={setDynamicOurPrice}
-          onStockUpdate={setDynamicStock}
-        />
+        {/* Variant Selector — only shown when variants exist */}
+        {hasVariants && (
+          <div className={styles.variantSection} style={{ boxShadow: 'none', padding: '0', marginTop: '4px' }}>
+            {/* Storage row */}
+            <div className={styles.variantRow}>
+              <div className={styles.variantLabel}>Storage</div>
+              <div className={styles.variantChips}>
+                {storageOptions.map(storage => (
+                  <button
+                    key={storage}
+                    className={`${styles.chip} ${selectedStorage === storage ? styles.chipActive : ''}`}
+                    onClick={() => handleStorageClick(storage)}
+                    id={`storage-chip-${storage}`}
+                  >
+                    {storage}GB
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* RAM row */}
+            <div className={styles.variantRow}>
+              <div className={styles.variantLabel}>RAM</div>
+              <div className={styles.variantChips}>
+                {ramOptions.map(ram => {
+                  const available = selectedStorage == null ? true : isRamAvailable(ram);
+                  return (
+                    <button
+                      key={ram}
+                      className={`${styles.chip} ${selectedRam === ram ? styles.chipActive : ''} ${!available ? styles.chipDisabled : ''}`}
+                      onClick={() => available && handleRamClick(ram)}
+                      id={`ram-chip-${ram}`}
+                    >
+                      {ram}GB
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Price feedback */}
+            {selectedStorage != null && selectedRam != null ? (
+              <div className={styles.variantSelectedPrice}>
+                <span className={styles.variantSelectedLabel}>
+                  {selectedRam}GB RAM · {selectedStorage}GB Storage
+                </span>
+                <span className={styles.variantSelectedValue}>{formatINR(dynamicOurPrice)}</span>
+              </div>
+            ) : (
+              <div className={styles.variantPriceHint}>
+                Starting from {formatINR(dynamicOurPrice)} · Select storage &amp; RAM to see exact price
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Live Price Display — hidden when variants are selected */}
+        {(!hasVariants || (selectedStorage == null && selectedRam == null)) && (
+          <LivePriceDisplay
+            product={product}
+            onPriceUpdate={!hasVariants ? setDynamicOurPrice : undefined}
+            onStockUpdate={setDynamicStock}
+          />
+        )}
       </div>
 
       {/* Payment Selector */}
