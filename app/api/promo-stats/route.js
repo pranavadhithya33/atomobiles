@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     // Anniversary starts on May 9, 2026
-    const startDate = '2026-05-09T00:00:00Z';
+    const startDate = '2026-05-08T00:00:00Z';
     const endDate = '2026-05-10T23:59:59Z';
 
     const { count, error } = await supabase
