@@ -9,6 +9,7 @@ import { supabase } from '@/lib/supabase';
 import styles from '@/styles/Header.module.css';
 import { formatINR } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
+import PromoBanner from '@/components/PromoBanner';
 
 export default function Header() {
   const [query, setQuery] = useState('');
@@ -103,6 +104,7 @@ export default function Header() {
 
   return (
     <header className={styles.header} style={{ height: 'auto', paddingBottom: '12px' }}>
+      <PromoBanner />
       {/* Row 1: Logo */}
       <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
         <Link href="/" className={styles.logo} style={{ gap: '10px' }}>

@@ -1,0 +1,131 @@
+.promoWrapper {
+  background: linear-gradient(90deg, #0a1628 0%, #1a2a44 100%);
+  color: #fff;
+  padding: 12px 20px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px solid #f4a724;
+  z-index: 1000;
+}
+
+.promoContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.textSection {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.badge {
+  background: #f4a724;
+  color: #000;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+  width: fit-content;
+  letter-spacing: 1px;
+}
+
+.phrase {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.4;
+}
+
+.progressSection {
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progressInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 12px;
+}
+
+.spotsText {
+  color: #f4a724;
+}
+
+.spotsText strong {
+  font-size: 16px;
+  margin-right: 2px;
+}
+
+.countText {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+
+.progressBarBg {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #f4a724, #ffc567);
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px rgba(244, 167, 36, 0.4);
+}
+
+.glow {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .promoContent {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .textSection {
+    align-items: center;
+  }
+  
+  .progressSection {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .phrase {
+    font-size: 13px;
+  }
+}
