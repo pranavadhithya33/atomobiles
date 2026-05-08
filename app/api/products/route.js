@@ -32,11 +32,10 @@ export async function GET(req) {
     const { data, error } = await query;
     if (error) throw error;
 
-    // Dynamically compute our_price as exactly 10% off the highest market price
+    // Attach market_price for display (strikethrough), but keep admin-set our_price as-is
     const enriched = (data || []).map(p => {
       const marketPrice = Math.max(p.amazon_price || 0, p.flipkart_price || 0, p.online_price || 0);
-      const ourPrice = marketPrice > 0 ? Math.round(marketPrice * 0.9) : p.our_price;
-      return { ...p, our_price: ourPrice, market_price: marketPrice };
+      return { ...p, market_price: marketPrice };
     });
 
     return NextResponse.json(enriched);
@@ -51,7 +50,7 @@ export async function POST(req) {
     const body = await req.json();
     const { 
       name, images, online_price, amazon_price, flipkart_price, 
-      amazon_url, flipkart_url, our_price, description, stock, 
+      amazon_url, flipkart_url, our_price, description,
       category, featured, prepaid_discount_pct 
     } = body;
 
@@ -70,7 +69,7 @@ export async function POST(req) {
         flipkart_url: flipkart_url || '',
         our_price: Number(our_price), 
         description, 
-        stock: Number(stock) || 0, 
+        stock: 10, // always in stock
         category, 
         featured: featured || false,
         prepaid_discount_pct: Number(prepaid_discount_pct) || 3

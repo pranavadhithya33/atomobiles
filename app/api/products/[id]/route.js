@@ -14,10 +14,9 @@ export async function GET(req, { params }) {
     const { data, error } = await query;
     if (error || !data) return NextResponse.json({ error: 'Product not found' }, { status: 404 });
 
-    // Dynamically compute our_price as exactly 10% off the highest market price
+    // Keep admin-set our_price as-is; attach market_price for display only
     const marketPrice = Math.max(data.amazon_price || 0, data.flipkart_price || 0, data.online_price || 0);
-    const ourPrice = marketPrice > 0 ? Math.round(marketPrice * 0.9) : data.our_price;
-    const enriched = { ...data, our_price: ourPrice, market_price: marketPrice };
+    const enriched = { ...data, market_price: marketPrice, stock: 10 };
 
     return NextResponse.json(enriched);
   } catch (err) {
@@ -31,8 +30,10 @@ export async function PUT(req, { params }) {
     const body = await req.json();
 
     const updateData = {};
-    const fields = ['name', 'images', 'online_price', 'amazon_price', 'flipkart_price', 'amazon_url', 'flipkart_url', 'our_price', 'description', 'stock', 'category', 'featured', 'prepaid_discount_pct'];
+    const fields = ['name', 'images', 'online_price', 'amazon_price', 'flipkart_price', 'amazon_url', 'flipkart_url', 'our_price', 'description', 'category', 'featured', 'prepaid_discount_pct'];
     fields.forEach(f => { if (body[f] !== undefined) updateData[f] = body[f]; });
+    // Always keep stock at 10 (always in stock)
+    updateData.stock = 10;
 
     const adminSupabase = createAdminClient();
     const { data, error } = await adminSupabase

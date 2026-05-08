@@ -6,7 +6,7 @@ import styles from '@/styles/Admin.module.css';
 import { formatINR } from '@/lib/utils';
 import {
   Smartphone, Package, ShoppingBag, Plus, Edit2, Trash2,
-  LogOut, Check, X, RefreshCw, TrendingUp, Users, Star, MessageSquare, FileText
+  LogOut, RefreshCw, Star, MessageSquare
 } from 'lucide-react';
 import { generateInvoice } from '@/lib/invoiceGenerator';
 
@@ -31,7 +31,7 @@ const buildEmptyVariants = () =>
 const EMPTY_PRODUCT = {
   name: '', images: [''], online_price: '', amazon_price: '', flipkart_price: '',
   amazon_url: '', flipkart_url: '', our_price: '',
-  description: '', stock: 0, category: 'smartphones',
+  description: '', category: 'smartphones',
   featured: false, prepaid_discount_pct: 3,
   variants: buildEmptyVariants(),
 };
@@ -127,7 +127,6 @@ export default function AdminDashboard() {
       flipkart_url: p.flipkart_url || '',
       our_price: p.our_price || '',
       description: p.description || '',
-      stock: p.stock ?? 0,
       category: p.category || 'smartphones',
       featured: p.featured || false,
       prepaid_discount_pct: p.prepaid_discount_pct || 3,
@@ -238,20 +237,6 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleToggleStock = async (p) => {
-    const newStock = p.stock > 0 ? 0 : 10;
-    try {
-      await fetch(`/api/products/${p.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ stock: newStock }),
-      });
-      await fetchProducts();
-    } catch {
-      alert('Failed to update stock');
-    }
-  };
-
   const handleImport = async () => {
     const isAmazon = importUrl.includes('amazon');
     const isFlipkart = importUrl.includes('flipkart');
@@ -302,7 +287,6 @@ export default function AdminDashboard() {
   // Stats
   const totalRevenue = orders.reduce((sum, o) => sum + (o.final_price || 0), 0);
   const pendingOrders = orders.filter(o => o.status === 'pending').length;
-  const inStockCount = products.filter(p => p.stock > 0).length;
 
   return (
     <div className={styles.adminPage}>
@@ -326,8 +310,8 @@ export default function AdminDashboard() {
             <div className={styles.statValue}>{products.length}</div>
           </div>
           <div className={styles.statCard}>
-            <div className={styles.statLabel}>In Stock</div>
-            <div className={styles.statValue} style={{ color:'var(--success)' }}>{inStockCount}</div>
+            <div className={styles.statLabel}>Active Listings</div>
+            <div className={styles.statValue} style={{ color:'var(--success)' }}>{products.length}</div>
           </div>
           <div className={styles.statCard}>
             <div className={styles.statLabel}>Total Orders</div>
@@ -447,7 +431,6 @@ export default function AdminDashboard() {
                       <th>Category</th>
                       <th>Market Price</th>
                       <th>Our Price</th>
-                      <th>Stock</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -474,14 +457,6 @@ export default function AdminDashboard() {
                             : '—'}
                         </td>
                         <td style={{ fontWeight:700 }}>{formatINR(p.our_price)}</td>
-                        <td>
-                          <button
-                            onClick={() => handleToggleStock(p)}
-                            className={`${styles.stockToggle} ${p.stock > 0 ? styles.stockToggleIn : styles.stockToggleOut}`}
-                          >
-                            {p.stock > 0 ? <><Check size={11} /> In Stock</> : <><X size={11} /> Out</>}
-                          </button>
-                        </td>
                         <td>
                           <div className={styles.actionBtns}>
                             <button onClick={() => openEdit(p)} className={styles.editBtn}>
@@ -796,19 +771,13 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Stock + Prepaid Discount */}
-              <div className={styles.formGrid}>
-                <div className="form-group">
-                  <label className="form-label">Stock Quantity</label>
-                  <input type="number" className="form-input" min="0" placeholder="0"
-                    value={form.stock} onChange={e => handleFormChange('stock', e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Prepaid Discount %</label>
-                  <input type="number" className="form-input" min="0" max="20" placeholder="3"
-                    value={form.prepaid_discount_pct} onChange={e => handleFormChange('prepaid_discount_pct', e.target.value)} />
-                </div>
+              {/* Prepaid Discount */}
+              <div className="form-group">
+                <label className="form-label">Prepaid Discount %</label>
+                <input type="number" className="form-input" min="0" max="20" placeholder="3"
+                  value={form.prepaid_discount_pct} onChange={e => handleFormChange('prepaid_discount_pct', e.target.value)} />
               </div>
+
 
               {/* Description */}
               <div className="form-group">
