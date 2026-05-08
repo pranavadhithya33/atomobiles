@@ -1,16 +1,17 @@
 // app/api/promo-stats/route.js
-import { supabase } from '@/lib/supabase';
+import { createAdminClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    // Anniversary starts on May 9, 2026
+    const adminSupabase = createAdminClient();
+    // Anniversary starts on May 8, 2026
     const startDate = '2026-05-08T00:00:00Z';
     const endDate = '2026-05-10T23:59:59Z';
 
-    const { count, error } = await supabase
+    const { count, error } = await adminSupabase
       .from('orders')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', startDate)
