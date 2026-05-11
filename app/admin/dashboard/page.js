@@ -376,6 +376,17 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteOrder = async (id, shortId) => {
+    if (!confirm(`Permanently delete order #${shortId}?`)) return;
+    try {
+      const res = await fetch(`/api/orders/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed');
+      await fetchOrders();
+    } catch {
+      alert('Failed to delete order');
+    }
+  };
+
   // Stats
   const totalRevenue = orders.reduce((sum, o) => sum + (o.final_price || 0), 0);
   const pendingOrders = orders.filter(o => o.status === 'pending').length;
@@ -602,6 +613,7 @@ export default function AdminDashboard() {
                       <th>Amount</th>
                       <th>Status</th>
                       <th>Date</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -650,6 +662,16 @@ export default function AdminDashboard() {
                         <td style={{ fontSize:12, color:'var(--text-muted)', whiteSpace:'nowrap' }}>
                           {new Date(o.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'2-digit' })}
                         </td>
+                        <td>
+                          <button 
+                            onClick={() => handleDeleteOrder(o.id, o.id?.slice(0,8)?.toUpperCase())} 
+                            className={styles.deleteBtn}
+                            style={{ padding: '6px', minWidth: 'auto' }}
+                            title="Delete Order"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -658,7 +680,6 @@ export default function AdminDashboard() {
             )}
           </div>
         )}
-
         {/* Reviews Moderation Tab */}
         {activeTab === 'reviews' && (
           <div>

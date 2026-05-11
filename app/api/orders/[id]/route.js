@@ -71,3 +71,21 @@ export async function PUT(req, context) {
     return NextResponse.json({ error: err.message || 'Failed to update order' }, { status: 500 });
   }
 }
+
+// Admin DELETE endpoint to remove an order
+export async function DELETE(req, context) {
+  try {
+    const { id } = await context.params;
+    const adminSupabase = createAdminClient();
+
+    const { error } = await adminSupabase
+      .from('orders')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: err.message || 'Failed to delete order' }, { status: 500 });
+  }
+}
