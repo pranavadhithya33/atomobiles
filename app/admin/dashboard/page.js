@@ -297,6 +297,7 @@ export default function AdminDashboard() {
 
   // Manual Order Handlers
   const openAddOrder = () => {
+    console.log('Opening Add Order modal...');
     setOrderForm({
       fullName: '', phone: '', address: '', pincode: '',
       productId: '', productName: '', productSlug: '',
@@ -377,12 +378,15 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteOrder = async (id, shortId) => {
+    console.log('Attempting to delete order:', id, shortId);
     if (!confirm(`Permanently delete order #${shortId}?`)) return;
     try {
       const res = await fetch(`/api/orders/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed');
+      console.log('Order deleted successfully');
       await fetchOrders();
-    } catch {
+    } catch (err) {
+      console.error('Delete order error:', err);
       alert('Failed to delete order');
     }
   };
@@ -664,9 +668,12 @@ export default function AdminDashboard() {
                         </td>
                         <td>
                           <button 
-                            onClick={() => handleDeleteOrder(o.id, o.id?.slice(0,8)?.toUpperCase())} 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteOrder(o.id, o.id?.slice(0,8)?.toUpperCase());
+                            }} 
                             className={styles.deleteBtn}
-                            style={{ padding: '6px', minWidth: 'auto' }}
+                            style={{ padding: '6px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                             title="Delete Order"
                           >
                             <Trash2 size={14} />
