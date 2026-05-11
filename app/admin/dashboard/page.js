@@ -397,6 +397,383 @@ export default function AdminDashboard() {
 
   return (
     <div className={styles.adminPage}>
+      {/* Modals at Top to prevent stacking issues */}
+      {showModal && (
+        <div className={styles.modalOverlay} style={{ zIndex: 9999 }}>
+          <div className={styles.modal}>
+            <h2 className={styles.modalTitle}>
+              {editProduct ? <><Edit2 size={18} /> Edit Product</> : <><Plus size={18} /> Add Product</>}
+            </h2>
+
+            <div className={styles.modalForm}>
+              {/* Name */}
+              <div className="form-group">
+                <label className="form-label">Product Name *</label>
+                <input type="text" className="form-input" placeholder="e.g. Samsung Galaxy A55 5G"
+                  value={form.name} onChange={e => handleFormChange('name', e.target.value)} />
+              </div>
+
+              {/* Category */}
+              <div className="form-group">
+                <label className="form-label">Category</label>
+                <select className="form-input" value={form.category} onChange={e => handleFormChange('category', e.target.value)}>
+                  {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                </select>
+              </div>
+
+              {/* Prices */}
+              <div className={styles.formGrid}>
+                <div className="form-group">
+                  <label className="form-label">Our Price (₹) *</label>
+                  <input type="number" className="form-input" placeholder="e.g. 21999"
+                    value={form.our_price} onChange={e => handleFormChange('our_price', e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Online Price (General)</label>
+                  <input type="number" className="form-input" placeholder="e.g. 26999"
+                    value={form.online_price} onChange={e => handleFormChange('online_price', e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Amazon Price (Fallback)</label>
+                  <input type="number" className="form-input" placeholder="e.g. 25999"
+                    value={form.amazon_price} onChange={e => handleFormChange('amazon_price', e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Flipkart Price (Fallback)</label>
+                  <input type="number" className="form-input" placeholder="e.g. 24999"
+                    value={form.flipkart_price} onChange={e => handleFormChange('flipkart_price', e.target.value)} />
+                </div>
+              </div>
+
+              {/* Scraper URLs */}
+              <div className={styles.formGrid}>
+                <div className="form-group" style={{ position: 'relative' }}>
+                  <label className="form-label">Amazon URL (For live scraping)</label>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <input type="url" className="form-input" placeholder="https://amazon.in/dp/..."
+                      value={form.amazon_url} onChange={e => handleFormChange('amazon_url', e.target.value)} />
+                    <button type="button" className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: 12 }} 
+                      onClick={async () => {
+                        if (!form.amazon_url) return alert('Enter URL first');
+                        setImporting(true);
+                        try {
+                          const res = await fetch('/api/import', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ url: form.amazon_url, category: form.category })
+                          });
+                          const data = await res.json();
+                          if (!res.ok) throw new Error(data.error);
+                          // Update form with fetched data
+                          setForm(prev => ({
+                            ...prev,
+                            name: data.product.name,
+                            amazon_price: data.product.amazon_price,
+                            online_price: data.product.amazon_price,
+                            our_price: data.product.our_price,
+                            description: data.product.description,
+                            images: data.product.images?.length ? data.product.images : prev.images,
+                            stock: data.product.stock
+                          }));
+                          alert('Data fetched successfully!');
+                        } catch (err) { alert('Fetch failed: ' + err.message); }
+                        finally { setImporting(false); }
+                      }}
+                      disabled={importing}
+                    >
+                      {importing ? '...' : 'Fetch'}
+                    </button>
+                  </div>
+                </div>
+                <div className="form-group" style={{ position: 'relative' }}>
+                  <label className="form-label">Flipkart URL (For live scraping)</label>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <input type="url" className="form-input" placeholder="https://flipkart.com/..."
+                      value={form.flipkart_url} onChange={e => handleFormChange('flipkart_url', e.target.value)} />
+                    <button type="button" className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: 12 }} 
+                      onClick={async () => {
+                        if (!form.flipkart_url) return alert('Enter URL first');
+                        setImporting(true);
+                        try {
+                          const res = await fetch('/api/import', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ url: form.flipkart_url, category: form.category })
+                          });
+                          const data = await res.json();
+                          if (!res.ok) throw new Error(data.error);
+                          // Update form with fetched data
+                          setForm(prev => ({
+                            ...prev,
+                            name: data.product.name,
+                            amazon_price: data.product.flipkart_price || data.product.amazon_price,
+                            online_price: data.product.flipkart_price || data.product.amazon_price,
+                            our_price: data.product.our_price,
+                            description: data.product.description,
+                            images: data.product.images?.length ? data.product.images : prev.images,
+                            stock: data.product.stock
+                          }));
+                          alert('Data fetched successfully!');
+                        } catch (err) { alert('Fetch failed: ' + err.message); }
+                        finally { setImporting(false); }
+                      }}
+                      disabled={importing}
+                    >
+                      {importing ? '...' : 'Fetch'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="form-group">
+                <label className="form-label">Description</label>
+                <textarea className="form-input" rows={4} placeholder="Product description..."
+                  value={form.description} onChange={e => handleFormChange('description', e.target.value)} />
+              </div>
+
+              {/* Images */}
+              <div className="form-group">
+                <label className="form-label">Images (URL per line)</label>
+                <textarea className="form-input" rows={3} placeholder="Image URLs..."
+                  value={form.images.join('\n')}
+                  onChange={e => handleFormChange('images', e.target.value.split('\n'))} />
+              </div>
+
+              {/* Stock and Featured */}
+              <div className={styles.formGrid}>
+                <div className="form-group">
+                  <label className="form-label">Stock Status</label>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button type="button" className={`${styles.stockToggle} ${form.stock > 0 ? styles.stockToggleActive : ''}`}
+                      onClick={() => handleFormChange('stock', 100)}>In Stock</button>
+                    <button type="button" className={`${styles.stockToggle} ${form.stock === 0 ? styles.stockToggleInactive : ''}`}
+                      onClick={() => handleFormChange('stock', 0)}>Out of Stock</button>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Featured Product</label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', marginTop: '8px' }}>
+                    <input type="checkbox" checked={form.featured} onChange={e => handleFormChange('featured', e.target.checked)} />
+                    Show in home page
+                  </label>
+                </div>
+              </div>
+
+              {/* Variants Section */}
+              <div style={{ marginTop: 24, padding: 16, background: 'var(--bg-secondary)', borderRadius: 12, border: '1px solid var(--border)' }}>
+                <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--brand-primary)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  📦 RAM &amp; Storage Variants
+                </div>
+                <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 14 }}>
+                  Set a price for each combination. Toggle the eye icon to show/hide that combo from customers. Leave price empty to skip.
+                </p>
+
+                {/* Column headers */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 110px 44px', gap: 6, marginBottom: 6, padding: '0 4px' }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>RAM</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Storage</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Price (₹)</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Show</div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 320, overflowY: 'auto' }}>
+                  {(form.variants || buildEmptyVariants()).map((v, idx) => (
+                    <div
+                      key={`${v.ram}-${v.storage}`}
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr 110px 44px',
+                        gap: 6,
+                        alignItems: 'center',
+                        padding: '6px 8px',
+                        borderRadius: 8,
+                        background: v.enabled ? 'rgba(244,167,36,0.06)' : '#fff',
+                        border: v.enabled ? '1px solid rgba(244,167,36,0.25)' : '1px solid var(--border)',
+                        opacity: v.price ? 1 : 0.65,
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{v.ram} GB</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{v.storage} GB</span>
+                      <input
+                        type="number"
+                        className="form-input"
+                        style={{ padding: '5px 8px', fontSize: 13, height: 34 }}
+                        placeholder="e.g. 21999"
+                        value={v.price}
+                        onChange={e => {
+                          const updated = [...(form.variants || buildEmptyVariants())];
+                          updated[idx] = { ...updated[idx], price: e.target.value };
+                          handleFormChange('variants', updated);
+                        }}
+                      />
+                      <button
+                        type="button"
+                        title={v.enabled ? 'Visible to customers — click to hide' : 'Hidden from customers — click to show'}
+                        onClick={() => {
+                          const updated = [...(form.variants || buildEmptyVariants())];
+                          updated[idx] = { ...updated[idx], enabled: !v.enabled };
+                          handleFormChange('variants', updated);
+                        }}
+                        style={{
+                          background: v.enabled ? 'var(--brand-primary)' : 'var(--bg-secondary)',
+                          color: v.enabled ? '#fff' : 'var(--text-muted)',
+                          border: 'none',
+                          borderRadius: 6,
+                          height: 34,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {v.enabled ? '👁' : '🚫'}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {saveError && <div className="notice notice-error">⚠ {saveError}</div>}
+
+              <div className={styles.modalActions}>
+                <button type="button" className={styles.modalCancelBtn} onClick={closeModal}>Cancel</button>
+                <button type="button" className={styles.modalSaveBtn} onClick={handleSave} disabled={saving}>
+                  {saving ? 'Saving…' : editProduct ? '✓ Save Changes' : '+ Add Product'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showOrderModal && (
+        <div className={styles.modalOverlay} style={{ zIndex: 9999 }}>
+          <div className={styles.modal}>
+            <h2 className={styles.modalTitle}>
+              <ShoppingBag size={18} /> Add Manual Order
+            </h2>
+
+            <div className={styles.modalForm}>
+              <div className="form-group">
+                <label className="form-label">Select Product *</label>
+                <select 
+                  className="form-input" 
+                  value={orderForm.productId}
+                  onChange={(e) => handleOrderFormChange('productId', e.target.value)}
+                >
+                  <option value="">-- Choose Product --</option>
+                  {products.map(p => (
+                    <option key={p.id} value={p.id}>{p.name} - {formatINR(p.our_price)}</option>
+                  ))}
+                  <option value="custom">-- Custom Item --</option>
+                </select>
+              </div>
+
+              {orderForm.productId === 'custom' && (
+                <div className="form-group">
+                  <label className="form-label">Item Name *</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    placeholder="Enter custom item name"
+                    value={orderForm.productName}
+                    onChange={(e) => handleOrderFormChange('productName', e.target.value)}
+                  />
+                </div>
+              )}
+
+              <div className={styles.formGrid}>
+                <div className="form-group">
+                  <label className="form-label">Customer Name *</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={orderForm.fullName}
+                    onChange={(e) => handleOrderFormChange('fullName', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Phone *</label>
+                  <input 
+                    type="tel" 
+                    className="form-input" 
+                    maxLength={10}
+                    value={orderForm.phone}
+                    onChange={(e) => handleOrderFormChange('phone', e.target.value.replace(/\D/g, ''))}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Delivery Address *</label>
+                <textarea 
+                  className={styles.formTextarea} 
+                  rows={2}
+                  value={orderForm.address}
+                  onChange={(e) => handleOrderFormChange('address', e.target.value)}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Pincode *</label>
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  maxLength={6}
+                  value={orderForm.pincode}
+                  onChange={(e) => handleOrderFormChange('pincode', e.target.value.replace(/\D/g, ''))}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Payment Method *</label>
+                <select 
+                  className="form-input"
+                  value={orderForm.paymentOption}
+                  onChange={(e) => handleOrderFormChange('paymentOption', e.target.value)}
+                >
+                  <option value="half_cod">Half COD (50% Advance)</option>
+                  <option value="full_prepaid">Full Prepaid</option>
+                  <option value="token_advance">Token Advance (30%)</option>
+                </select>
+              </div>
+
+              <div className={styles.formGrid}>
+                <div className="form-group">
+                  <label className="form-label">Final Price (₹) *</label>
+                  <input 
+                    type="number" 
+                    className="form-input" 
+                    value={orderForm.finalPrice}
+                    onChange={(e) => handleOrderFormChange('finalPrice', Number(e.target.value))}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Advance (₹)</label>
+                  <input 
+                    type="number" 
+                    className="form-input" 
+                    value={orderForm.advanceAmount}
+                    onChange={(e) => handleOrderFormChange('advanceAmount', Number(e.target.value))}
+                  />
+                </div>
+              </div>
+
+              {orderError && <div className="notice notice-error">⚠ {orderError}</div>}
+
+              <div className={styles.modalActions}>
+                <button type="button" className={styles.modalCancelBtn} onClick={() => setShowOrderModal(false)}>Cancel</button>
+                <button type="button" className={styles.modalSaveBtn} onClick={handleOrderSave} disabled={orderSaving}>
+                  {orderSaving ? 'Creating...' : '✓ Create Order'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className={styles.adminHeader}>
         <div className={styles.adminHeaderTitle}>
@@ -592,7 +969,12 @@ export default function AdminDashboard() {
                 <button onClick={() => fetchOrders()} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-secondary)', display:'flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600 }}>
                   <RefreshCw size={14} /> Refresh
                 </button>
-                <button onClick={openAddOrder} className={styles.addBtn} style={{ padding: '8px 16px', fontSize: '13px' }}>
+                <button 
+                  onClick={() => openAddOrder()} 
+                  className={styles.addBtn} 
+                  style={{ padding: '8px 16px', fontSize: '13px', position: 'relative', zIndex: 100 }}
+                  id="add-manual-order-btn"
+                >
                   <Plus size={16} /> Add Manual Order
                 </button>
               </div>
@@ -670,10 +1052,10 @@ export default function AdminDashboard() {
                           <button 
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleDeleteOrder(o.id, o.id?.slice(0,8)?.toUpperCase());
+                              handleDeleteOrder(o.id, o.id ? o.id.slice(0,8).toUpperCase() : '???');
                             }} 
                             className={styles.deleteBtn}
-                            style={{ padding: '6px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            style={{ padding: '6px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 100 }}
                             title="Delete Order"
                           >
                             <Trash2 size={14} />
