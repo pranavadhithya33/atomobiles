@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '@/styles/Admin.module.css';
-import { formatINR } from '@/lib/utils';
+import { formatINR, calcPaymentDetails } from '@/lib/utils';
 import {
   Smartphone, Package, ShoppingBag, Plus, Edit2, Trash2,
-  LogOut, RefreshCw, Star, MessageSquare
+  LogOut, RefreshCw, Star, MessageSquare, Check, X, User, Phone, MapPin
 } from 'lucide-react';
 import { generateInvoice } from '@/lib/invoiceGenerator';
 
@@ -53,6 +53,17 @@ export default function AdminDashboard() {
   const [importUrl, setImportUrl] = useState('');
   const [importing, setImporting] = useState(false);
   const [importMsg, setImportMsg] = useState('');
+
+  // Manual Order state
+  const [showOrderModal, setShowOrderModal] = useState(false);
+  const [orderForm, setOrderForm] = useState({
+    fullName: '', phone: '', address: '', pincode: '',
+    productId: '', productName: '', productSlug: '',
+    paymentOption: 'half_cod',
+    basePrice: 0, finalPrice: 0, advanceAmount: 0
+  });
+  const [orderSaving, setOrderSaving] = useState(false);
+  const [orderError, setOrderError] = useState('');
 
   // Reviews moderation state
   const [pendingReviews, setPendingReviews] = useState([]);
@@ -284,6 +295,87 @@ export default function AdminDashboard() {
     }
   };
 
+  // Manual Order Handlers
+  const openAddOrder = () => {
+    setOrderForm({
+      fullName: '', phone: '', address: '', pincode: '',
+      productId: '', productName: '', productSlug: '',
+      paymentOption: 'half_cod',
+      basePrice: 0, finalPrice: 0, advanceAmount: 0
+    });
+    setOrderError('');
+    setShowOrderModal(true);
+  };
+
+  const handleOrderFormChange = (field, value) => {
+    setOrderForm(prev => {
+      const updated = { ...prev, [field]: value };
+      
+      // Auto-calculate if product or payment changes
+      if (field === 'productId') {
+        const product = products.find(p => p.id === value);
+        if (product) {
+          updated.productName = product.name;
+          updated.productSlug = product.slug || '';
+          updated.basePrice = product.our_price;
+          
+          const details = calcPaymentDetails(product.our_price, updated.paymentOption);
+          updated.finalPrice = details.finalPrice;
+          updated.advanceAmount = details.advance;
+        }
+      } else if (field === 'paymentOption' && updated.basePrice) {
+        const details = calcPaymentDetails(updated.basePrice, value);
+        updated.finalPrice = details.finalPrice;
+        updated.advanceAmount = details.advance;
+      }
+      
+      return updated;
+    });
+  };
+
+  const handleOrderSave = async () => {
+    const { fullName, phone, address, pincode, productName, finalPrice } = orderForm;
+    if (!fullName || !phone || !address || !pincode || !productName || !finalPrice) {
+      setOrderError('All fields are required');
+      return;
+    }
+
+    setOrderSaving(true);
+    setOrderError('');
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: fullName,
+          phone,
+          address,
+          pincode,
+          product_id: orderForm.productId || null,
+          product_name: productName,
+          product_slug: orderForm.productSlug || 'offline',
+          payment_option: orderForm.paymentOption,
+          base_price: orderForm.basePrice,
+          discount_amount: orderForm.basePrice - orderForm.finalPrice,
+          final_price: orderForm.finalPrice,
+          advance_amount: orderForm.advanceAmount,
+          status: 'confirmed' // Offline orders usually confirmed
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to create order');
+
+      alert(`Order created successfully! ID: #${data.id.slice(0, 8).toUpperCase()}`);
+      await fetchOrders();
+      setShowOrderModal(false);
+    } catch (err) {
+      setOrderError(err.message);
+    } finally {
+      setOrderSaving(false);
+    }
+  };
+
   // Stats
   const totalRevenue = orders.reduce((sum, o) => sum + (o.final_price || 0), 0);
   const pendingOrders = orders.filter(o => o.status === 'pending').length;
@@ -481,9 +573,14 @@ export default function AdminDashboard() {
           <div>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>All Orders</h2>
-              <button onClick={() => fetchOrders()} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-secondary)', display:'flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600 }}>
-                <RefreshCw size={14} /> Refresh
-              </button>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <button onClick={() => fetchOrders()} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-secondary)', display:'flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600 }}>
+                  <RefreshCw size={14} /> Refresh
+                </button>
+                <button onClick={openAddOrder} className={styles.addBtn} style={{ padding: '8px 16px', fontSize: '13px' }}>
+                  <Plus size={16} /> Add Manual Order
+                </button>
+              </div>
             </div>
 
             {loading ? (
@@ -905,6 +1002,133 @@ export default function AdminDashboard() {
                 <button type="button" className={styles.modalCancelBtn} onClick={closeModal}>Cancel</button>
                 <button type="button" className={styles.modalSaveBtn} onClick={handleSave} disabled={saving}>
                   {saving ? 'Saving…' : editProduct ? '✓ Save Changes' : '+ Add Product'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Manual Order Modal */}
+      {showOrderModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <h2 className={styles.modalTitle}>
+              <ShoppingBag size={18} /> Add Manual Order
+            </h2>
+
+            <div className={styles.modalForm}>
+              <div className="form-group">
+                <label className="form-label">Select Product *</label>
+                <select 
+                  className="form-input" 
+                  value={orderForm.productId}
+                  onChange={(e) => handleOrderFormChange('productId', e.target.value)}
+                >
+                  <option value="">-- Choose Product --</option>
+                  {products.map(p => (
+                    <option key={p.id} value={p.id}>{p.name} - {formatINR(p.our_price)}</option>
+                  ))}
+                  <option value="custom">-- Custom Item --</option>
+                </select>
+              </div>
+
+              {orderForm.productId === 'custom' && (
+                <div className="form-group">
+                  <label className="form-label">Item Name *</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    placeholder="Enter custom item name"
+                    value={orderForm.productName}
+                    onChange={(e) => handleOrderFormChange('productName', e.target.value)}
+                  />
+                </div>
+              )}
+
+              <div className={styles.formGrid}>
+                <div className="form-group">
+                  <label className="form-label">Customer Name *</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={orderForm.fullName}
+                    onChange={(e) => handleOrderFormChange('fullName', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Phone *</label>
+                  <input 
+                    type="tel" 
+                    className="form-input" 
+                    maxLength={10}
+                    value={orderForm.phone}
+                    onChange={(e) => handleOrderFormChange('phone', e.target.value.replace(/\D/g, ''))}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Delivery Address *</label>
+                <textarea 
+                  className={styles.formTextarea} 
+                  rows={2}
+                  value={orderForm.address}
+                  onChange={(e) => handleOrderFormChange('address', e.target.value)}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Pincode *</label>
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  maxLength={6}
+                  value={orderForm.pincode}
+                  onChange={(e) => handleOrderFormChange('pincode', e.target.value.replace(/\D/g, ''))}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Payment Method *</label>
+                <select 
+                  className="form-input"
+                  value={orderForm.paymentOption}
+                  onChange={(e) => handleOrderFormChange('paymentOption', e.target.value)}
+                >
+                  <option value="half_cod">Half COD (50% Advance)</option>
+                  <option value="full_prepaid">Full Prepaid</option>
+                  <option value="token_advance">Token Advance (30%)</option>
+                </select>
+              </div>
+
+              <div className={styles.formGrid}>
+                <div className="form-group">
+                  <label className="form-label">Final Price (₹) *</label>
+                  <input 
+                    type="number" 
+                    className="form-input" 
+                    value={orderForm.finalPrice}
+                    onChange={(e) => handleOrderFormChange('finalPrice', Number(e.target.value))}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Advance (₹)</label>
+                  <input 
+                    type="number" 
+                    className="form-input" 
+                    value={orderForm.advanceAmount}
+                    onChange={(e) => handleOrderFormChange('advanceAmount', Number(e.target.value))}
+                  />
+                </div>
+              </div>
+
+              {orderError && <div className="notice notice-error">⚠ {orderError}</div>}
+
+              <div className={styles.modalActions}>
+                <button type="button" className={styles.modalCancelBtn} onClick={() => setShowOrderModal(false)}>Cancel</button>
+                <button type="button" className={styles.modalSaveBtn} onClick={handleOrderSave} disabled={orderSaving}>
+                  {orderSaving ? 'Creating...' : '✓ Create Order'}
                 </button>
               </div>
             </div>

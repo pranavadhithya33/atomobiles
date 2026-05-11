@@ -10,7 +10,10 @@ export default function PromoBanner() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch('/api/promo-stats');
+        const res = await fetch(`/api/promo-stats?t=${Date.now()}`, { 
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' }
+        });
         const data = await res.json();
         setStats(data);
       } catch (err) {

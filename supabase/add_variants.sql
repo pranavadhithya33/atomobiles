@@ -28,3 +28,4 @@ CREATE POLICY "Service role full access variants" ON product_variants
 
 -- Index for fast product lookups
 CREATE INDEX IF NOT EXISTS idx_product_variants_product_id ON product_variants(product_id);
+ 
