@@ -30,11 +30,17 @@ export async function GET() {
     const claimed = typeof count === 'number' ? Math.min(count, GIVEAWAY_LIMIT) : 0;
     const isActive = claimed < GIVEAWAY_LIMIT;
 
+    const headers = {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      'CDN-Cache-Control': 'no-store',
+      'Vercel-CDN-Cache-Control': 'no-store',
+    };
+
     return NextResponse.json({
       count: claimed,
       total: GIVEAWAY_LIMIT,
       isActive,
-    });
+    }, { headers });
   } catch (err) {
     console.error('Promo stats error:', err);
     // On error, hide the banner — never show broken data
@@ -42,6 +48,12 @@ export async function GET() {
       count: 0,
       total: 300,
       isActive: false,
+    }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+        'CDN-Cache-Control': 'no-store',
+        'Vercel-CDN-Cache-Control': 'no-store',
+      },
     });
   }
 }
