@@ -4,66 +4,111 @@ import { useState, useEffect } from 'react';
 import styles from '@/styles/PromoBanner.module.css';
 
 export default function PromoBanner() {
-  const [stats, setStats] = useState({ count: 0, total: 100, isActive: false });
+  const [stats, setStats] = useState({
+    count: 0,
+    total: 300,
+    isActive: false,
+  });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    let cancelled = false;
+
+    async function fetchStats() {
       try {
-        const res = await fetch(`/api/promo-stats?t=${Date.now()}`, { 
+        const res = await fetch(`/api/promo-stats?t=${Date.now()}`, {
           cache: 'no-store',
-          headers: { 'Cache-Control': 'no-cache' }
+          headers: { 'Cache-Control': 'no-cache' },
         });
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
         const data = await res.json();
-        setStats(data);
+
+        // Validate the response shape before setting state
+        if (
+          typeof data.count !== 'number' ||
+          typeof data.total !== 'number' ||
+          typeof data.isActive !== 'boolean'
+        ) {
+          throw new Error('Invalid response shape');
+        }
+
+        if (!cancelled) {
+          setStats(data);
+          setError(false);
+        }
       } catch (err) {
-        console.error('Failed to fetch promo stats');
+        console.error('Failed to fetch promo stats:', err);
+        if (!cancelled) {
+          setError(true);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
-    };
+    }
 
     fetchStats();
-    // Refresh every minute
-    const interval = setInterval(fetchStats, 60000);
-    return () => clearInterval(interval);
+
+    // Refresh every 2 minutes to keep it accurate without hammering the API
+    const interval = setInterval(fetchStats, 120000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, []);
 
-  // For testing/preview if not yet the 9th
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  const showBanner = stats.isActive || isDevelopment;
+  // Don't render anything while loading, on error, or when inactive
+  if (loading || error || !stats.isActive) {
+    return null;
+  }
 
-  if (!showBanner || loading) return null;
-
-  const percentage = Math.min((stats.count / stats.total) * 100, 100);
-  const spotsLeft = Math.max(stats.total - stats.count, 0);
+  // Safety: clamp values to prevent visual glitches
+  const clampedCount = Math.max(0, Math.min(stats.count, stats.total));
+  const spotsLeft = stats.total - clampedCount;
+  const percentage = (clampedCount / stats.total) * 100;
 
   return (
-    <div className={styles.promoWrapper}>
+    <div className={styles.promoWrapper} role="banner" aria-label="Special giveaway promotion">
       <div className={styles.promoContent}>
         <div className={styles.textSection}>
-          <span className={styles.badge}>15TH ANNIVERSARY</span>
+          <span className={styles.badge}>🎉 3,000 ORDERS MILESTONE</span>
           <p className={styles.phrase}>
-            Celebrating 15 Years of Excellence! 🎂 First 100 orders get an extra anniversary discount!
+            We hit 3,000 orders! Next {stats.total} customers get a special giveaway! 🎁
           </p>
         </div>
-        
+
         <div className={styles.progressSection}>
           <div className={styles.progressInfo}>
             <span className={styles.spotsText}>
-              <strong>{spotsLeft}</strong> spots remaining
+              <strong>{spotsLeft}</strong> spots left
             </span>
-            <span className={styles.countText}>{stats.count}/{stats.total} claimed</span>
+            <span className={styles.countText}>
+              {clampedCount}/{stats.total} claimed
+            </span>
           </div>
-          <div className={styles.progressBarBg}>
-            <div 
-              className={styles.progressBarFill} 
+          <div
+            className={styles.progressBarBg}
+            role="progressbar"
+            aria-valuenow={clampedCount}
+            aria-valuemin={0}
+            aria-valuemax={stats.total}
+            aria-label={`${clampedCount} of ${stats.total} giveaway spots claimed`}
+          >
+            <div
+              className={styles.progressBarFill}
               style={{ width: `${percentage}%` }}
             />
           </div>
         </div>
       </div>
-      <div className={styles.glow} />
+      <div className={styles.glow} aria-hidden="true" />
     </div>
   );
 }
