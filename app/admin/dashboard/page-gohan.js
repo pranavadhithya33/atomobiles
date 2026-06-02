@@ -341,10 +341,7 @@ export default function AdminDashboard() {
           current_step: routeEditForm.current_step,
         })
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Failed');
-      }
+      if (!res.ok) throw new Error('Failed');
       alert('Shipment route updated successfully!');
       setExpandedRouteOrderId(null);
       await fetchOrders();
@@ -852,7 +849,25 @@ export default function AdminDashboard() {
       </div>
 
       <div className={styles.adminBody}>
-        {/* Stats Bar Removed */}
+        {/* Stats */}
+        <div className={styles.statsBar}>
+          <div className={styles.statCard}>
+            <div className={styles.statLabel}>Total Products</div>
+            <div className={styles.statValue}>{products.length}</div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statLabel}>Active Listings</div>
+            <div className={styles.statValue} style={{ color:'var(--success)' }}>{products.length}</div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statLabel}>Total Orders</div>
+            <div className={styles.statValue}>{orders.length}</div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statLabel}>Pending Orders</div>
+            <div className={styles.statValue} style={{ color:'var(--warning)' }}>{pendingOrders}</div>
+          </div>
+        </div>
 
         {/* Tabs */}
         <div className={styles.tabs}>
@@ -1128,7 +1143,84 @@ export default function AdminDashboard() {
                               >
                                 <Trash2 size={14} />
                               </button>
-                            </di                        {/* Manage Route Modal moved to root */}            </td>
+                            </div>
+                          </td>
+                        </tr>
+                        {expandedRouteOrderId === o.id && (
+                          <tr>
+                            <td colSpan={9} style={{ background: '#f8fafc', padding: '24px', borderTop: '1px solid #e2e8f0', borderBottom: '2px solid #cbd5e1' }}>
+                              <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px', boxShadow: 'var(--shadow-md)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
+                                  <h3 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--brand-primary)', margin: 0 }}>
+                                    🗺️ Manage Shipment Route & Steps
+                                  </h3>
+                                  <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--brand-accent-dark)', background: 'var(--brand-accent-light)', padding: '3px 8px', borderRadius: '12px' }}>
+                                    Order ID: #{o.id.slice(0,8).toUpperCase()}
+                                  </span>
+                                </div>
+
+                                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
+                                  Customize the destination name for each milestone of this shipment. Choose which step is the current package location.
+                                </p>
+
+                                <div className="admin-route-grid">
+                                  {[1, 2, 3, 4, 5, 6].map((num) => (
+                                    <div key={num} className={`admin-route-step-card ${routeEditForm.current_step === num ? 'active' : ''}`}>
+                                      <div className="admin-route-radio-wrapper">
+                                        <input
+                                          type="radio"
+                                          name={`active-step-${o.id}`}
+                                          className="admin-route-radio"
+                                          checked={routeEditForm.current_step === num}
+                                          onChange={() => setRouteEditForm(prev => ({ ...prev, current_step: num }))}
+                                        />
+                                      </div>
+                                      <div style={{ flex: 1 }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                                          <label className="form-label" style={{ margin: 0, fontWeight: 700 }}>
+                                            Step {num}
+                                          </label>
+                                          {routeEditForm.current_step === num && (
+                                            <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--brand-accent-dark)' }}>
+                                              📍 Currently Here
+                                            </span>
+                                          )}
+                                        </div>
+                                        <input
+                                          type="text"
+                                          className="form-input"
+                                          style={{ padding: '8px 12px', fontSize: 13, height: '36px' }}
+                                          placeholder={
+                                            num === 1 ? "Order Placed" : "Pending Hub Update"
+                                          }
+                                          value={routeEditForm[`step${num}`] || ''}
+                                          onChange={(e) => setRouteEditForm(prev => ({ ...prev, [`step${num}`]: e.target.value }))}
+                                        />
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+
+                                <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #e2e8f0' }}>
+                                  <button
+                                    type="button"
+                                    className="btn btn-outline"
+                                    style={{ padding: '8px 16px', fontSize: '13px', height: '36px', display: 'flex', alignItems: 'center' }}
+                                    onClick={() => setExpandedRouteOrderId(null)}
+                                  >
+                                    Cancel
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    style={{ padding: '8px 24px', fontSize: '13px', height: '36px', display: 'flex', alignItems: 'center' }}
+                                    onClick={() => handleSaveRoute(o.id)}
+                                  >
+                                    ✓ Save Steps
+                                  </button>
+                                </div>
+                              </div>
+                            </td>
                           </tr>
                         )}
                       </Fragment>
@@ -1615,83 +1707,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
-      {/* Manage Route Modal */}
-      {expandedRouteOrderId && (
-        <div className={styles.modalOverlay} style={{ zIndex: 9999 }}>
-          <div className={styles.modal}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--brand-primary)', margin: 0 }}>
-                🗺️ Manage Shipment Route
-              </h3>
-              <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--brand-accent-dark)', background: 'var(--brand-accent-light)', padding: '4px 10px', borderRadius: '12px' }}>
-                Order #{expandedRouteOrderId.slice(0,8).toUpperCase()}
-              </span>
-            </div>
-
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
-              Customize the destination name for each milestone of this shipment. Choose which step is the current package location.
-            </p>
-
-            <div className="admin-route-grid">
-              {[1, 2, 3, 4, 5, 6].map((num) => (
-                <div key={num} className={`admin-route-step-card ${routeEditForm.current_step === num ? 'active' : ''}`}>
-                  <div className="admin-route-radio-wrapper">
-                    <input
-                      type="radio"
-                      name={`active-step-${expandedRouteOrderId}`}
-                      className="admin-route-radio"
-                      checked={routeEditForm.current_step === num}
-                      onChange={() => setRouteEditForm(prev => ({ ...prev, current_step: num }))}
-                    />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <label className="form-label" style={{ margin: 0, fontWeight: 700 }}>
-                        Step {num}
-                      </label>
-                      {routeEditForm.current_step === num && (
-                        <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--brand-accent-dark)' }}>
-                          📍 Currently Here
-                        </span>
-                      )}
-                    </div>
-                    <input
-                      type="text"
-                      className="form-input"
-                      style={{ padding: '8px 12px', fontSize: 13, height: '36px' }}
-                      placeholder={
-                        num === 1 ? "Order Placed" : "Pending Hub Update"
-                      }
-                      value={routeEditForm[`step${num}`] || ''}
-                      onChange={(e) => setRouteEditForm(prev => ({ ...prev, [`step${num}`]: e.target.value }))}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #e2e8f0' }}>
-              <button
-                type="button"
-                className="btn btn-outline"
-                style={{ padding: '8px 16px', fontSize: '13px', height: '36px', display: 'flex', alignItems: 'center' }}
-                onClick={() => setExpandedRouteOrderId(null)}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                style={{ padding: '8px 24px', fontSize: '13px', height: '36px', display: 'flex', alignItems: 'center' }}
-                onClick={() => handleSaveRoute(expandedRouteOrderId)}
-              >
-                ✓ Save Steps
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }

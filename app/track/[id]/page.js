@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Package, Truck, CheckCircle, XCircle, ArrowLeft, Clock, Hash, MapPin, Calendar, Download } from 'lucide-react';
+import { Package, Truck, XCircle, ArrowLeft, Hash, MapPin, Download, Check } from 'lucide-react';
 import { generateInvoice } from '@/lib/invoiceGenerator';
 import { formatINR } from '@/lib/utils';
 
@@ -90,33 +90,32 @@ export default function TrackOrderPage({ params }) {
   }
 
   const isCancelled = order.status === 'cancelled';
-  
-  // Calculate days passed since creation
-  const orderDate = new Date(order.created_at);
-  const today = new Date();
-  const diffTime = Math.max(0, today - orderDate);
-  const daysPassed = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  
-  // Stages Mapping
-  const stages = [
-    "Day 1: Ordered",
-    "Day 2: Placed order with brand",
-    "Day 3: Applied offer price",
-    "Day 4: Shipped by road",
-    "Day 5: Reached main hub",
-    "Day 6: Assigned to local transport",
-    "Day 7: Reached Bengaluru hub",
-    "Day 8: In transit to Chennai hub",
-    "Day 9: Shipped to your orders",
-    "Day 10: Delivered"
+  const isDelivered = order.status === 'delivered';
+
+  // 6-step manual destination system
+  const currentStep = order.current_step || 1;
+  const steps = [
+    { num: 1, text: order.step1 || 'Order Placed' },
+    { num: 2, text: order.step2 || 'Pending Hub Update' },
+    { num: 3, text: order.step3 || 'Pending Hub Update' },
+    { num: 4, text: order.step4 || 'Pending Hub Update' },
+    { num: 5, text: order.step5 || 'Pending Hub Update' },
+    { num: 6, text: order.step6 || 'Pending Hub Update' }
   ];
 
-  // Current stage index (0 to 9)
-  let currentStageIndex = daysPassed;
-  if (currentStageIndex > 9) currentStageIndex = 9;
+  // Active step text for location banner
+  const activeStepText = steps[currentStep - 1].text;
 
-  // Override if order is already marked delivered in DB
-  if (order.status === 'delivered') currentStageIndex = 9;
+  // Status label and colors
+  const getStatusStyle = () => {
+    if (isCancelled) return { bg: '#fee2e2', color: '#ef4444', label: 'Cancelled' };
+    if (isDelivered) return { bg: '#dcfce7', color: '#16a34a', label: 'Delivered' };
+    if (order.status === 'shipped') return { bg: '#e0f2fe', color: '#0ea5e9', label: 'Shipped' };
+    if (order.status === 'confirmed') return { bg: '#fef3d0', color: '#d4890a', label: 'Confirmed' };
+    if (order.status === 'delayed') return { bg: '#fef3cd', color: '#b45309', label: 'Delayed' };
+    return { bg: '#f1f5f9', color: '#64748b', label: 'Pending' };
+  };
+  const statusStyle = getStatusStyle();
 
   return (
     <div style={{ padding: '24px 16px', maxWidth: 600, margin: '0 auto', minHeight: '80vh' }}>
@@ -134,8 +133,8 @@ export default function TrackOrderPage({ params }) {
             </div>
           </div>
           <div style={{ 
-            background: isCancelled ? '#fee2e2' : currentStageIndex === 9 ? '#dcfce7' : '#e0f2fe', 
-            color: isCancelled ? '#ef4444' : currentStageIndex === 9 ? '#16a34a' : '#0ea5e9',
+            background: statusStyle.bg, 
+            color: statusStyle.color,
             padding: '6px 14px',
             borderRadius: 12,
             fontSize: 12,
@@ -143,7 +142,7 @@ export default function TrackOrderPage({ params }) {
             textTransform: 'uppercase',
             letterSpacing: '0.5px'
           }}>
-            {isCancelled ? 'Cancelled' : currentStageIndex === 9 ? 'Delivered' : 'In Transit'}
+            {statusStyle.label}
           </div>
         </div>
 
@@ -171,8 +170,8 @@ export default function TrackOrderPage({ params }) {
           </button>
         </div>
 
-        {/* Timeline */}
-        <div style={{ marginBottom: 32 }}>
+        {/* Current Destination / Status */}
+        <div style={{ marginBottom: 24 }}>
           {isCancelled ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 16, color: '#ef4444', background: '#fee2e2', padding: 20, borderRadius: 16, border: '1px solid #fecaca' }}>
               <XCircle size={32} />
@@ -182,67 +181,73 @@ export default function TrackOrderPage({ params }) {
               </div>
             </div>
           ) : (
-            <div style={{ position: 'relative', paddingLeft: 8 }}>
-              {stages.map((stage, idx) => {
-                const isCompleted = idx < currentStageIndex;
-                const isCurrent = idx === currentStageIndex;
-                const isFuture = idx > currentStageIndex;
-                const isLast = idx === stages.length - 1;
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(244,167,36,0.1), rgba(244,167,36,0.05))',
+              border: '1.5px solid rgba(244,167,36,0.3)',
+              borderRadius: 16,
+              padding: '20px 24px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 16,
+            }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: '50%',
+                background: 'var(--brand-accent)', color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 0 0 6px rgba(244,167,36,0.15)',
+                flexShrink: 0,
+              }}>
+                <Truck size={24} strokeWidth={2.5} />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--brand-accent)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>
+                  📍 Current Location
+                </div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.3 }}>
+                  {activeStepText}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 6-Step Flowchart Timeline */}
+        {!isCancelled && (
+          <div style={{ marginBottom: 32, background: '#fff', border: '1px solid var(--border)', borderRadius: 20, padding: '24px 16px', boxShadow: 'var(--shadow-sm)' }}>
+            <div className="flowchart-timeline" style={{ '--fill-pct': `${((currentStep - 1) / 5) * 100}%` }}>
+              <div className="flowchart-line">
+                <div className="flowchart-progress-fill" />
+              </div>
+
+              {steps.map((step) => {
+                const isCompleted = step.num < currentStep;
+                const isActive = step.num === currentStep;
+                const isPending = step.num > currentStep;
                 
+                let stateClass = 'pending';
+                if (isCompleted) stateClass = 'completed';
+                if (isActive) stateClass = 'active';
+
                 return (
-                  <div key={idx} style={{ display: 'flex', gap: 20, marginBottom: isLast ? 0 : 20, position: 'relative' }}>
-                    {/* Line */}
-                    {!isLast && (
-                      <div style={{ 
-                        position: 'absolute', 
-                        left: 14, 
-                        top: 30, 
-                        bottom: -20, 
-                        width: 2, 
-                        background: isCompleted ? '#16a34a' : '#f1f5f9',
-                        zIndex: 1
-                      }} />
-                    )}
-                    
-                    {/* Icon/Dot */}
-                    <div style={{ 
-                      width: 30, 
-                      height: 30, 
-                      borderRadius: '50%', 
-                      background: isCompleted ? '#16a34a' : (isCurrent ? 'var(--brand-primary)' : '#fff'),
-                      border: isFuture ? '2px solid #f1f5f9' : 'none',
-                      color: isFuture ? '#94a3b8' : '#fff',
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center',
-                      zIndex: 2,
-                      boxShadow: isCurrent ? '0 0 0 5px rgba(244, 167, 36, 0.15)' : 'none',
-                      transition: 'all 0.3s ease'
-                    }}>
-                      {isCompleted ? <CheckCircle size={16} strokeWidth={3} /> : (isCurrent ? <Truck size={16} strokeWidth={3} /> : <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#cbd5e1' }} />)}
-                    </div>
-                    
-                    {/* Text */}
-                    <div style={{ paddingTop: 4 }}>
-                      <div style={{ 
-                        fontWeight: isCurrent ? 800 : (isCompleted ? 700 : 500), 
-                        fontSize: 15,
-                        color: isFuture ? '#94a3b8' : (isCurrent ? 'var(--text-primary)' : '#16a34a')
-                      }}>
-                        {stage}
-                      </div>
-                      {isCurrent && (
-                        <div style={{ fontSize: 12, color: 'var(--brand-primary)', fontWeight: 700, marginTop: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
-                          <Clock size={12} /> Currently here
-                        </div>
+                  <div key={step.num} className={`flowchart-node ${stateClass}`}>
+                    <div className="flowchart-node-circle">
+                      {isCompleted ? (
+                        <Check size={14} strokeWidth={3} />
+                      ) : isActive ? (
+                        <Truck size={14} strokeWidth={2.5} />
+                      ) : (
+                        step.num
                       )}
+                    </div>
+                    <div className="flowchart-node-label">
+                      {step.text}
                     </div>
                   </div>
                 );
               })}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Order Info Summary */}
         <div style={{ background: '#f8fafc', borderRadius: 16, padding: 20, border: '1px solid #f1f5f9' }}>
@@ -325,7 +330,7 @@ export default function TrackOrderPage({ params }) {
   );
 }
 
-// Additional icons needed
+// Spinner icon
 const RefreshCw = ({ size = 16, className = "", color = "currentColor" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <path d="M21 2v6h-6"></path>

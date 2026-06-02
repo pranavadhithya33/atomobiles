@@ -51,23 +51,52 @@ export async function GET(req, context) {
   }
 }
 
-// Admin PUT endpoint to update order status
+// Admin PUT endpoint to update order status or custom step
 export async function PUT(req, context) {
   try {
     const { id } = await context.params;
     const body = await req.json();
     const adminSupabase = createAdminClient();
 
+    const updateData = {};
+
+    // If status is being updated (from dropdown), clear custom_step
+    if (body.status !== undefined) {
+      updateData.status = body.status;
+      updateData.custom_step = null;
+    }
+
+    // If custom_step is being updated (from text input)
+    if (body.custom_step !== undefined) {
+      updateData.custom_step = body.custom_step || null;
+    }
+
+    // Allow updating step1 through step6
+    ['step1', 'step2', 'step3', 'step4', 'step5', 'step6'].forEach(s => {
+      if (body[s] !== undefined) {
+        updateData[s] = body[s] || '';
+      }
+    });
+
+    // Allow updating current_step
+    if (body.current_step !== undefined) {
+      updateData.current_step = Number(body.current_step);
+    }
+
     const { data: order, error } = await adminSupabase
       .from('orders')
-      .update({ status: body.status })
+      .update(updateData)
       .eq('id', id)
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase update error:', error);
+      return NextResponse.json({ error: error.message || JSON.stringify(error) }, { status: 500 });
+    }
     return NextResponse.json({ success: true, order });
   } catch (err) {
+    console.error('API route error:', err);
     return NextResponse.json({ error: err.message || 'Failed to update order' }, { status: 500 });
   }
 }

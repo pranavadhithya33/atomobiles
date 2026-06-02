@@ -75,8 +75,33 @@ CREATE TABLE IF NOT EXISTS orders (
   advance_amount NUMERIC(10,2),
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'shipped', 'delivered', 'cancelled', 'delayed')),
   notes TEXT,
+  custom_step TEXT,
+  step1 TEXT DEFAULT '',
+  step2 TEXT DEFAULT '',
+  step3 TEXT DEFAULT '',
+  step4 TEXT DEFAULT '',
+  step5 TEXT DEFAULT '',
+  step6 TEXT DEFAULT '',
+  current_step INTEGER DEFAULT 1 CHECK (current_step BETWEEN 1 AND 6),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Add custom_step column if table already exists (safe to re-run)
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS custom_step TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS step1 TEXT DEFAULT '';
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS step2 TEXT DEFAULT '';
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS step3 TEXT DEFAULT '';
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS step4 TEXT DEFAULT '';
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS step5 TEXT DEFAULT '';
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS step6 TEXT DEFAULT '';
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS current_step INTEGER DEFAULT 1;
+
+-- Drop old check constraint on current_step if it exists
+ALTER TABLE orders DROP CONSTRAINT IF EXISTS orders_current_step_check;
+ALTER TABLE orders DROP CONSTRAINT IF EXISTS tracking_current_step_check;
+
+-- Add check constraint for 1 to 6 steps
+ALTER TABLE orders ADD CONSTRAINT orders_current_step_check CHECK (current_step BETWEEN 1 AND 6);
 
 -- ============================================================
 -- REVIEWS TABLE
