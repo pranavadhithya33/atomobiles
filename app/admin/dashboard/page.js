@@ -1044,7 +1044,7 @@ export default function AdminDashboard() {
                       <th>Product</th>
                       <th>Payment</th>
                       <th>Amount</th>
-                      <th>Status</th>
+                      <th>Active Destination</th>
                       <th>Date</th>
                       <th>Actions</th>
                     </tr>
@@ -1074,24 +1074,12 @@ export default function AdminDashboard() {
                           </td>
                           <td style={{ fontWeight:700 }}>{formatINR(o.final_price)}</td>
                           <td>
-                            <select 
-                              value={o.status || 'pending'} 
-                              onChange={(e) => handleUpdateOrderStatus(o.id, e.target.value)}
-                              className={`${styles.orderStatus} ${
-                                o.status === 'shipped' || o.status === 'delivered' ? styles.orderStatusConfirmed :
-                                o.status === 'cancelled' ? styles.orderStatusCancelled :
-                                o.status === 'delayed' ? styles.orderStatusDelayed :
-                                styles.orderStatusPending
-                              }`}
-                              style={{ padding: '4px 24px 4px 10px', appearance: 'auto', cursor: 'pointer', border: '1px solid transparent' }}
-                            >
-                              <option value="pending">Pending</option>
-                              <option value="confirmed">Confirmed</option>
-                              <option value="shipped">Shipped</option>
-                              <option value="delayed">Delayed</option>
-                              <option value="delivered">Delivered</option>
-                              <option value="cancelled">Cancelled</option>
-                            </select>
+                            <div style={{ fontWeight: 700, color: 'var(--brand-accent-dark)', fontSize: 13 }}>
+                              {o[`step${o.current_step || 1}`] || 'Order Placed'}
+                            </div>
+                            <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                              Step {o.current_step || 1} of 6
+                            </div>
                           </td>
                           <td style={{ fontSize:12, color:'var(--text-muted)', whiteSpace:'nowrap' }}>
                             {new Date(o.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'2-digit' })}
