@@ -107,6 +107,10 @@ export async function DELETE(req, context) {
     const { id } = await context.params;
     const adminSupabase = createAdminClient();
 
+    // 1. Delete associated coin transactions to prevent foreign key constraint errors
+    await adminSupabase.from('coin_transactions').delete().eq('order_id', id);
+
+    // 2. Delete the order
     const { error } = await adminSupabase
       .from('orders')
       .delete()
