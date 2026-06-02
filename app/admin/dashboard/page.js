@@ -1127,10 +1127,9 @@ export default function AdminDashboard() {
                                 title="Delete Order"
                               >
                                 <Trash2 size={14} />
-                              </button>
-                            </di                        {/* Manage Route Modal moved to root */}            </td>
-                          </tr>
-                        )}
+                            </div>
+                          </td>
+                        </tr>
                       </Fragment>
                     ))}
                   </tbody>
