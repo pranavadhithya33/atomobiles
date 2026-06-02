@@ -1127,6 +1127,7 @@ export default function AdminDashboard() {
                                 title="Delete Order"
                               >
                                 <Trash2 size={14} />
+                              </button>
                             </div>
                           </td>
                         </tr>
