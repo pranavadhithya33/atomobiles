@@ -1045,7 +1045,6 @@ export default function AdminDashboard() {
                       <th>Payment</th>
                       <th>Amount</th>
                       <th>Status</th>
-                      <th>Active Destination</th>
                       <th>Date</th>
                       <th>Actions</th>
                     </tr>
@@ -1093,14 +1092,6 @@ export default function AdminDashboard() {
                               <option value="delivered">Delivered</option>
                               <option value="cancelled">Cancelled</option>
                             </select>
-                          </td>
-                          <td>
-                            <div style={{ fontWeight: 700, color: 'var(--brand-accent-dark)', fontSize: 13 }}>
-                              {o[`step${o.current_step || 1}`] || 'Order Placed'}
-                            </div>
-                            <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                              Step {o.current_step || 1} of 6
-                            </div>
                           </td>
                           <td style={{ fontSize:12, color:'var(--text-muted)', whiteSpace:'nowrap' }}>
                             {new Date(o.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'2-digit' })}
