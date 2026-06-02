@@ -447,12 +447,15 @@ export default function AdminDashboard() {
     if (!confirm(`Permanently delete order #${shortId}?`)) return;
     try {
       const res = await fetch(`/api/orders/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed');
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Failed to delete from API');
+      }
       console.log('Order deleted successfully');
       await fetchOrders();
     } catch (err) {
       console.error('Delete order error:', err);
-      alert('Failed to delete order');
+      alert(`Failed to delete order: ${err.message}`);
     }
   };
 
