@@ -67,6 +67,18 @@ export default function ClientLayoutWrapper({ children }) {
                 <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>Jaganraj:</span>
                 <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>Attur</span>
               </div>
+              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 20px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>Sarbudeen:</span>
+                <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>Trichy Central</span>
+              </div>
+              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 20px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>Sevagan:</span>
+                <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>Thitakudi, Cuddalore</span>
+              </div>
+              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 20px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>Karthick C:</span>
+                <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>Hosur</span>
+              </div>
             </div>
           </div>
           
