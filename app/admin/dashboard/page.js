@@ -91,6 +91,8 @@ export default function AdminDashboard() {
   const [pendingReviews, setPendingReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   // Auth check
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -99,6 +101,8 @@ export default function AdminDashboard() {
       if (!auth || !token) {
         sessionStorage.removeItem('og_admin');
         router.replace('/admin/login');
+      } else {
+        setIsAuthenticated(true);
       }
     }
   }, [router]);
@@ -475,6 +479,8 @@ export default function AdminDashboard() {
   // Stats
   const totalRevenue = orders.reduce((sum, o) => sum + (o.final_price || 0), 0);
   const pendingOrders = orders.filter(o => o.status === 'pending').length;
+
+  if (!isAuthenticated) return <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>Loading...</div>;
 
   return (
     <div className={styles.adminPage}>
