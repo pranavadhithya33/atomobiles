@@ -1,6 +1,7 @@
 // app/api/products/[id]/route.js
 import { supabase, createAdminClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
+import { verifyAdminRequest } from '@/lib/adminAuth';
 
 export async function GET(req, { params }) {
   try {
@@ -25,6 +26,9 @@ export async function GET(req, { params }) {
 }
 
 export async function PUT(req, { params }) {
+  // Admin auth guard
+  const auth = verifyAdminRequest(req);
+  if (!auth.authorized) return auth.response;
   try {
     const { id } = await params;
     const body = await req.json();
@@ -51,6 +55,9 @@ export async function PUT(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
+  // Admin auth guard
+  const auth = verifyAdminRequest(req);
+  if (!auth.authorized) return auth.response;
   try {
     const { id } = await params;
     const adminSupabase = createAdminClient();

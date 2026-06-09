@@ -567,3 +567,62 @@
   color: var(--text-muted);
   font-size: 14px;
 }
+
+/* Mobile Responsive Tables (High Density Stacking) */
+@media (max-width: 768px) {
+  .tableWrap {
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+  }
+  .table, .table tbody, .table tr, .table td {
+    display: block;
+    width: 100%;
+  }
+  .table thead {
+    display: none;
+  }
+  .table tr {
+    background: var(--bg-card);
+    margin-bottom: var(--space-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+  .table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    text-align: right;
+  }
+  .table td:last-child {
+    border-bottom: none;
+    background: #f8fafc;
+    justify-content: flex-end;
+  }
+  .table td::before {
+    content: attr(data-label);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-right: 16px;
+    text-align: left;
+    flex-shrink: 0;
+  }
+  /* Fix Action Buttons Layout on Mobile */
+  .actionBtns {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .productThumb, .productThumbPlaceholder {
+    width: 40px;
+    height: 40px;
+  }
+}

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase';
+import { verifyAdminRequest } from '@/lib/adminAuth';
 
 // Public GET endpoint to fetch order details for tracking
 export async function GET(req, context) {
@@ -53,6 +54,9 @@ export async function GET(req, context) {
 
 // Admin PUT endpoint to update order status or custom step
 export async function PUT(req, context) {
+  // Admin auth guard
+  const auth = verifyAdminRequest(req);
+  if (!auth.authorized) return auth.response;
   try {
     const { id } = await context.params;
     const body = await req.json();
@@ -103,6 +107,9 @@ export async function PUT(req, context) {
 
 // Admin DELETE endpoint to remove an order
 export async function DELETE(req, context) {
+  // Admin auth guard
+  const auth = verifyAdminRequest(req);
+  if (!auth.authorized) return auth.response;
   try {
     const { id } = await context.params;
     const adminSupabase = createAdminClient();

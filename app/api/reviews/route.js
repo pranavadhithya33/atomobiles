@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
+import { verifyAdminRequest } from '@/lib/adminAuth';
 
 export async function GET(req) {
   try {
@@ -69,6 +70,9 @@ export async function POST(req) {
 
 // Admin: update review status (approve/reject)
 export async function PUT(req) {
+  // Admin auth guard
+  const auth = verifyAdminRequest(req);
+  if (!auth.authorized) return auth.response;
   try {
     const body = await req.json();
     const { id, status } = body;

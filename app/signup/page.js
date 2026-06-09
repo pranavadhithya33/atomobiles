@@ -134,9 +134,9 @@ export default function SignupPage() {
           </div>
         </form>
 
-        <div style={{ marginTop: '24px', padding: '16px', background: '#1a2235', borderRadius: '12px', border: '1px solid #1e3a5f' }}>
-          <div style={{ fontSize: '12px', fontWeight: '700', color: '#60a5fa', marginBottom: '6px' }}>🪙 Earn OG Coins on every purchase!</div>
-          <div style={{ fontSize: '12px', color: '#9aa3b2' }}>Get 1 coin per ₹100 spent. Redeem on your next order.</div>
+        <div style={{ marginTop: '24px', padding: '16px', background: 'linear-gradient(to right, #1a2235, #131a2a)', borderRadius: '12px', border: '1px solid #1e3a5f' }}>
+          <div style={{ fontSize: '14px', fontWeight: '800', color: '#60a5fa', marginBottom: '4px' }}>🪙 Welcome Bonus: OG Coins</div>
+          <div style={{ fontSize: '12px', color: '#9aa3b2' }}>Get 1 coin per ₹1000 spent. Redeem on your next order.</div>
         </div>
       </div>
     </div>

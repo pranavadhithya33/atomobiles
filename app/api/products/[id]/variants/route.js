@@ -1,6 +1,7 @@
 // app/api/products/[id]/variants/route.js
 import { supabase, createAdminClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
+import { verifyAdminRequest } from '@/lib/adminAuth';
 
 // GET /api/products/[id]/variants
 // Returns all enabled variants for a product (public)
@@ -48,6 +49,9 @@ export async function GET(req, { params }) {
 // Body: { variants: [{ram, storage, price, enabled}, ...] }
 // Replaces ALL variants for this product (admin only — uses service role)
 export async function POST(req, { params }) {
+  // Admin auth guard
+  const auth = verifyAdminRequest(req);
+  if (!auth.authorized) return auth.response;
   try {
     const { id } = await params;
     const body = await req.json();

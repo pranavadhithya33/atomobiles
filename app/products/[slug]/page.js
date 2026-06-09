@@ -148,13 +148,18 @@ export default function ProductDetailPage() {
       basePrice: dynamicOurPrice,
       finalPrice,
       ...(advanceAmount && { advanceAmount }),
+      ...(hasVariants && selectedRam != null && { ram: selectedRam }),
+      ...(hasVariants && selectedStorage != null && { storage: selectedStorage }),
     });
     router.push(`/order?${params.toString()}`);
   };
 
   const handleAddToCart = () => {
     if (!inStock) return;
-    addToCart(product, 1, paymentOption);
+    const variantInfo = (hasVariants && selectedRam != null && selectedStorage != null)
+      ? { ram: selectedRam, storage: selectedStorage, variantPrice: dynamicOurPrice }
+      : null;
+    addToCart(product, 1, paymentOption, variantInfo);
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
   };
@@ -343,7 +348,7 @@ export default function ProductDetailPage() {
         <a
           href="#reviews-section"
           style={{
-            position: 'fixed', bottom: '24px', right: '24px', background: '#fff',
+            position: 'fixed', bottom: '24px', left: '24px', background: '#fff',
             padding: '8px 16px', borderRadius: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none',
             color: '#111', fontWeight: '700', border: '1px solid #e5e7eb', zIndex: 100

@@ -135,7 +135,7 @@ function LoginForm() {
 
         <div style={{ marginTop: '24px', padding: '14px 16px', background: '#1a2235', borderRadius: '12px', border: '1px solid #1e3a5f' }}>
           <div style={{ fontSize: '12px', color: '#9aa3b2' }}>
-            🪙 <strong style={{ color: '#60a5fa' }}>OG Coins</strong> — Earn 1 coin per ₹100 spent, redeem on next orders.
+            🪙 <strong style={{ color: '#60a5fa' }}>OG Coins</strong> — Earn 1 coin per ₹1000 spent, redeem on next orders.
           </div>
         </div>
       </div>

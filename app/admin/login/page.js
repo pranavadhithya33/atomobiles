@@ -24,6 +24,7 @@ export default function AdminLoginPage() {
       const data = await res.json();
       if (res.ok && data.success) {
         sessionStorage.setItem('og_admin', 'true');
+        if (data.token) sessionStorage.setItem('og_admin_token', data.token);
         router.push('/admin/dashboard');
       } else {
         setError('Incorrect password. Please try again.');

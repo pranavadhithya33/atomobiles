@@ -65,7 +65,7 @@ export default function CartPage() {
 
       <div style={{ display: 'grid', gap: '16px' }}>
         {cart.map((item) => (
-          <div key={`${item.id}-${item.paymentOption}`} style={{ 
+          <div key={`${item.id}-${item.paymentOption}-${item.variantId || 'base'}`} style={{ 
             background: 'var(--bg-card)', 
             border: '1px solid var(--border)', 
             borderRadius: '16px', 
@@ -96,6 +96,11 @@ export default function CartPage() {
               <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '4px' }}>
                 {item.name}
               </div>
+              {item.variantInfo && (
+                <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>
+                  {item.variantInfo.ram}GB RAM / {item.variantInfo.storage}GB Storage
+                </div>
+              )}
               <div style={{ fontSize: '12px', color: '#f4a724', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 {item.paymentOption === 'full_prepaid' ? 'Full Prepaid' : item.paymentOption === 'token_advance' ? 'Token Advance' : 'Half COD'}
               </div>
@@ -106,14 +111,14 @@ export default function CartPage() {
                 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#f8fafc', padding: '4px 12px', borderRadius: '24px', border: '1px solid var(--border)' }}>
                   <button 
-                    onClick={() => updateQuantity(item.id, item.paymentOption, item.quantity - 1)}
+                    onClick={() => updateQuantity(item.id, item.paymentOption, item.quantity - 1, item.variantId)}
                     style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', padding: '4px' }}
                   >
                     <Minus size={14} />
                   </button>
                   <span style={{ fontSize: '14px', fontWeight: '700', minWidth: '20px', textAlign: 'center', color: 'var(--text-primary)' }}>{item.quantity}</span>
                   <button 
-                    onClick={() => updateQuantity(item.id, item.paymentOption, item.quantity + 1)}
+                    onClick={() => updateQuantity(item.id, item.paymentOption, item.quantity + 1, item.variantId)}
                     style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', padding: '4px' }}
                   >
                     <Plus size={14} />
@@ -123,7 +128,7 @@ export default function CartPage() {
             </div>
 
             <button 
-              onClick={() => removeFromCart(item.id, item.paymentOption)}
+              onClick={() => removeFromCart(item.id, item.paymentOption, item.variantId)}
               style={{ 
                 background: 'rgba(239, 68, 68, 0.08)', 
                 border: 'none', 

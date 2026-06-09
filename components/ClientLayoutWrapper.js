@@ -90,7 +90,7 @@ export default function ClientLayoutWrapper({ children }) {
             </div>
           </div>
           
-          <div style={{ marginTop: 24, fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
+          <div suppressHydrationWarning style={{ marginTop: 24, fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
             © {new Date().getFullYear()} Only Gadjets. All rights reserved.
           </div>
         </footer>

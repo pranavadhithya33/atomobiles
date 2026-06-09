@@ -57,8 +57,10 @@ export function CartProvider({ children }) {
                 user_id: user.id,
                 product_id: item.id,
                 payment_option: item.paymentOption,
-                quantity: item.quantity
-              }, { onConflict: 'user_id, product_id, payment_option' });
+                quantity: item.quantity,
+                variant_id: item.variantId || null,
+                variant_info: item.variantInfo || null
+              }, { onConflict: 'user_id, product_id, payment_option, variant_id' });
             }
             localStorage.removeItem('og_cart');
           }
@@ -74,6 +76,8 @@ export function CartProvider({ children }) {
           id,
           quantity,
           payment_option,
+          variant_id,
+          variant_info,
           product:products (
             id,
             name,
@@ -91,9 +95,11 @@ export function CartProvider({ children }) {
           name: item.product.name,
           slug: item.product.slug,
           image: item.product.images?.[0],
-          basePrice: item.product.our_price,
+          basePrice: item.variant_info?.variantPrice || item.product.our_price,
           paymentOption: item.payment_option,
-          quantity: item.quantity
+          quantity: item.quantity,
+          variantId: item.variant_id,
+          variantInfo: item.variant_info
         }));
         setCart(dbCart);
       }
@@ -112,10 +118,12 @@ export function CartProvider({ children }) {
     }
   }, [cart, isLoaded, user]);
 
-  const addToCart = async (product, quantity = 1, paymentOption = 'half_cod') => {
+  const addToCart = async (product, quantity = 1, paymentOption = 'half_cod', variantInfo = null) => {
+    const variantId = variantInfo ? `${variantInfo.ram}GB-${variantInfo.storage}GB` : null;
+
     if (user) {
       // Get existing item to calculate new quantity
-      const existing = cart.find(item => item.id === product.id && item.paymentOption === paymentOption);
+      const existing = cart.find(item => item.id === product.id && item.paymentOption === paymentOption && item.variantId === variantId);
       const newQuantity = (existing ? existing.quantity : 0) + quantity;
 
       // Upsert to Database
@@ -125,17 +133,19 @@ export function CartProvider({ children }) {
           user_id: user.id,
           product_id: product.id,
           payment_option: paymentOption,
-          quantity: newQuantity
-        }, { onConflict: 'user_id, product_id, payment_option' });
+          quantity: newQuantity,
+          variant_id: variantId,
+          variant_info: variantInfo
+        }, { onConflict: 'user_id, product_id, payment_option, variant_id' });
       
       if (error) console.error('Error adding to cart:', error);
     }
 
     setCart(prev => {
-      const existing = prev.find(item => item.id === product.id && item.paymentOption === paymentOption);
+      const existing = prev.find(item => item.id === product.id && item.paymentOption === paymentOption && item.variantId === variantId);
       if (existing) {
         return prev.map(item => 
-          item.id === product.id && item.paymentOption === paymentOption
+          item.id === product.id && item.paymentOption === paymentOption && item.variantId === variantId
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
@@ -145,39 +155,55 @@ export function CartProvider({ children }) {
         name: product.name, 
         slug: product.slug, 
         image: product.images?.[0], 
-        basePrice: product.our_price,
+        basePrice: variantInfo?.variantPrice || product.our_price,
         paymentOption,
-        quantity 
+        quantity,
+        variantId,
+        variantInfo
       }];
     });
   };
 
-  const removeFromCart = async (id, paymentOption) => {
+  const removeFromCart = async (id, paymentOption, variantId = null) => {
     if (user) {
-      await supabase
+      let query = supabase
         .from('cart_items')
         .delete()
         .eq('user_id', user.id)
         .eq('product_id', id)
         .eq('payment_option', paymentOption);
+      
+      if (variantId) {
+        query = query.eq('variant_id', variantId);
+      } else {
+        query = query.is('variant_id', null);
+      }
+      await query;
     }
-    setCart(prev => prev.filter(item => !(item.id === id && item.paymentOption === paymentOption)));
+    setCart(prev => prev.filter(item => !(item.id === id && item.paymentOption === paymentOption && item.variantId === variantId)));
   };
 
-  const updateQuantity = async (id, paymentOption, quantity) => {
-    if (quantity < 1) return removeFromCart(id, paymentOption);
+  const updateQuantity = async (id, paymentOption, quantity, variantId = null) => {
+    if (quantity < 1) return removeFromCart(id, paymentOption, variantId);
     
     if (user) {
-      await supabase
+      let query = supabase
         .from('cart_items')
         .update({ quantity })
         .eq('user_id', user.id)
         .eq('product_id', id)
         .eq('payment_option', paymentOption);
+      
+      if (variantId) {
+        query = query.eq('variant_id', variantId);
+      } else {
+        query = query.is('variant_id', null);
+      }
+      await query;
     }
 
     setCart(prev => prev.map(item => 
-      item.id === id && item.paymentOption === paymentOption
+      item.id === id && item.paymentOption === paymentOption && item.variantId === variantId
         ? { ...item, quantity }
         : item
     ));

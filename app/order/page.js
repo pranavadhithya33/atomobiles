@@ -23,6 +23,8 @@ function OrderFormContent() {
   const productSlug = searchParams.get('productSlug') || '';
   const initialPaymentOption = searchParams.get('paymentOption') || 'half_cod';
   const urlBasePrice = parseInt(searchParams.get('basePrice') || '0');
+  const variantRam = searchParams.get('ram');
+  const variantStorage = searchParams.get('storage');
 
   const [selectedPayment, setSelectedPayment] = useState(initialPaymentOption);
   const [form, setForm] = useState({ fullName: '', phone: '', address: '', pincode: '' });
@@ -43,7 +45,10 @@ function OrderFormContent() {
     name: productName,
     slug: productSlug,
     basePrice: urlBasePrice,
-    quantity: 1
+    quantity: 1,
+    ...(variantRam && variantStorage && { 
+      variantInfo: { ram: variantRam, storage: variantStorage } 
+    })
   }];
 
   const totals = items.reduce((acc, item) => {
@@ -146,7 +151,9 @@ function OrderFormContent() {
             name: i.name,
             slug: i.slug,
             price: i.basePrice,
-            quantity: i.quantity || 1
+            quantity: i.quantity || 1,
+            variant_id: i.variantId || (i.variantInfo ? `${i.variantInfo.ram}GB-${i.variantInfo.storage}GB` : null),
+            variant_info: i.variantInfo || null
           }))
         }),
       });
@@ -265,6 +272,11 @@ function OrderFormContent() {
             <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: '12px', borderBottom: idx === items.length - 1 ? 'none' : '1px solid rgba(0,0,0,0.05)' }}>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>{item.name}</div>
+                {item.variantInfo && (
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+                    {item.variantInfo.ram}GB RAM / {item.variantInfo.storage}GB Storage
+                  </div>
+                )}
                 <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Quantity: {item.quantity || 1}</div>
               </div>
               <div style={{ fontSize: '14px', fontWeight: '800' }}>{formatINR(item.basePrice * (item.quantity || 1))}</div>

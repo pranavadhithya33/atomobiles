@@ -145,7 +145,7 @@ ul, ol {
 }
 
 .page-wrapper {
-  padding-top: var(--header-height);
+  padding-top: 0;
   min-height: 100vh;
 }
 

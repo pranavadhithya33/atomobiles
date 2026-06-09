@@ -36,6 +36,16 @@ const EMPTY_PRODUCT = {
   variants: buildEmptyVariants(),
 };
 
+// Helper: get admin auth headers for API calls
+function getAdminHeaders(extra = {}) {
+  const token = typeof window !== 'undefined' ? sessionStorage.getItem('og_admin_token') : null;
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { 'x-admin-token': token } : {}),
+    ...extra
+  };
+}
+
 export default function AdminDashboard() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('products');
@@ -112,6 +122,7 @@ export default function AdminDashboard() {
 
   const handleLogout = () => {
     sessionStorage.removeItem('og_admin');
+    sessionStorage.removeItem('og_admin_token');
     router.replace('/admin/login');
   };
 
@@ -225,7 +236,7 @@ export default function AdminDashboard() {
 
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAdminHeaders(),
         body: JSON.stringify(payload),
       });
       const data = await res.json();
@@ -236,7 +247,7 @@ export default function AdminDashboard() {
       if (productId && form.variants?.length) {
         await fetch(`/api/products/${productId}/variants`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: getAdminHeaders(),
           body: JSON.stringify({ variants: form.variants }),
         });
       }
@@ -253,7 +264,7 @@ export default function AdminDashboard() {
   const handleDelete = async (id, name) => {
     if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
     try {
-      await fetch(`/api/products/${id}`, { method: 'DELETE' });
+      await fetch(`/api/products/${id}`, { method: 'DELETE', headers: getAdminHeaders() });
       await fetchProducts();
     } catch {
       alert('Failed to delete product');
@@ -298,7 +309,7 @@ export default function AdminDashboard() {
       setOrders(prev => prev.map(o => o.id === id ? { ...o, status: newStatus } : o));
       const res = await fetch(`/api/orders/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAdminHeaders(),
         body: JSON.stringify({ status: newStatus }),
       });
       if (!res.ok) throw new Error('Failed');
@@ -330,7 +341,7 @@ export default function AdminDashboard() {
     try {
       const res = await fetch(`/api/orders/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAdminHeaders(),
         body: JSON.stringify({
           step1: routeEditForm.step1,
           step2: routeEditForm.step2,
@@ -404,7 +415,7 @@ export default function AdminDashboard() {
     try {
       const res = await fetch('/api/orders', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAdminHeaders(),
         body: JSON.stringify({
           full_name: fullName,
           phone,
@@ -419,12 +430,6 @@ export default function AdminDashboard() {
           final_price: orderForm.finalPrice,
           advance_amount: orderForm.advanceAmount,
           status: 'confirmed', // Offline orders usually confirmed
-          step1: '',
-          step2: '',
-          step3: '',
-          step4: '',
-          step5: '',
-          step6: '',
           current_step: 1
         }),
       });
@@ -446,7 +451,7 @@ export default function AdminDashboard() {
     console.log('Attempting to delete order:', id, shortId);
     if (!confirm(`Permanently delete order #${shortId}?`)) return;
     try {
-      const res = await fetch(`/api/orders/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/orders/${id}`, { method: 'DELETE', headers: getAdminHeaders() });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         throw new Error(errData.error || 'Failed to delete from API');
@@ -971,7 +976,7 @@ export default function AdminDashboard() {
                   <tbody>
                     {products.map(p => (
                       <tr key={p.id}>
-                        <td>
+                        <td data-label="Image">
                           {p.images?.[0] ? (
                             <img src={p.images[0]} alt={p.name} className={styles.productThumb} />
                           ) : (
@@ -980,18 +985,18 @@ export default function AdminDashboard() {
                             </div>
                           )}
                         </td>
-                        <td style={{ fontWeight:600, maxWidth:180 }}>
+                        <td data-label="Name" style={{ fontWeight:600, maxWidth:180 }}>
                           <div style={{ overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.name}</div>
                           {p.featured && <span style={{ fontSize:10, background:'#fef3d0', color:'#d4890a', padding:'1px 6px', borderRadius:99, fontWeight:700 }}>Featured</span>}
                         </td>
-                        <td style={{ fontSize:13, color:'var(--text-secondary)' }}>{p.category || '—'}</td>
-                        <td style={{ fontSize:13, color:'#9aa3b2', textDecoration:'line-through' }}>
+                        <td data-label="Category" style={{ fontSize:13, color:'var(--text-secondary)' }}>{p.category || '—'}</td>
+                        <td data-label="Market Price" style={{ fontSize:13, color:'#9aa3b2', textDecoration:'line-through' }}>
                           {Math.max(p.amazon_price || 0, p.flipkart_price || 0, p.online_price || 0) > 0 
                             ? formatINR(Math.max(p.amazon_price || 0, p.flipkart_price || 0, p.online_price || 0)) 
                             : '—'}
                         </td>
-                        <td style={{ fontWeight:700 }}>{formatINR(p.our_price)}</td>
-                        <td>
+                        <td data-label="Our Price" style={{ fontWeight:700 }}>{formatINR(p.our_price)}</td>
+                        <td data-label="Actions">
                           <div className={styles.actionBtns}>
                             <button onClick={() => openEdit(p)} className={styles.editBtn}>
                               <Edit2 size={12} style={{ display:'inline', marginRight:3 }} /> Edit
@@ -1056,17 +1061,17 @@ export default function AdminDashboard() {
                     {orders.map(o => (
                       <Fragment key={o.id}>
                         <tr style={{ background: expandedRouteOrderId === o.id ? 'rgba(244, 167, 36, 0.03)' : 'transparent' }}>
-                          <td style={{ fontFamily:'monospace', fontSize:12, color:'var(--text-muted)' }}>
+                          <td data-label="Order ID" style={{ fontFamily:'monospace', fontSize:12, color:'var(--text-muted)' }}>
                             #{o.id?.slice(0,8)?.toUpperCase()}
                           </td>
-                          <td>
+                          <td data-label="Customer">
                             <div style={{ fontWeight:600, fontSize:14 }}>{o.full_name}</div>
                             <div style={{ fontSize:12, color:'var(--text-muted)' }}>{o.phone}</div>
                           </td>
-                          <td style={{ fontSize:13, maxWidth:150 }}>
+                          <td data-label="Product" style={{ fontSize:13, maxWidth:150 }}>
                             <div style={{ overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{o.product_name}</div>
                           </td>
-                          <td>
+                          <td data-label="Payment">
                             <span style={{
                               fontSize:11, fontWeight:700, padding:'3px 8px', borderRadius:99,
                               background: o.payment_option === 'full_prepaid' ? 'var(--success-bg)' : 'var(--info-bg)',
@@ -1075,8 +1080,8 @@ export default function AdminDashboard() {
                               {o.payment_option === 'full_prepaid' ? '✅ Prepaid' : '🚚 Half COD'}
                             </span>
                           </td>
-                          <td style={{ fontWeight:700 }}>{formatINR(o.final_price)}</td>
-                          <td>
+                          <td data-label="Amount" style={{ fontWeight:700 }}>{formatINR(o.final_price)}</td>
+                          <td data-label="Active Destination">
                             <div style={{ fontWeight: 700, color: 'var(--brand-accent-dark)', fontSize: 13 }}>
                               {o[`step${o.current_step || 1}`] || 'Order Placed'}
                             </div>
@@ -1084,10 +1089,10 @@ export default function AdminDashboard() {
                               Step {o.current_step || 1} of 6
                             </div>
                           </td>
-                          <td style={{ fontSize:12, color:'var(--text-muted)', whiteSpace:'nowrap' }}>
+                          <td data-label="Date" style={{ fontSize:12, color:'var(--text-muted)', whiteSpace:'nowrap' }}>
                             {new Date(o.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'2-digit' })}
                           </td>
-                          <td>
+                          <td data-label="Actions">
                             <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                               <button 
                                 onClick={(e) => {
@@ -1159,7 +1164,7 @@ export default function AdminDashboard() {
                           onClick={async () => {
                             await fetch('/api/reviews', {
                               method: 'PUT',
-                              headers: { 'Content-Type': 'application/json' },
+                              headers: getAdminHeaders(),
                               body: JSON.stringify({ id: review.id, status: 'approved' })
                             });
                             fetchPendingReviews();
@@ -1172,7 +1177,7 @@ export default function AdminDashboard() {
                           onClick={async () => {
                             await fetch('/api/reviews', {
                               method: 'PUT',
-                              headers: { 'Content-Type': 'application/json' },
+                              headers: getAdminHeaders(),
                               body: JSON.stringify({ id: review.id, status: 'rejected' })
                             });
                             fetchPendingReviews();
