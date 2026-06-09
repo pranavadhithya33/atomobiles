@@ -61,8 +61,23 @@ export async function DELETE(req, { params }) {
   try {
     const { id } = await params;
     const adminSupabase = createAdminClient();
+    
+    // 1. Delete associated variants (Cascade)
+    await adminSupabase.from('product_variants').delete().eq('product_id', id);
+    
+    // 2. Delete associated reviews (Cascade)
+    await adminSupabase.from('reviews').delete().eq('product_id', id);
+
+    // 3. Delete the product itself
     const { error } = await adminSupabase.from('products').delete().eq('id', id);
-    if (error) throw error;
+    if (error) {
+      // If it still fails (e.g. FK constraint on orders), throw a clear message
+      if (error.code === '23503') {
+        throw new Error('Cannot delete this product because it has existing orders.');
+      }
+      throw error;
+    }
+    
     return NextResponse.json({ success: true });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });

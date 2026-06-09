@@ -95,7 +95,11 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const auth = sessionStorage.getItem('og_admin');
-      if (!auth) router.replace('/admin/login');
+      const token = sessionStorage.getItem('og_admin_token');
+      if (!auth || !token) {
+        sessionStorage.removeItem('og_admin');
+        router.replace('/admin/login');
+      }
     }
   }, [router]);
 
@@ -264,10 +268,14 @@ export default function AdminDashboard() {
   const handleDelete = async (id, name) => {
     if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
     try {
-      await fetch(`/api/products/${id}`, { method: 'DELETE', headers: getAdminHeaders() });
+      const res = await fetch(`/api/products/${id}`, { method: 'DELETE', headers: getAdminHeaders() });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to delete product from database.');
+      }
       await fetchProducts();
-    } catch {
-      alert('Failed to delete product');
+    } catch (err) {
+      alert(err.message || 'Failed to delete product');
     }
   };
 
