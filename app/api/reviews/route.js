@@ -7,14 +7,26 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const productId = searchParams.get('productId');
     const status = searchParams.get('status'); // admin can filter by status
+    const admin = searchParams.get('admin');
 
-    if (!productId && !status) {
+    if (!productId && !status && !admin) {
       return NextResponse.json({ error: 'Product ID required' }, { status: 400 });
     }
 
     const supabase = createAdminClient();
 
-    // If admin requests all pending reviews (no productId, status=pending)
+    // If admin requests all reviews
+    if (admin === 'true') {
+      const { data, error } = await supabase
+        .from('reviews')
+        .select('id, product_id, user_name, rating, comment, status, created_at')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return NextResponse.json(data || []);
+    }
+
+    // If admin requests specific status
     if (status && !productId) {
       const { data, error } = await supabase
         .from('reviews')

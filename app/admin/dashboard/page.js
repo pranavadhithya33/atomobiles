@@ -88,7 +88,7 @@ export default function AdminDashboard() {
   });
 
   // Reviews moderation state
-  const [pendingReviews, setPendingReviews] = useState([]);
+  const [allReviews, setAllReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
 
   // Videos state
@@ -118,12 +118,12 @@ export default function AdminDashboard() {
   const fetchOrders = () => {
     return fetch('/api/orders').then(r => r.json()).then(setOrders);
   };
-  const fetchPendingReviews = () => {
+  const fetchReviewsAdmin = () => {
     setReviewsLoading(true);
-    return fetch('/api/reviews?status=pending')
+    return fetch('/api/reviews?admin=true', { headers: getAdminHeaders() })
       .then(r => r.json())
-      .then(data => setPendingReviews(Array.isArray(data) ? data : []))
-      .catch(() => setPendingReviews([]))
+      .then(data => setAllReviews(Array.isArray(data) ? data : []))
+      .catch(() => setAllReviews([]))
       .finally(() => setReviewsLoading(false));
   };
   const fetchVideosAdmin = () => {
@@ -137,7 +137,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     // setLoading(true); // Avoid calling setState synchronously in effect body
-    Promise.all([fetchProducts(), fetchOrders(), fetchPendingReviews(), fetchVideosAdmin()]).finally(() => setLoading(false));
+    Promise.all([fetchProducts(), fetchOrders(), fetchReviewsAdmin(), fetchVideosAdmin()]).finally(() => setLoading(false));
   }, []);
 
   const handleLogout = () => {
@@ -1163,25 +1163,35 @@ export default function AdminDashboard() {
           <div>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>Review Moderation</h2>
-              <button onClick={fetchPendingReviews} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-secondary)', display:'flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600 }}>
+              <button onClick={fetchReviewsAdmin} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-secondary)', display:'flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600 }}>
                 <RefreshCw size={14} /> Refresh
               </button>
             </div>
 
             {reviewsLoading ? (
               <div style={{ textAlign:'center', padding:32, color:'var(--text-muted)' }}>Loading…</div>
-            ) : pendingReviews.length === 0 ? (
+            ) : allReviews.length === 0 ? (
               <div className={styles.emptyState}>
                 <div style={{ fontSize:40, marginBottom:12 }}>✅</div>
-                <p>No pending reviews. All caught up!</p>
+                <p>No reviews found.</p>
               </div>
             ) : (
               <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
-                {pendingReviews.map(review => (
+                {allReviews.map(review => (
                   <div key={review.id} style={{ background:'#fff', border:'1px solid var(--border)', borderRadius:'12px', padding:'16px', boxShadow:'0 1px 3px rgba(0,0,0,0.04)' }}>
                     <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'10px' }}>
                       <div>
-                        <div style={{ fontWeight:700, fontSize:14, color:'var(--text-primary)', marginBottom:4 }}>{review.user_name}</div>
+                        <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
+                          <div style={{ fontWeight:700, fontSize:14, color:'var(--text-primary)' }}>{review.user_name}</div>
+                          <span style={{ 
+                            fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 4,
+                            background: review.status === 'approved' ? '#dcfce7' : review.status === 'pending' ? '#fef3c7' : '#fee2e2',
+                            color: review.status === 'approved' ? '#166534' : review.status === 'pending' ? '#92400e' : '#991b1b',
+                            textTransform: 'uppercase'
+                          }}>
+                            {review.status}
+                          </span>
+                        </div>
                         <div style={{ display:'flex', alignItems:'center', gap:4 }}>
                           {[1,2,3,4,5].map(s => (
                             <Star key={s} size={14} fill={s <= review.rating ? '#facc15' : '#e5e7eb'} color={s <= review.rating ? '#facc15' : '#e5e7eb'} />
@@ -1192,32 +1202,36 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                       <div style={{ display:'flex', gap:8 }}>
-                        <button
-                          onClick={async () => {
-                            await fetch('/api/reviews', {
-                              method: 'PUT',
-                              headers: getAdminHeaders(),
-                              body: JSON.stringify({ id: review.id, status: 'approved' })
-                            });
-                            fetchPendingReviews();
-                          }}
-                          style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#16a34a', color:'#fff', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
-                        >
-                          <Check size={14} /> Approve
-                        </button>
-                        <button
-                          onClick={async () => {
-                            await fetch('/api/reviews', {
-                              method: 'PUT',
-                              headers: getAdminHeaders(),
-                              body: JSON.stringify({ id: review.id, status: 'rejected' })
-                            });
-                            fetchPendingReviews();
-                          }}
-                          style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#ef4444', color:'#fff', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
-                        >
-                          <X size={14} /> Reject
-                        </button>
+                        {review.status !== 'approved' && (
+                          <button
+                            onClick={async () => {
+                              await fetch('/api/reviews', {
+                                method: 'PUT',
+                                headers: getAdminHeaders(),
+                                body: JSON.stringify({ id: review.id, status: 'approved' })
+                              });
+                              fetchReviewsAdmin();
+                            }}
+                            style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#16a34a', color:'#fff', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
+                          >
+                            <Check size={14} /> Approve
+                          </button>
+                        )}
+                        {review.status !== 'rejected' && (
+                          <button
+                            onClick={async () => {
+                              await fetch('/api/reviews', {
+                                method: 'PUT',
+                                headers: getAdminHeaders(),
+                                body: JSON.stringify({ id: review.id, status: 'rejected' })
+                              });
+                              fetchReviewsAdmin();
+                            }}
+                            style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#ef4444', color:'#fff', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
+                          >
+                            <X size={14} /> Reject
+                          </button>
+                        )}
                       </div>
                     </div>
                     {review.comment && (
@@ -1225,9 +1239,13 @@ export default function AdminDashboard() {
                         &quot;{review.comment}&quot;
                       </div>
                     )}
-                    {review.product_id && (
+                    {review.product_id ? (
                       <div style={{ fontSize:11, color:'var(--text-muted)', marginTop:8 }}>
                         Product ID: {review.product_id.slice(0,8)}...
+                      </div>
+                    ) : (
+                      <div style={{ fontSize:11, color:'var(--text-muted)', marginTop:8, fontWeight: 600 }}>
+                        Store Review (Homepage)
                       </div>
                     )}
                   </div>
