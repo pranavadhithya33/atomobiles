@@ -39,6 +39,11 @@ export async function GET(req) {
     
     if (error) throw error;
     
+    // If the table is empty (user created table but didn't insert rows yet)
+    if (!data || data.length === 0) {
+      return NextResponse.json(adminMode ? FALLBACK_VIDEOS : FALLBACK_VIDEOS.filter(v => v.active));
+    }
+    
     return NextResponse.json(data);
   } catch (err) {
     return NextResponse.json(adminMode ? FALLBACK_VIDEOS : FALLBACK_VIDEOS.filter(v => v.active));
