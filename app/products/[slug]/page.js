@@ -6,7 +6,6 @@ import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
 import PaymentSelector from '@/components/PaymentSelector';
 import LivePriceDisplay from '@/components/LivePriceDisplay';
-import ReviewsSection from '@/components/ReviewsSection';
 import { formatINR, calcDiscountPct, calcSavings, calcPaymentDetails } from '@/lib/utils';
 import styles from '@/styles/ProductDetail.module.css';
 import { ChevronRight, CheckCircle, AlertCircle, Clock, ShoppingBag, MessageCircle, Package, Star, ShoppingCart } from 'lucide-react';
@@ -29,7 +28,6 @@ export default function ProductDetailPage() {
   const [paymentOption, setPaymentOption] = useState('half_cod');
   const [dynamicOurPrice, setDynamicOurPrice] = useState(0);
   const [dynamicStock, setDynamicStock] = useState(true);
-  const [reviewStats, setReviewStats] = useState({ avg: 0, count: 0 });
   const { addToCart } = useCart();
   const [addedToCart, setAddedToCart] = useState(false);
 
@@ -190,15 +188,6 @@ export default function ProductDetailPage() {
           <div style={{ flex:1 }}>
             {product.category && <div className={styles.productCategory}>{product.category}</div>}
             <h1 className={styles.productName} style={{ marginBottom: '8px' }}>{product.name}</h1>
-            {reviewStats.count > 0 ? (
-              <a href="#reviews-section" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#16a34a', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '13px', fontWeight: '700', textDecoration: 'none' }}>
-                {reviewStats.avg} ★ <span style={{ fontSize: '11px', opacity: 0.85 }}>({reviewStats.count})</span>
-              </a>
-            ) : (
-              <a href="#reviews-section" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#9aa3b2', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '13px', fontWeight: '700', textDecoration: 'none' }}>
-                No reviews yet
-              </a>
-            )}
           </div>
           {discountPct > 0 && (
             <span className={styles.discountBadgeLarge}>{discountPct}% OFF</span>
@@ -338,28 +327,6 @@ export default function ProductDetailPage() {
         </div>
       )}
 
-      {/* Reviews */}
-      <div id="reviews-section">
-        <ReviewsSection productId={product.id} onStatsChange={setReviewStats} />
-      </div>
-
-      {/* Floating Review Badge — real data */}
-      {reviewStats.count > 0 && (
-        <a
-          href="#reviews-section"
-          style={{
-            position: 'fixed', bottom: '24px', left: '24px', background: '#fff',
-            padding: '8px 16px', borderRadius: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none',
-            color: '#111', fontWeight: '700', border: '1px solid #e5e7eb', zIndex: 100
-          }}
-        >
-          <span style={{ display: 'flex', alignItems: 'center', gap: '2px', color: '#16a34a' }}>
-            {reviewStats.avg} <Star size={14} fill="currentColor" />
-          </span>
-          <span style={{ fontSize: '12px', color: '#666', fontWeight: '500' }}>{reviewStats.count} Reviews</span>
-        </a>
-      )}
     </div>
   );
 }

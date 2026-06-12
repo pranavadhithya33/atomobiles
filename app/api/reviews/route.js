@@ -26,13 +26,18 @@ export async function GET(req) {
       return NextResponse.json(data || []);
     }
 
-    // Public: only return approved reviews for a product
+    // Public: only return approved reviews for a product (or store)
     let query = supabase
       .from('reviews')
       .select('id, user_name, rating, comment, created_at')
-      .eq('product_id', productId)
       .eq('status', 'approved')
       .order('created_at', { ascending: false });
+
+    if (productId === 'store') {
+      query = query.is('product_id', null);
+    } else {
+      query = query.eq('product_id', productId);
+    }
 
     const { data, error } = await query;
     if (error) throw error;
@@ -49,14 +54,18 @@ export async function POST(req) {
     const body = await req.json();
     const { product_id, user_name, rating, comment } = body;
 
-    if (!product_id || !user_name || !rating) {
+    if (!user_name || !rating) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     const supabase = createAdminClient();
+    
+    // If product_id is 'store', insert null
+    const dbProductId = product_id === 'store' ? null : product_id;
+
     const { data, error } = await supabase
       .from('reviews')
-      .insert([{ product_id, user_name, rating: parseInt(rating), comment: comment || '', status: 'pending' }])
+      .insert([{ product_id: dbProductId, user_name, rating: parseInt(rating), comment: comment || '', status: 'pending' }])
       .select()
       .single();
 
