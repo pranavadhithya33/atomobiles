@@ -157,7 +157,7 @@ export default function ReviewsSection({ productId, onStatsChange }) {
             />
           </div>
 
-          {productId === 'store' && storeProducts.length > 0 && (
+          {productId === 'store' && (
             <div style={{ marginBottom: '16px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#4b5563', marginBottom: '6px' }}>Which product did you buy? (Optional)</label>
               <select 
@@ -166,9 +166,11 @@ export default function ReviewsSection({ productId, onStatsChange }) {
                 style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff' }}
               >
                 <option value="">-- General Store Review --</option>
-                {storeProducts.map(p => (
+                {storeProducts.length > 0 ? storeProducts.map(p => (
                   <option key={p.id} value={p.id}>{p.name}</option>
-                ))}
+                )) : (
+                  <option value="" disabled>Loading products...</option>
+                )}
               </select>
             </div>
           )}
