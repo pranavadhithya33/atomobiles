@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Star, ThumbsUp, MessageSquare, User, CheckCircle } from 'lucide-react';
 
 export default function ReviewsSection({ productId, onStatsChange }) {
@@ -11,20 +12,28 @@ export default function ReviewsSection({ productId, onStatsChange }) {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [storeProducts, setStoreProducts] = useState([]);
   const [form, setForm] = useState({ user_name: '', rating: 5, comment: '', selected_product_id: '', product_search_query: '' });
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     // Check for auto-open link
     if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('review') === 'true' || window.location.hash === '#review') {
+      const isReview = searchParams?.get('review') === 'true' || window.location.hash === '#review';
+      if (isReview) {
         setShowForm(true);
-        setTimeout(() => {
+        
+        const scrollToReviews = () => {
           const el = document.getElementById('reviews-section');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }, 300);
+          if (el) {
+            const y = el.getBoundingClientRect().top + window.scrollY - 80; // Account for header
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        };
+
+        setTimeout(scrollToReviews, 300);
+        setTimeout(scrollToReviews, 1200); // Fallback for slower devices/image loads
       }
     }
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     fetchReviews();
