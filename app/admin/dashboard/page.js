@@ -91,6 +91,10 @@ export default function AdminDashboard() {
   const [pendingReviews, setPendingReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
 
+  // Videos state
+  const [videos, setVideos] = useState([]);
+  const [videosLoading, setVideosLoading] = useState(false);
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Auth check
@@ -122,10 +126,18 @@ export default function AdminDashboard() {
       .catch(() => setPendingReviews([]))
       .finally(() => setReviewsLoading(false));
   };
+  const fetchVideosAdmin = () => {
+    setVideosLoading(true);
+    return fetch('/api/videos?admin=true', { headers: getAdminHeaders() })
+      .then(r => r.json())
+      .then(data => setVideos(Array.isArray(data) ? data : []))
+      .catch(() => setVideos([]))
+      .finally(() => setVideosLoading(false));
+  };
 
   useEffect(() => {
     // setLoading(true); // Avoid calling setState synchronously in effect body
-    Promise.all([fetchProducts(), fetchOrders(), fetchPendingReviews()]).finally(() => setLoading(false));
+    Promise.all([fetchProducts(), fetchOrders(), fetchPendingReviews(), fetchVideosAdmin()]).finally(() => setLoading(false));
   }, []);
 
   const handleLogout = () => {
@@ -896,6 +908,12 @@ export default function AdminDashboard() {
           >
             <MessageSquare size={15} /> Reviews {pendingReviews.length > 0 && <span style={{ background: '#ef4444', color: '#fff', fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 99, marginLeft: 4 }}>{pendingReviews.length}</span>}
           </button>
+          <button
+            className={`${styles.tab} ${activeTab === 'videos' ? styles.tabActive : ''}`}
+            onClick={() => { setActiveTab('videos'); fetchVideosAdmin(); }}
+          >
+            🎬 Video Reviews
+          </button>
         </div>
 
         {/* Products Tab */}
@@ -1214,6 +1232,99 @@ export default function AdminDashboard() {
                     )}
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Videos Tab */}
+        {activeTab === 'videos' && (
+          <div>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Video Reviews</h2>
+              <button onClick={fetchVideosAdmin} className="btn btn-outline" style={{ padding: '8px 16px', fontSize: 13 }}>
+                <RefreshCw size={14} style={{ display:'inline', marginRight: 5 }} /> Refresh
+              </button>
+            </div>
+            
+            <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 20 }}>
+              Toggle the visibility of your hardcoded video reviews, and update customer names.
+              The video files themselves are served from the Vercel CDN via the repository.
+            </p>
+
+            {videosLoading ? (
+              <div style={{ textAlign:'center', padding:32, color:'var(--text-muted)' }}>Loading videos...</div>
+            ) : videos.length === 0 ? (
+              <div className={styles.emptyState}>
+                <div style={{ fontSize:40, marginBottom:12 }}>🎥</div>
+                <p>No videos found. Did you run the SQL script?</p>
+              </div>
+            ) : (
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Video File</th>
+                      <th>Customer Name</th>
+                      <th>Visible</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {videos.map(v => (
+                      <tr key={v.id}>
+                        <td data-label="Video File" style={{ fontFamily:'monospace', fontSize:12, color:'var(--brand-secondary)' }}>
+                          {v.url}
+                        </td>
+                        <td data-label="Customer Name">
+                          <input 
+                            type="text" 
+                            className="form-input" 
+                            style={{ padding: '6px 12px', fontSize: 13 }}
+                            defaultValue={v.customer_name}
+                            id={`customer_name_${v.id}`}
+                          />
+                        </td>
+                        <td data-label="Visible">
+                          <input 
+                            type="checkbox" 
+                            defaultChecked={v.active} 
+                            id={`active_${v.id}`}
+                            style={{ width: 18, height: 18, accentColor: 'var(--brand-accent)' }}
+                          />
+                        </td>
+                        <td data-label="Actions">
+                          <button 
+                            className="btn btn-primary" 
+                            style={{ padding: '6px 12px', fontSize: 12 }}
+                            onClick={async (e) => {
+                              const btn = e.target;
+                              btn.textContent = 'Saving...';
+                              const name = document.getElementById(`customer_name_${v.id}`).value;
+                              const active = document.getElementById(`active_${v.id}`).checked;
+                              try {
+                                const res = await fetch(`/api/videos/${v.id}`, {
+                                  method: 'PUT',
+                                  headers: getAdminHeaders(),
+                                  body: JSON.stringify({ customer_name: name, active })
+                                });
+                                const data = await res.json();
+                                if (!res.ok) throw new Error(data.error);
+                                btn.textContent = '✓ Saved';
+                                setTimeout(() => btn.textContent = 'Save', 2000);
+                              } catch(err) {
+                                alert(err.message);
+                                btn.textContent = 'Save';
+                              }
+                            }}
+                          >
+                            Save
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>

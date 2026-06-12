@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import ProductCard, { SkeletonCard } from '@/components/ProductCard';
+import VideoReviewCarousel from '@/components/VideoReviewCarousel';
 import { Smartphone, Tag, Star, TrendingUp, ChevronRight, Zap, Truck } from 'lucide-react';
 
 function HomeContent() {
@@ -12,6 +13,7 @@ function HomeContent() {
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('');
 
@@ -21,20 +23,18 @@ function HomeContent() {
   }, [categoryFilter]);
 
   useEffect(() => {
-    fetch('/api/categories')
-      .then(r => r.json())
-      .then(setCategories)
-      .catch(() => {});
-  }, []);
-
-  useEffect(() => {
     setLoading(true);
-    const url = activeCategory
-      ? `/api/products?category=${encodeURIComponent(activeCategory)}`
-      : '/api/products';
-    fetch(url)
-      .then(r => r.json())
-      .then(data => { setProducts(data || []); setLoading(false); })
+    const fetchProducts = fetch(activeCategory ? `/api/products?category=${encodeURIComponent(activeCategory)}` : '/api/products').then(r => r.json());
+    const fetchCategories = fetch('/api/categories').then(r => r.json());
+    const fetchVideos = fetch('/api/videos').then(r => r.json()).catch(() => []);
+
+    Promise.all([fetchProducts, fetchCategories, fetchVideos])
+      .then(([prodData, catData, vidData]) => {
+        setProducts(prodData || []);
+        setCategories(catData || []);
+        setVideos(vidData || []);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, [activeCategory]);
 
@@ -242,6 +242,11 @@ function HomeContent() {
           </div>
         </div>
       </div>
+
+      {/* Video Reviews */}
+      {!loading && videos.length > 0 && (
+        <VideoReviewCarousel videos={videos} />
+      )}
 
       {/* Track Order CTA */}
       <div style={{ padding:'24px 16px 0' }}>
