@@ -10,7 +10,21 @@ export default function ReviewsSection({ productId, onStatsChange }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [storeProducts, setStoreProducts] = useState([]);
-  const [form, setForm] = useState({ user_name: '', rating: 5, comment: '', selected_product_id: '' });
+  const [form, setForm] = useState({ user_name: '', rating: 5, comment: '', selected_product_id: '', product_search_query: '' });
+
+  useEffect(() => {
+    // Check for auto-open link
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('review') === 'true' || window.location.hash === '#review') {
+        setShowForm(true);
+        setTimeout(() => {
+          const el = document.getElementById('reviews-section');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     fetchReviews();
@@ -60,7 +74,7 @@ export default function ReviewsSection({ productId, onStatsChange }) {
       
       if (!res.ok) throw new Error('Failed to submit review');
       
-      setForm({ user_name: '', rating: 5, comment: '', selected_product_id: '' });
+      setForm({ user_name: '', rating: 5, comment: '', selected_product_id: '', product_search_query: '' });
       setShowForm(false);
       setSubmitSuccess(true);
       // Don't refetch — the new review won't appear until admin approves it
@@ -160,18 +174,26 @@ export default function ReviewsSection({ productId, onStatsChange }) {
           {productId === 'store' && (
             <div style={{ marginBottom: '16px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#4b5563', marginBottom: '6px' }}>Which product did you buy? (Optional)</label>
-              <select 
-                value={form.selected_product_id}
-                onChange={e => setForm({...form, selected_product_id: e.target.value})}
+              <input 
+                list="store-products-list"
+                placeholder="-- Type to search or select a product --"
+                value={form.product_search_query || ''}
+                onChange={e => {
+                  const val = e.target.value;
+                  const p = storeProducts.find(prod => prod.name === val);
+                  setForm({
+                    ...form, 
+                    product_search_query: val,
+                    selected_product_id: p ? p.id : ''
+                  });
+                }}
                 style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff' }}
-              >
-                <option value="">-- General Store Review --</option>
-                {storeProducts.length > 0 ? storeProducts.map(p => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
-                )) : (
-                  <option value="" disabled>Loading products...</option>
-                )}
-              </select>
+              />
+              <datalist id="store-products-list">
+                {storeProducts.map(p => (
+                  <option key={p.id} value={p.name} />
+                ))}
+              </datalist>
             </div>
           )}
           
