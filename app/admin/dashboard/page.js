@@ -1241,7 +1241,7 @@ export default function AdminDashboard() {
                     )}
                     {review.product_id ? (
                       <div style={{ fontSize:11, color:'var(--text-muted)', marginTop:8 }}>
-                        Product ID: {review.product_id.slice(0,8)}...
+                        Bought: <span style={{ fontWeight: 600 }}>{review.products?.name || review.product_id.slice(0,8)}</span>
                       </div>
                     ) : (
                       <div style={{ fontSize:11, color:'var(--text-muted)', marginTop:8, fontWeight: 600 }}>

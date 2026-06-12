@@ -9,10 +9,17 @@ export default function ReviewsSection({ productId, onStatsChange }) {
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [form, setForm] = useState({ user_name: '', rating: 5, comment: '' });
+  const [storeProducts, setStoreProducts] = useState([]);
+  const [form, setForm] = useState({ user_name: '', rating: 5, comment: '', selected_product_id: '' });
 
   useEffect(() => {
     fetchReviews();
+    if (productId === 'store') {
+      fetch('/api/products')
+        .then(r => r.json())
+        .then(data => setStoreProducts(data))
+        .catch(console.error);
+    }
   }, [productId]);
 
   const fetchReviews = async () => {
@@ -41,15 +48,19 @@ export default function ReviewsSection({ productId, onStatsChange }) {
     setSubmitting(true);
     
     try {
+      const payload_product_id = productId === 'store' 
+        ? (form.selected_product_id || 'store') 
+        : productId;
+        
       const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product_id: productId, ...form })
+        body: JSON.stringify({ product_id: payload_product_id, ...form })
       });
       
       if (!res.ok) throw new Error('Failed to submit review');
       
-      setForm({ user_name: '', rating: 5, comment: '' });
+      setForm({ user_name: '', rating: 5, comment: '', selected_product_id: '' });
       setShowForm(false);
       setSubmitSuccess(true);
       // Don't refetch — the new review won't appear until admin approves it
@@ -145,6 +156,22 @@ export default function ReviewsSection({ productId, onStatsChange }) {
               placeholder="What did you like or dislike?"
             />
           </div>
+
+          {productId === 'store' && storeProducts.length > 0 && (
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#4b5563', marginBottom: '6px' }}>Which product did you buy? (Optional)</label>
+              <select 
+                value={form.selected_product_id}
+                onChange={e => setForm({...form, selected_product_id: e.target.value})}
+                style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff' }}
+              >
+                <option value="">-- General Store Review --</option>
+                {storeProducts.map(p => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
           
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
             <button 
@@ -197,9 +224,15 @@ export default function ReviewsSection({ productId, onStatsChange }) {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', color: '#878787' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span style={{ fontWeight: '600', color: '#4b5563' }}>{review.user_name}</span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#878787' }}>
-                      <CheckCircle size={12} color="#878787" /> Certified Buyer
-                    </span>
+                    {review.products?.name ? (
+                      <span style={{ fontSize: '11px', background: '#e0e7ff', color: '#4338ca', padding: '2px 8px', borderRadius: '12px', fontWeight: '700' }}>
+                        Bought: {review.products.name}
+                      </span>
+                    ) : (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#878787' }}>
+                        <CheckCircle size={12} color="#878787" /> Certified Buyer
+                      </span>
+                    )}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <span>{new Date(review.created_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}</span>

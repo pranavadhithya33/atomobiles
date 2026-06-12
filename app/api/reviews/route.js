@@ -19,7 +19,7 @@ export async function GET(req) {
     if (admin === 'true') {
       const { data, error } = await supabase
         .from('reviews')
-        .select('id, product_id, user_name, rating, comment, status, created_at')
+        .select('id, product_id, user_name, rating, comment, status, created_at, products(name)')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -30,7 +30,7 @@ export async function GET(req) {
     if (status && !productId) {
       const { data, error } = await supabase
         .from('reviews')
-        .select('id, product_id, user_name, rating, comment, status, created_at')
+        .select('id, product_id, user_name, rating, comment, status, created_at, products(name)')
         .eq('status', status)
         .order('created_at', { ascending: false });
 
@@ -38,16 +38,14 @@ export async function GET(req) {
       return NextResponse.json(data || []);
     }
 
-    // Public: only return approved reviews for a product (or store)
+    // Public: return approved reviews
     let query = supabase
       .from('reviews')
-      .select('id, user_name, rating, comment, created_at')
+      .select('id, user_name, rating, comment, created_at, products(name)')
       .eq('status', 'approved')
       .order('created_at', { ascending: false });
 
-    if (productId === 'store') {
-      query = query.is('product_id', null);
-    } else {
+    if (productId !== 'store') {
       query = query.eq('product_id', productId);
     }
 
