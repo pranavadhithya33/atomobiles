@@ -904,9 +904,9 @@ export default function AdminDashboard() {
           </button>
           <button
             className={`${styles.tab} ${activeTab === 'reviews' ? styles.tabActive : ''}`}
-            onClick={() => { setActiveTab('reviews'); fetchPendingReviews(); }}
+            onClick={() => { setActiveTab('reviews'); fetchReviewsAdmin(); }}
           >
-            <MessageSquare size={15} /> Reviews {pendingReviews.length > 0 && <span style={{ background: '#ef4444', color: '#fff', fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 99, marginLeft: 4 }}>{pendingReviews.length}</span>}
+            <MessageSquare size={15} /> Reviews {allReviews.filter(r => r.status === 'pending').length > 0 && <span style={{ background: '#ef4444', color: '#fff', fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 99, marginLeft: 4 }}>{allReviews.filter(r => r.status === 'pending').length}</span>}
           </button>
           <button
             className={`${styles.tab} ${activeTab === 'videos' ? styles.tabActive : ''}`}
