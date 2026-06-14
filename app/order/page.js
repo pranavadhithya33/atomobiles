@@ -331,7 +331,7 @@ function OrderFormContent() {
 
         {useCoins && (
           <div className={styles.summaryRow}>
-            <span style={{ color: 'var(--brand-accent-dark)' }}>OG Coins Applied</span>
+            <span style={{ color: 'var(--brand-accent-dark)' }}>Atom Coins Applied</span>
             <strong style={{ color: 'var(--brand-accent-dark)' }}>- {formatINR(userCoins)}</strong>
           </div>
         )}
@@ -375,7 +375,7 @@ function OrderFormContent() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ fontSize: '24px' }}>🪙</div>
             <div>
-              <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)' }}>Redeem OG Coins</div>
+              <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)' }}>Redeem Atom Coins</div>
               <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>You have ₹{userCoins} savings available</div>
             </div>
           </div>
@@ -403,7 +403,7 @@ function OrderFormContent() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ fontSize: '20px' }}>🪙</div>
             <div>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>Login to earn OG Coins</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>Login to earn Atom Coins</div>
               <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Earn 1 coin per ₹1000 spent on this order.</div>
             </div>
           </div>

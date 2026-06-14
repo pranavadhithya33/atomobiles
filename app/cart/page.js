@@ -152,7 +152,7 @@ export default function CartPage() {
         border: '1px solid rgba(244, 167, 36, 0.2)',
         boxShadow: 'var(--shadow-lg)'
       }}>
-        {/* OG Coins Section */}
+        {/* Atom Coins Section */}
         {userCoins > 0 && (
           <div style={{ 
             background: 'rgba(255,255,255,0.05)', 
@@ -165,7 +165,7 @@ export default function CartPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontSize: '20px' }}>🪙</span>
                 <div>
-                  <div style={{ color: '#fff', fontSize: '14px', fontWeight: '700' }}>Use your OG Coins</div>
+                  <div style={{ color: '#fff', fontSize: '14px', fontWeight: '700' }}>Use your Atom Coins</div>
                   <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px' }}>Balance: {userCoins} coins (₹{userCoins})</div>
                 </div>
               </div>
@@ -199,7 +199,7 @@ export default function CartPage() {
 
         {useCoins && (
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <span style={{ color: 'var(--brand-accent)', fontSize: '15px' }}>OG Coins Discount</span>
+            <span style={{ color: 'var(--brand-accent)', fontSize: '15px' }}>Atom Coins Discount</span>
             <span style={{ color: 'var(--brand-accent)', fontSize: '18px', fontWeight: '700' }}>- {formatINR(coinsToRedeem)}</span>
           </div>
         )}

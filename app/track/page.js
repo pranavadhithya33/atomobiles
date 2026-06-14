@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Truck, Search, ArrowLeft, Smartphone } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function TrackingLandingPage() {
   const [orderId, setOrderId] = useState('');
@@ -26,9 +27,14 @@ export default function TrackingLandingPage() {
         <ArrowLeft size={16} /> Back to Shopping
       </Link>
 
-      <div style={{ background: '#fff', borderRadius: 24, padding: '40px 32px', boxShadow: '0 20px 50px rgba(0,0,0,0.08)', border: '1px solid var(--border)', textAlign: 'center' }}>
-        <div style={{ width: 64, height: 64, background: '#e0f2fe', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-          <Truck size={32} color="#0ea5e9" />
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        style={{ background: '#fff', borderRadius: 24, padding: '40px 32px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)', textAlign: 'center' }}
+      >
+        <div style={{ width: 64, height: 64, background: 'rgba(244, 167, 36, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+          <Truck size={32} color="var(--brand-accent)" />
         </div>
         
         <h1 style={{ fontSize: 28, fontWeight: 900, marginBottom: 12, color: 'var(--text-primary)' }}>Track Your Shipment</h1>
@@ -49,23 +55,26 @@ export default function TrackingLandingPage() {
                 width: '100%', 
                 padding: '16px 20px', 
                 borderRadius: 16, 
-                border: '2px solid #e2e8f0', 
+                border: '2px solid var(--border)', 
                 fontSize: 16, 
                 outline: 'none',
-                background: '#f8fafc',
+                background: 'var(--bg-page)',
                 transition: 'border-color 0.2s',
                 fontWeight: 600,
-                color: '#0a1628'
+                color: 'var(--text-primary)'
               }}
+              onFocus={(e) => e.target.style.borderColor = 'var(--brand-accent)'}
+              onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
             />
           </div>
           
-          <button 
+          <motion.button 
+            whileTap={{ scale: 0.95 }}
             type="submit"
             style={{ 
               width: '100%', 
               padding: '16px', 
-              background: '#0a1628', 
+              background: 'var(--brand-primary)', 
               color: '#fff', 
               border: 'none', 
               borderRadius: 16, 
@@ -80,13 +89,13 @@ export default function TrackingLandingPage() {
             }}
           >
             <Search size={20} /> Track Now
-          </button>
+          </motion.button>
         </form>
         
-        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px dashed #e2e8f0', fontSize: 13, color: 'var(--text-secondary)' }}>
+        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px dashed var(--border)', fontSize: 13, color: 'var(--text-secondary)' }}>
           Need help? Contact us on <a href="https://wa.me/917397189222" style={{ color: 'var(--brand-primary)', fontWeight: 700 }}>WhatsApp</a>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
