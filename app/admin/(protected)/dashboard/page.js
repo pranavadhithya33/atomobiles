@@ -6,9 +6,11 @@ import styles from '@/styles/Admin.module.css';
 import { formatINR, calcPaymentDetails } from '@/lib/utils';
 import {
   Smartphone, Package, ShoppingBag, Plus, Edit2, Trash2,
-  LogOut, RefreshCw, Star, MessageSquare, Check, X, User, Phone, MapPin
+  LogOut, RefreshCw, Star, MessageSquare, Check, X, User, Phone, MapPin, CheckCircle
 } from 'lucide-react';
 import { generateInvoice } from '@/lib/invoiceGenerator';
+import { motion, AnimatePresence } from 'framer-motion';
+import AdminLoader from '@/components/AdminLoader';
 
 const CATEGORIES = [
   { label: 'Smartphones', value: 'smartphones' },
@@ -492,7 +494,7 @@ export default function AdminDashboard() {
   const totalRevenue = orders.reduce((sum, o) => sum + (o.final_price || 0), 0);
   const pendingOrders = orders.filter(o => o.status === 'pending').length;
 
-  if (!isAuthenticated) return <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>Loading...</div>;
+  if (!isAuthenticated) return <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center' }}><AdminLoader /></div>;
 
   return (
     <div className={styles.adminPage}>
@@ -876,8 +878,8 @@ export default function AdminDashboard() {
       {/* Header */}
       <div className={styles.adminHeader}>
         <div className={styles.adminHeaderTitle}>
-          <Smartphone size={20} color="#f4a724" />
-          Only <span>Gadjets</span> Admin
+          <Smartphone size={20} color="var(--brand-accent)" />
+          Atomobiles <span>Admin</span>
         </div>
         <button onClick={handleLogout} className={styles.logoutBtn}>
           <LogOut size={14} style={{ display:'inline', marginRight:5, verticalAlign:'middle' }} />
@@ -908,17 +910,13 @@ export default function AdminDashboard() {
           >
             <MessageSquare size={15} /> Reviews {allReviews.filter(r => r.status === 'pending').length > 0 && <span style={{ background: '#ef4444', color: '#fff', fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 99, marginLeft: 4 }}>{allReviews.filter(r => r.status === 'pending').length}</span>}
           </button>
-          <button
-            className={`${styles.tab} ${activeTab === 'videos' ? styles.tabActive : ''}`}
-            onClick={() => { setActiveTab('videos'); fetchVideosAdmin(); }}
-          >
-            🎬 Video Reviews
-          </button>
         </div>
+
+        <AnimatePresence mode="wait">
 
         {/* Products Tab */}
         {activeTab === 'products' && (
-          <div>
+          <motion.div key="products" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>Products</h2>
               <button onClick={openAdd} className={styles.addBtn} id="add-product-btn">
@@ -986,10 +984,10 @@ export default function AdminDashboard() {
             </button>
 
             {loading ? (
-              <div style={{ textAlign:'center', padding:32, color:'var(--text-muted)' }}>Loading…</div>
+              <AdminLoader />
             ) : products.length === 0 ? (
               <div className={styles.emptyState}>
-                <div style={{ fontSize:40, marginBottom:12 }}>📱</div>
+                <div style={{ marginBottom:12, display: 'flex', justifyContent: 'center', color: 'var(--text-muted)' }}><Smartphone size={40} /></div>
                 <p>No products yet. Click &quot;Add Product&quot; to get started.</p>
               </div>
             ) : (
@@ -1044,12 +1042,12 @@ export default function AdminDashboard() {
                 </table>
               </div>
             )}
-          </div>
+          </motion.div>
         )}
 
         {/* Orders Tab */}
         {activeTab === 'orders' && (
-          <div>
+          <motion.div key="orders" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>All Orders</h2>
               <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -1068,10 +1066,10 @@ export default function AdminDashboard() {
             </div>
 
             {loading ? (
-              <div style={{ textAlign:'center', padding:32, color:'var(--text-muted)' }}>Loading…</div>
+              <AdminLoader />
             ) : orders.length === 0 ? (
               <div className={styles.emptyState}>
-                <div style={{ fontSize:40, marginBottom:12 }}>📦</div>
+                <div style={{ marginBottom:12, display: 'flex', justifyContent: 'center', color: 'var(--text-muted)' }}><Package size={40} /></div>
                 <p>No orders yet.</p>
               </div>
             ) : (
@@ -1156,11 +1154,11 @@ export default function AdminDashboard() {
                 </table>
               </div>
             )}
-          </div>
+          </motion.div>
         )}
         {/* Reviews Moderation Tab */}
         {activeTab === 'reviews' && (
-          <div>
+          <motion.div key="reviews" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>Review Moderation</h2>
               <button onClick={fetchReviewsAdmin} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-secondary)', display:'flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600 }}>
@@ -1169,10 +1167,10 @@ export default function AdminDashboard() {
             </div>
 
             {reviewsLoading ? (
-              <div style={{ textAlign:'center', padding:32, color:'var(--text-muted)' }}>Loading…</div>
+              <AdminLoader />
             ) : allReviews.length === 0 ? (
               <div className={styles.emptyState}>
-                <div style={{ fontSize:40, marginBottom:12 }}>✅</div>
+                <div style={{ marginBottom:12, display: 'flex', justifyContent: 'center', color: 'var(--success)' }}><CheckCircle size={40} /></div>
                 <p>No reviews found.</p>
               </div>
             ) : (
@@ -1252,101 +1250,9 @@ export default function AdminDashboard() {
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
         )}
-
-        {/* Videos Tab */}
-        {activeTab === 'videos' && (
-          <div>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>Video Reviews</h2>
-              <button onClick={fetchVideosAdmin} className="btn btn-outline" style={{ padding: '8px 16px', fontSize: 13 }}>
-                <RefreshCw size={14} style={{ display:'inline', marginRight: 5 }} /> Refresh
-              </button>
-            </div>
-            
-            <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 20 }}>
-              Toggle the visibility of your hardcoded video reviews, and update customer names.
-              The video files themselves are served from the Vercel CDN via the repository.
-            </p>
-
-            {videosLoading ? (
-              <div style={{ textAlign:'center', padding:32, color:'var(--text-muted)' }}>Loading videos...</div>
-            ) : videos.length === 0 ? (
-              <div className={styles.emptyState}>
-                <div style={{ fontSize:40, marginBottom:12 }}>🎥</div>
-                <p>No videos found. Did you run the SQL script?</p>
-              </div>
-            ) : (
-              <div className={styles.tableWrap}>
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>Video File</th>
-                      <th>Customer Name</th>
-                      <th>Visible</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {videos.map(v => (
-                      <tr key={v.id}>
-                        <td data-label="Video File" style={{ fontFamily:'monospace', fontSize:12, color:'var(--brand-secondary)' }}>
-                          {v.url}
-                        </td>
-                        <td data-label="Customer Name">
-                          <input 
-                            type="text" 
-                            className="form-input" 
-                            style={{ padding: '6px 12px', fontSize: 13 }}
-                            defaultValue={v.customer_name}
-                            id={`customer_name_${v.id}`}
-                          />
-                        </td>
-                        <td data-label="Visible">
-                          <input 
-                            type="checkbox" 
-                            defaultChecked={v.active} 
-                            id={`active_${v.id}`}
-                            style={{ width: 18, height: 18, accentColor: 'var(--brand-accent)' }}
-                          />
-                        </td>
-                        <td data-label="Actions">
-                          <button 
-                            className="btn btn-primary" 
-                            style={{ padding: '6px 12px', fontSize: 12 }}
-                            onClick={async (e) => {
-                              const btn = e.target;
-                              btn.textContent = 'Saving...';
-                              const name = document.getElementById(`customer_name_${v.id}`).value;
-                              const active = document.getElementById(`active_${v.id}`).checked;
-                              try {
-                                const res = await fetch(`/api/videos/${v.id}`, {
-                                  method: 'PUT',
-                                  headers: getAdminHeaders(),
-                                  body: JSON.stringify({ customer_name: name, active })
-                                });
-                                const data = await res.json();
-                                if (!res.ok) throw new Error(data.error);
-                                btn.textContent = '✓ Saved';
-                                setTimeout(() => btn.textContent = 'Save', 2000);
-                              } catch(err) {
-                                alert(err.message);
-                                btn.textContent = 'Save';
-                              }
-                            }}
-                          >
-                            Save
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        )}
+        </AnimatePresence>
 
       </div>
 

@@ -190,10 +190,10 @@
 .discountBadgeLarge {
   display: inline-flex;
   align-items: center;
-  background: #dc2626;
-  color: #fff;
+  background: var(--brand-accent);
+  color: var(--brand-primary);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
   padding: 4px 10px;
   border-radius: var(--radius-full);
   margin-left: 8px;
@@ -244,8 +244,8 @@
 }
 
 .paymentOptionPrepaid.paymentOptionActive {
-  border-color: var(--success) !important;
-  background: var(--success-bg) !important;
+  border-color: var(--brand-accent) !important;
+  background: var(--brand-accent-light) !important;
 }
 
 .paymentOptionHeader {
@@ -273,7 +273,7 @@
 }
 
 .paymentOptionPrepaid.paymentOptionActive .paymentRadio {
-  border-color: var(--success);
+  border-color: var(--brand-accent);
 }
 
 .paymentRadioDot {
@@ -284,7 +284,7 @@
 }
 
 .paymentOptionPrepaid.paymentOptionActive .paymentRadioDot {
-  background: var(--success);
+  background: var(--brand-accent);
 }
 
 .paymentOptionInfo {
@@ -308,10 +308,10 @@
 }
 
 .prepaidBadge {
-  background: var(--success);
-  color: #fff;
+  background: var(--brand-accent);
+  color: var(--brand-primary);
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   padding: 2px 7px;
   border-radius: var(--radius-full);
   letter-spacing: 0.3px;
@@ -345,7 +345,7 @@
 }
 
 .prepaidTotal {
-  color: var(--success);
+  color: var(--brand-accent);
 }
 
 .paymentSummary {
@@ -420,12 +420,14 @@
 }
 
 .ctaWhatsApp {
-  background: #25d366;
+  background: var(--brand-secondary);
   color: #fff;
+  border: 1px solid var(--border);
 }
 
 .ctaWhatsApp:hover {
-  background: #128c7e;
+  background: var(--brand-primary);
+  color: var(--brand-accent);
 }
 
 /* ---- Page Layout ---- */
@@ -529,7 +531,7 @@
   border-color: var(--brand-accent) !important;
   background: var(--brand-accent) !important;
   color: var(--brand-primary) !important;
-  box-shadow: 0 2px 8px rgba(244,167,36,0.35);
+  box-shadow: 0 2px 8px rgba(200, 121, 65, 0.35);
 }
 
 .chipDisabled {
@@ -550,8 +552,8 @@
   gap: 10px;
   margin-top: 4px;
   padding: 10px 14px;
-  background: linear-gradient(135deg, rgba(244,167,36,0.08), rgba(244,167,36,0.04));
-  border: 1.5px solid rgba(244,167,36,0.3);
+  background: linear-gradient(135deg, rgba(200, 121, 65, 0.08), rgba(200, 121, 65, 0.04));
+  border: 1.5px solid rgba(200, 121, 65, 0.3);
   border-radius: 10px;
 }
 

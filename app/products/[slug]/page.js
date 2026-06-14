@@ -10,6 +10,7 @@ import { formatINR, calcDiscountPct, calcSavings, calcPaymentDetails } from '@/l
 import styles from '@/styles/ProductDetail.module.css';
 import { ChevronRight, CheckCircle, AlertCircle, Clock, ShoppingBag, MessageCircle, Package, Star, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { motion } from 'framer-motion';
 
 const WHATSAPP_NUMBER = '917397189222';
 
@@ -163,9 +164,22 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className={styles.detailPage}>
+    <motion.div 
+      className={styles.detailPage}
+      initial="hidden"
+      animate="visible"
+      variants={{
+        visible: { transition: { staggerChildren: 0.1 } }
+      }}
+    >
       {/* Breadcrumb */}
-      <nav className={styles.breadcrumb}>
+      <motion.nav 
+        className={styles.breadcrumb}
+        variants={{
+          hidden: { opacity: 0, y: -10 },
+          visible: { opacity: 1, y: 0 }
+        }}
+      >
         <Link href="/" className={styles.breadcrumbLink}>Home</Link>
         <ChevronRight size={14} className={styles.breadcrumbSep} />
         {product.category && (
@@ -177,13 +191,15 @@ export default function ProductDetailPage() {
           </>
         )}
         <span className={styles.breadcrumbCurrent}>{product.name}</span>
-      </nav>
+      </motion.nav>
 
       {/* Gallery */}
-      <ProductGallery images={product.images} name={product.name} />
+      <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+        <ProductGallery images={product.images} name={product.name} />
+      </motion.div>
 
       {/* Info Card */}
-      <div className={styles.infoSection}>
+      <motion.div className={styles.infoSection} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:8, flexWrap:'wrap' }}>
           <div style={{ flex:1 }}>
             {product.category && <div className={styles.productCategory}>{product.category}</div>}
@@ -262,18 +278,21 @@ export default function ProductDetailPage() {
             onStockUpdate={setDynamicStock}
           />
         )}
-      </div>
+      </motion.div>
 
       {/* Payment Selector */}
-      <PaymentSelector
-        ourPrice={dynamicOurPrice}
-        selectedOption={paymentOption}
-        onSelect={setPaymentOption}
-      />
+      <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+        <PaymentSelector
+          ourPrice={dynamicOurPrice}
+          selectedOption={paymentOption}
+          onSelect={setPaymentOption}
+        />
+      </motion.div>
 
       {/* CTA Buttons */}
-      <div className={styles.ctaSection}>
-        <button
+      <motion.div className={styles.ctaSection} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+        <motion.button
+          whileTap={{ scale: 0.95 }}
           onClick={handleBuyNow}
           disabled={!inStock}
           className={`${styles.ctaBtn} ${styles.ctaBuyNow}`}
@@ -282,9 +301,10 @@ export default function ProductDetailPage() {
         >
           <ShoppingBag size={20} strokeWidth={2.5} />
           {inStock ? `Place Order · ${formatINR(finalPrice)}` : 'Out of Stock'}
-        </button>
+        </motion.button>
 
-        <button
+        <motion.button
+          whileTap={{ scale: 0.95 }}
           onClick={handleAddToCart}
           disabled={!inStock || addedToCart}
           className={`${styles.ctaBtn}`}
@@ -302,9 +322,10 @@ export default function ProductDetailPage() {
         >
           {addedToCart ? <CheckCircle size={20} /> : <ShoppingCart size={20} />}
           {addedToCart ? 'Added to Cart' : 'Add to Cart'}
-        </button>
+        </motion.button>
 
-        <a
+        <motion.a
+          whileTap={{ scale: 0.95 }}
           href={waUrl}
           target="_blank"
           rel="noopener noreferrer"
@@ -313,20 +334,20 @@ export default function ProductDetailPage() {
         >
           <MessageCircle size={20} strokeWidth={2.5} />
           Enquire on WhatsApp
-        </a>
-      </div>
+        </motion.a>
+      </motion.div>
 
       {/* Description */}
       {product.description && (
-        <div className={styles.descSection}>
+        <motion.div className={styles.descSection} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
           <h2 className={styles.descTitle}>
             <Package size={16} strokeWidth={2} style={{ display:'inline', marginRight:6, verticalAlign:'middle' }} />
             Product Details
           </h2>
           <p className={styles.descText}>{product.description}</p>
-        </div>
+        </motion.div>
       )}
 
-    </div>
+    </motion.div>
   );
 }

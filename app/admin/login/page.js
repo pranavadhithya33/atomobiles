@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '@/styles/Admin.module.css';
-import { Smartphone, Lock } from 'lucide-react';
+import { Smartphone, Lock, LogIn } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function AdminLoginPage() {
   const [password, setPassword] = useState('');
@@ -38,7 +39,12 @@ export default function AdminLoginPage() {
 
   return (
     <div className={styles.loginPage}>
-      <div className={styles.loginCard}>
+      <motion.div 
+        className={styles.loginCard}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+      >
         <div className={styles.loginLogo}>
           <div className={styles.loginLogoIcon}>
             <Smartphone size={28} color="#f4a724" />
@@ -66,21 +72,23 @@ export default function AdminLoginPage() {
 
           {error && <div className={styles.loginError}>{error}</div>}
 
-          <button
+          <motion.button
+            whileTap={{ scale: 0.95 }}
             type="submit"
             id="admin-login-btn"
             className={styles.loginBtn}
             disabled={loading || !password}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
           >
-            {loading ? 'Verifying…' : '🔐 Login to Dashboard'}
-          </button>
+            {loading ? 'Verifying…' : <><LogIn size={18} /> Login to Dashboard</>}
+          </motion.button>
         </form>
 
         <p style={{ textAlign:'center', fontSize:12, color:'#aaa' }}>
           <Lock size={11} style={{ verticalAlign:'middle', marginRight:4 }} />
           Authorized personnel only
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }

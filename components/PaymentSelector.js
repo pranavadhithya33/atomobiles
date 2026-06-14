@@ -48,7 +48,7 @@ export default function PaymentSelector({ ourPrice, selectedOption, onSelect }) 
             </div>
             <div className={styles.paymentBreakdownRow}>
               <span>Prepaid Discount</span>
-              <strong style={{ color: '#16a34a' }}>− {formatINR(fullDetails.discount)}</strong>
+              <strong style={{ color: 'var(--brand-accent)' }}>− {formatINR(fullDetails.discount)}</strong>
             </div>
             <div className={`${styles.paymentBreakdownRow} ${styles.paymentTotal} ${styles.prepaidTotal}`}>
               <span>You Pay</span>
@@ -74,7 +74,7 @@ export default function PaymentSelector({ ourPrice, selectedOption, onSelect }) 
             <div className={styles.paymentOptionName}>
               <Truck size={15} strokeWidth={2} />
               Half Payment + Cash on Delivery
-              <span className={styles.prepaidBadge} style={{ background: '#f3f4f6', color: '#4b5563', marginLeft: '6px' }}>₹{halfDetails.discount} OFF</span>
+              <span className={styles.prepaidBadge} style={{ background: 'var(--bg-page)', color: 'var(--text-primary)', marginLeft: '6px' }}>₹{halfDetails.discount} OFF</span>
             </div>
             <div className={styles.paymentOptionDesc}>
               Pay advance now, rest on delivery
@@ -90,7 +90,7 @@ export default function PaymentSelector({ ourPrice, selectedOption, onSelect }) 
             </div>
             <div className={styles.paymentBreakdownRow}>
               <span>Discount</span>
-              <strong style={{ color: '#16a34a' }}>− {formatINR(halfDetails.discount)}</strong>
+              <strong style={{ color: 'var(--brand-accent)' }}>− {formatINR(halfDetails.discount)}</strong>
             </div>
             <div className={`${styles.paymentBreakdownRow} ${styles.paymentTotal}`}>
               <span>Advance (pay now)</span>
@@ -120,7 +120,7 @@ export default function PaymentSelector({ ourPrice, selectedOption, onSelect }) 
             <div className={styles.paymentOptionName}>
               <Tag size={15} strokeWidth={2} />
               30% Token Advance
-              <span className={styles.prepaidBadge} style={{ background: '#f3f4f6', color: '#4b5563', marginLeft: '6px' }}>₹{tokenDetails.discount} OFF</span>
+              <span className={styles.prepaidBadge} style={{ background: 'var(--bg-page)', color: 'var(--text-primary)', marginLeft: '6px' }}>₹{tokenDetails.discount} OFF</span>
             </div>
             <div className={styles.paymentOptionDesc}>
               Pay 30% now, remaining on delivery
@@ -136,7 +136,7 @@ export default function PaymentSelector({ ourPrice, selectedOption, onSelect }) 
             </div>
             <div className={styles.paymentBreakdownRow}>
               <span>Discount</span>
-              <strong style={{ color: '#16a34a' }}>− {formatINR(tokenDetails.discount)}</strong>
+              <strong style={{ color: 'var(--brand-accent)' }}>− {formatINR(tokenDetails.discount)}</strong>
             </div>
             <div className={`${styles.paymentBreakdownRow} ${styles.paymentTotal}`}>
               <span>Token Advance (pay now)</span>
@@ -163,7 +163,7 @@ export default function PaymentSelector({ ourPrice, selectedOption, onSelect }) 
             Pay <strong>{formatINR(tokenDetails.advance)}</strong> token advance · ₹{tokenDetails.remaining} on delivery
           </p>
         ) : (
-          <p style={{ color: '#16a34a' }}>
+          <p style={{ color: 'var(--brand-accent)' }}>
             <CheckCircle size={13} strokeWidth={2} />
             You save an extra <strong>{formatINR(fullDetails.discount)}</strong> with prepaid!
           </p>

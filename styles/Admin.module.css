@@ -2,7 +2,7 @@
 
 .adminPage {
   min-height: 100vh;
-  background: #f0f2f5;
+  background: var(--bg-page);
 }
 
 .adminHeader {
@@ -438,7 +438,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--brand-primary);
+  background: radial-gradient(circle at top left, var(--bg-page), #f3ebe3);
   padding: var(--space-md);
 }
 

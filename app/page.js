@@ -6,42 +6,25 @@ import Link from 'next/link';
 import ProductCard, { SkeletonCard } from '@/components/ProductCard';
 import ReviewsSection from '@/components/ReviewsSection';
 import { motion } from 'framer-motion';
-import { Smartphone, Tag, Star, TrendingUp, ChevronRight, Zap, Truck } from 'lucide-react';
+import { Smartphone, Tag, Star, TrendingUp, ChevronRight, Zap, Truck, CheckCircle, CreditCard, ShieldCheck } from 'lucide-react';
 
 function HomeContent() {
-  const searchParams = useSearchParams();
-  const categoryFilter = searchParams.get('cat') || searchParams.get('category') || '';
-
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState('');
-
-  // Sync state with URL params
-  useEffect(() => {
-    setActiveCategory(categoryFilter);
-  }, [categoryFilter]);
 
   useEffect(() => {
     setLoading(true);
-    const fetchProducts = fetch(activeCategory ? `/api/products?category=${encodeURIComponent(activeCategory)}` : '/api/products').then(r => r.json());
-    const fetchCategories = fetch('/api/categories').then(r => r.json());
-
-    Promise.all([fetchProducts, fetchCategories])
-      .then(([prodData, catData]) => {
+    fetch('/api/products')
+      .then(r => r.json())
+      .then(prodData => {
         setProducts(prodData || []);
-        setCategories(catData || []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [activeCategory]);
+  }, []);
 
   return (
     <div style={{ paddingBottom: 80 }}>
-      {/* Version Indicator for Debugging */}
-      <div style={{ background: '#f4a724', color: '#0a1628', fontSize: '10px', textAlign: 'center', padding: '2px', fontWeight: 'bold' }}>
-        BUILD_VER: 2026-04-26-1700
-      </div>
       {/* Hero Banner */}
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
@@ -105,33 +88,52 @@ function HomeContent() {
         </div>
       </motion.div>
 
-      {/* USP Strip */}
-      <div style={{
-        background:'#fff', borderBottom:'1px solid #e2e8f0',
-        display:'flex', overflowX:'auto', scrollbarWidth:'none'
-      }}>
-        {[
-          { icon:'🏷️', text:'Wholesale Rates' },
-          { icon:'🚚', text:'Pan India Delivery' },
-          { icon:'💳', text:'Half COD Option' },
-          { icon:'✅', text:'Genuine Products' },
-        ].map((item, i) => (
-          <div key={i} style={{
-            display:'flex', alignItems:'center', gap:6,
-            padding:'10px 16px', whiteSpace:'nowrap', flexShrink:0,
-            borderRight: i < 3 ? '1px solid #e2e8f0' : 'none'
-          }}>
-            <span style={{ fontSize:15 }}>{item.icon}</span>
-            <span style={{ fontSize:12, fontWeight:600, color:'#4a5568' }}>{item.text}</span>
-          </div>
-        ))}
+      {/* USP Strip - Premium Feature Grid */}
+      <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '16px' }}>
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={{
+            visible: { transition: { staggerChildren: 0.1 } }
+          }}
+          style={{ display: 'flex', overflowX: 'auto', scrollbarWidth: 'none', gap: '16px', scrollSnapType: 'x mandatory' }}
+        >
+          {[
+            { icon: <Tag size={20} color="var(--brand-accent)" />, title: 'Unbeatable Dealer Pricing', desc: 'Direct-to-retailer margins' },
+            { icon: <Truck size={20} color="var(--brand-accent)" />, title: 'Express Nationwide Shipping', desc: 'Secure transit across India' },
+            { icon: <CreditCard size={20} color="var(--brand-accent)" />, title: 'Flexible Payment Terms', desc: 'Pay 50% advance, rest on delivery' },
+            { icon: <ShieldCheck size={20} color="var(--brand-accent)" />, title: '100% Verified Authenticity', desc: 'Quality guaranteed on every unit' },
+          ].map((item, i) => (
+            <motion.div 
+              key={i} 
+              variants={{
+                hidden: { opacity: 0, x: -20 },
+                visible: { opacity: 1, x: 0 }
+              }}
+              style={{
+                display: 'flex', flexDirection: 'column', gap: '4px',
+                padding: '16px', background: 'var(--bg-page)', borderRadius: '12px',
+                minWidth: '220px', scrollSnapAlign: 'start', border: '1px solid var(--border)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                {item.icon}
+                <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)' }}>{item.title}</span>
+              </div>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{item.desc}</span>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
 
       {/* Top Selling Section */}
       {!loading && products.some(p => p.featured && p.stock > 0) && (
-        <div style={{ padding: '0 16px', marginTop: 20 }}>
-          <div className="section-header" style={{ marginBottom: 12 }}>
-            <h2 className="section-title">🔥 Top <span>Selling</span></h2>
+        <div style={{ padding: '0 16px', marginTop: 32 }}>
+          <div className="section-header" style={{ marginBottom: 16 }}>
+            <h2 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <TrendingUp size={24} color="var(--brand-accent)" /> Top <span>Selling</span>
+            </h2>
           </div>
           <div className="product-grid" style={{ marginBottom: 20 }}>
             {products
@@ -143,50 +145,13 @@ function HomeContent() {
         </div>
       )}
 
-      {/* Category Filter */}
-      {categories.length > 0 && (
-        <div style={{ padding:'16px 16px 8px' }}>
-          <div style={{ display:'flex', gap:8, overflowX:'auto', scrollbarWidth:'none', paddingBottom:4 }}>
-            <button
-              onClick={() => setActiveCategory('')}
-              style={{
-                padding:'7px 16px', borderRadius:99, fontSize:13, fontWeight:600,
-                border:'none', cursor:'pointer', flexShrink:0, transition:'all 0.2s',
-                background: !activeCategory ? '#0a1628' : '#fff',
-                color: !activeCategory ? '#fff' : '#4a5568',
-                boxShadow: !activeCategory ? 'none' : '0 1px 3px rgba(0,0,0,0.1)',
-              }}
-            >
-              All
-            </button>
-            {categories.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(activeCategory === cat.slug ? '' : cat.slug)}
-                style={{
-                  padding:'7px 16px', borderRadius:99, fontSize:13, fontWeight:600,
-                  border:'none', cursor:'pointer', flexShrink:0, transition:'all 0.2s',
-                  background: activeCategory === cat.slug ? '#0a1628' : '#fff',
-                  color: activeCategory === cat.slug ? '#fff' : '#4a5568',
-                  boxShadow: activeCategory === cat.slug ? 'none' : '0 1px 3px rgba(0,0,0,0.1)',
-                }}
-              >
-                {cat.icon && <span style={{ marginRight:4 }}>{cat.icon}</span>}
-                {cat.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+
 
       {/* Products Grid */}
       <div id="products" style={{ padding:'12px 12px 0' }}>
         <div className="section-header" style={{ padding:'0 4px', marginBottom:12 }}>
           <h2 className="section-title">
-            {activeCategory
-              ? categories.find(c => c.slug === activeCategory)?.name || 'Products'
-              : <>All <span>Products</span></>
-            }
+            All <span>Smartphones</span>
           </h2>
           {!loading && (
             <span style={{ fontSize:12, color:'var(--text-muted)', fontWeight:600 }}>
@@ -204,19 +169,13 @@ function HomeContent() {
             textAlign:'center', padding:'48px 16px',
             background:'#fff', borderRadius:16, margin:'0 4px'
           }}>
-            <div style={{ fontSize:48, marginBottom:12 }}>📱</div>
-            <div style={{ fontWeight:700, fontSize:16, color:'#0a1628', marginBottom:6 }}>
+            <div style={{ fontSize:48, marginBottom:12, display: 'flex', justifyContent: 'center' }}><Smartphone size={48} color="var(--brand-accent)" /></div>
+            <div style={{ fontWeight:700, fontSize:16, color:'var(--text-primary)', marginBottom:6 }}>
               No products found
             </div>
-            <div style={{ fontSize:13, color:'#9aa3b2' }}>
-              {activeCategory ? 'No products in this category yet.' : 'Products will appear here once added.'}
+            <div style={{ fontSize:13, color:'var(--text-muted)' }}>
+              Products will appear here once added.
             </div>
-            {activeCategory && (
-              <button onClick={() => setActiveCategory('')}
-                style={{ marginTop:16, padding:'10px 20px', background:'#f4a724', color:'#0a1628', border:'none', borderRadius:10, fontWeight:700, fontSize:13, cursor:'pointer' }}>
-                View All Products
-              </button>
-            )}
           </div>
         ) : (
           <div className="product-grid">
@@ -229,29 +188,36 @@ function HomeContent() {
       </div>
 
       {/* Why Choose Us */}
-      <div style={{ padding:'24px 16px 0' }}>
-        <div style={{ background:'linear-gradient(135deg, #0a1628, #1a3a6e)', borderRadius:20, padding:'20px 16px' }}>
-          <h2 style={{ color:'#fff', fontWeight:800, fontSize:18, marginBottom:16, textAlign:'center' }}>
-            Why <span style={{ color:'#f4a724' }}>Atomobiles?</span>
+      <div style={{ padding:'32px 16px 16px' }}>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{ background:'linear-gradient(135deg, var(--brand-secondary), var(--brand-primary))', borderRadius:20, padding:'24px 16px' }}
+        >
+          <h2 style={{ color:'#fff', fontWeight:900, fontSize:20, marginBottom:20, textAlign:'center' }}>
+            Why <span style={{ color:'var(--brand-accent)' }}>Atomobiles?</span>
           </h2>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
             {[
-              { icon:'💰', title:'Best Wholesale Rates', desc:'No middlemen, direct savings' },
-              { icon:'🚚', title:'Pan India Delivery', desc:'Fast & reliable shipping' },
-              { icon:'📦', title:'Half COD Available', desc:'Pay 50% advance, rest on delivery' },
-              { icon:'⭐', title:'Genuine Products', desc:'100% authentic, verified stock' },
+              { icon: <Tag size={24} color="var(--brand-accent)" />, title:'Best Wholesale Rates', desc:'No middlemen, direct savings' },
+              { icon: <Truck size={24} color="var(--brand-accent)" />, title:'Pan India Delivery', desc:'Fast & reliable shipping' },
+              { icon: <CreditCard size={24} color="var(--brand-accent)" />, title:'Half COD Available', desc:'Pay 50% advance, rest on delivery' },
+              { icon: <ShieldCheck size={24} color="var(--brand-accent)" />, title:'Genuine Products', desc:'100% authentic, verified stock' },
             ].map((item, i) => (
               <div key={i} style={{
-                background:'rgba(255,255,255,0.07)', borderRadius:12,
-                padding:'14px 12px', border:'1px solid rgba(255,255,255,0.08)'
+                background:'rgba(255,255,255,0.05)', borderRadius:16,
+                padding:'16px 12px', border:'1px solid rgba(255,255,255,0.08)',
+                backdropFilter: 'blur(10px)'
               }}>
-                <div style={{ fontSize:22, marginBottom:6 }}>{item.icon}</div>
-                <div style={{ fontSize:13, fontWeight:700, color:'#fff', marginBottom:3 }}>{item.title}</div>
-                <div style={{ fontSize:11, color:'rgba(255,255,255,0.55)' }}>{item.desc}</div>
+                <div style={{ marginBottom:10 }}>{item.icon}</div>
+                <div style={{ fontSize:14, fontWeight:800, color:'#fff', marginBottom:4 }}>{item.title}</div>
+                <div style={{ fontSize:12, color:'rgba(255,255,255,0.6)' }}>{item.desc}</div>
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Video Reviews Removed */}

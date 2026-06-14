@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Search, Smartphone, Truck, User, LogOut, LayoutGrid, ShoppingCart } from 'lucide-react';
+import { Search, Smartphone, Truck, User, LogOut, LayoutGrid, ShoppingCart, Coins } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import styles from '@/styles/Header.module.css';
 import { formatINR } from '@/lib/utils';
@@ -15,7 +15,6 @@ export default function Header() {
   const [results, setResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const [categories, setCategories] = useState([]);
   const searchRef = useRef(null);
   const debounceRef = useRef(null);
   const pathname = usePathname();
@@ -59,12 +58,7 @@ export default function Header() {
     window.location.href = '/';
   };
 
-  useEffect(() => {
-    fetch('/api/categories')
-      .then(r => r.json())
-      .then(data => setCategories(data || []))
-      .catch(() => {});
-  }, []);
+  };
 
   const handleSearch = (val) => {
     setQuery(val);
@@ -142,7 +136,7 @@ export default function Header() {
               <User size={16} /> Profile
             </Link>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '800', color: '#fff', padding: '6px 12px', borderRadius: '20px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', whiteSpace: 'nowrap' }}>
-              <span style={{ fontSize: '14px' }}>🪙</span> {coins}
+              <Coins size={14} color="var(--brand-accent)" /> {coins}
             </div>
             <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '600', marginLeft: '4px' }}>
               <LogOut size={14} /> Logout
@@ -191,22 +185,6 @@ export default function Header() {
         </Link>
 
         <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)', flexShrink: 0 }} />
-
-        {/* Dynamic Categories */}
-        <Link href="/" className={`${styles.categoryPill} ${!pathname?.includes('cat=') ? styles.categoryPillActive : ''}`} style={{ margin: 0 }}>
-          All
-        </Link>
-        {categories.map(cat => (
-          <Link
-            key={cat.id || cat.slug}
-            href={`/?cat=${cat.slug}`}
-            className={`${styles.categoryPill} ${pathname?.includes(`cat=${cat.slug}`) ? styles.categoryPillActive : ''}`}
-            style={{ margin: 0 }}
-          >
-            {cat.icon && <span style={{ marginRight: '4px' }}>{cat.icon}</span>}
-            {cat.name}
-          </Link>
-        ))}
       </div>
 
       {/* Row 3: Search Bar */}
@@ -244,7 +222,7 @@ export default function Header() {
                       <img src={product.images[0]} alt={product.name} className={styles.searchResultImg} referrerPolicy="no-referrer" />
                     ) : (
                       <div className={styles.searchResultImg} style={{ background: '#f0f2f5', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                        <Smartphone size={18} color="#9aa3b2" />
+                        <Smartphone size={18} color="var(--brand-accent)" />
                       </div>
                     )}
                     <div className={styles.searchResultInfo}>

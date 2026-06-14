@@ -28,6 +28,7 @@ export default function ProductCard({ product }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       whileHover={{ y: -6, scale: 1.02, boxShadow: '0 12px 24px rgba(62, 39, 35, 0.15)' }}
+      whileTap={{ scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
     >
       {/* Image */}

@@ -2,8 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 import Header from '@/components/Header';
-import WhatsAppButton from '@/components/WhatsAppButton';
 import { CartProvider } from '@/context/CartContext';
+import { MessageCircle } from 'lucide-react';
 
 export default function ClientLayoutWrapper({ children }) {
   const pathname = usePathname();
@@ -16,8 +16,6 @@ export default function ClientLayoutWrapper({ children }) {
       <main className={isAdmin ? '' : 'page-wrapper'}>
         {children}
       </main>
-      
-      {!isAdmin && <WhatsAppButton />}
       
       {!isAdmin && (
         <footer style={{
@@ -45,8 +43,8 @@ export default function ClientLayoutWrapper({ children }) {
             
             <div style={{ marginBottom: 32 }}>
               <a href={`https://wa.me/917397189222`} target="_blank" rel="noopener noreferrer"
-                style={{ color: '#25d366', fontWeight: 700, fontSize: 15, display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(37, 211, 102, 0.12)', padding: '14px 28px', borderRadius: 30, textDecoration: 'none', border: '1px solid rgba(37, 211, 102, 0.25)', transition: 'all 0.2s' }}>
-                <span style={{ fontSize: 18 }}>📱</span> WhatsApp: +91 73971 89222
+                style={{ color: 'var(--brand-primary)', fontWeight: 800, fontSize: 15, display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--brand-accent)', padding: '14px 28px', borderRadius: 30, textDecoration: 'none', boxShadow: '0 4px 12px rgba(200, 121, 65, 0.4)', transition: 'all 0.2s', letterSpacing: '-0.3px' }}>
+                <MessageCircle size={20} color="var(--brand-primary)" /> WhatsApp: +91 73971 89222
               </a>
             </div>
 
