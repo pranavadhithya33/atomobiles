@@ -37,9 +37,8 @@ function LoginForm() {
         return;
       }
 
-      // Redirect back to where they came from
-      router.push(decodeURIComponent(redirectTo));
-      router.refresh();
+      // Redirect back to where they came from with a full reload to update Header
+      window.location.href = decodeURIComponent(redirectTo) || '/';
     } catch (err) {
       setError('Something went wrong. Please try again.');
       setLoading(false);

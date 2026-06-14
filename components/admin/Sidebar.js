@@ -39,8 +39,8 @@ export default function AdminSidebar({ role }) {
   ];
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    window.location.href = "/login";
+    await fetch("/api/admin/logout", { method: "POST" });
+    window.location.href = "/admin/login";
   };
 
   return (

@@ -44,9 +44,8 @@ export default function SignupPage() {
         return;
       }
 
-      // Redirect to profile page after successful signup and login
-      router.push('/profile');
-      router.refresh();
+      // Redirect to profile page after successful signup and login with full reload
+      window.location.href = '/profile';
     } catch (err) {
       setError('Something went wrong. Please try again.');
       setLoading(false);

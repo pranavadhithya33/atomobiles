@@ -44,9 +44,9 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Failed to create account' }, { status: 500 });
     }
 
-    // 3. Set secure cookie
-    const cookieStore = await cookies();
-    cookieStore.set({
+    // 3. Set secure cookie on the response
+    const response = NextResponse.json({ success: true, user: newUser });
+    response.cookies.set({
       name: 'user_token',
       value: newUser.id,
       httpOnly: true,
@@ -56,9 +56,9 @@ export async function POST(request) {
       maxAge: 60 * 60 * 24 * 30, // 30 days
     });
 
-    return NextResponse.json({ success: true, user: newUser });
+    return response;
   } catch (error) {
     console.error('Signup Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }

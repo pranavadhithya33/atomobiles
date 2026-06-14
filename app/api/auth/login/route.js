@@ -25,9 +25,9 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Invalid login credentials' }, { status: 401 });
     }
 
-    // Set secure cookie
-    const cookieStore = await cookies();
-    cookieStore.set({
+    // Set secure cookie on the response
+    const response = NextResponse.json({ success: true, user });
+    response.cookies.set({
       name: 'user_token',
       value: user.id,
       httpOnly: true,
@@ -37,9 +37,9 @@ export async function POST(request) {
       maxAge: 60 * 60 * 24 * 30, // 30 days
     });
 
-    return NextResponse.json({ success: true, user });
+    return response;
   } catch (error) {
     console.error('Login Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
