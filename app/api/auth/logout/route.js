@@ -3,7 +3,8 @@ import { cookies } from 'next/headers';
 
 export async function POST() {
   try {
-    cookies().delete('user_token');
+    const cookieStore = await cookies();
+    cookieStore.delete('user_token');
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

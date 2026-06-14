@@ -9,7 +9,8 @@ export async function GET(req) {
     const adminSupabase = createAdminClient();
     
     const { cookies } = require('next/headers');
-    let userId = cookies().get('user_token')?.value || null;
+    const cookieStore = await cookies();
+    let userId = cookieStore.get('user_token')?.value || null;
 
     let query = adminSupabase.from('orders').select('*');
     if (userId) query = query.eq('user_id', userId);
@@ -45,7 +46,8 @@ export async function POST(req) {
     const adminSupabase = createAdminClient();
     
     const { cookies } = require('next/headers');
-    let userId = cookies().get('user_token')?.value || null;
+    const cookieStore = await cookies();
+    let userId = cookieStore.get('user_token')?.value || null;
 
     const { coins_redeemed, items } = body;
 

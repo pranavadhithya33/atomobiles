@@ -4,7 +4,8 @@ import { cookies } from 'next/headers';
 
 export async function GET() {
   try {
-    const userToken = cookies().get('user_token')?.value;
+    const cookieStore = await cookies();
+    const userToken = cookieStore.get('user_token')?.value;
 
     if (!userToken) {
       return NextResponse.json({ user: null }, { status: 401 });

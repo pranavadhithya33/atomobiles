@@ -45,7 +45,8 @@ export async function POST(request) {
     }
 
     // 3. Set secure cookie
-    cookies().set({
+    const cookieStore = await cookies();
+    cookieStore.set({
       name: 'user_token',
       value: newUser.id,
       httpOnly: true,
