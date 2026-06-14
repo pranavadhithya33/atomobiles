@@ -67,8 +67,8 @@ export default function SignupPage() {
         });
       }
 
-      // Redirect to home
-      router.push('/');
+      // Redirect to profile page after successful signup and login
+      router.push('/profile');
       router.refresh();
     } catch (err) {
       setError('Something went wrong. Please try again.');
