@@ -1,5 +1,5 @@
 -- ============================================================
--- ONLY GADJETS - Bulk Order Support
+-- ATOMOBILES - Bulk Order Support
 -- ============================================================
 
 -- Add items column to store multiple products in one order

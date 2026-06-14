@@ -222,7 +222,7 @@ function HomeContent() {
       <div style={{ padding:'24px 16px 0' }}>
         <div style={{ background:'linear-gradient(135deg, #0a1628, #1a3a6e)', borderRadius:20, padding:'20px 16px' }}>
           <h2 style={{ color:'#fff', fontWeight:800, fontSize:18, marginBottom:16, textAlign:'center' }}>
-            Why <span style={{ color:'#f4a724' }}>Only Gadjets?</span>
+            Why <span style={{ color:'#f4a724' }}>Atomobiles?</span>
           </h2>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
             {[

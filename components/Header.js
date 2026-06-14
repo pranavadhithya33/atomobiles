@@ -112,7 +112,7 @@ export default function Header() {
             <Smartphone size={20} color="#0a1628" strokeWidth={2.5} />
           </div>
           <div className={styles.logoText}>
-            <span className={styles.logoName} style={{ fontSize: '16px' }}>Only Gadjets</span>
+            <span className={styles.logoName} style={{ fontSize: '16px' }}>Atomobiles</span>
             <span className={styles.logoTagline} style={{ fontSize: '10px' }}>Wholesale Dealer</span>
           </div>
         </Link>

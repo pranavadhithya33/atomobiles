@@ -1,5 +1,5 @@
 -- ============================================================
--- ONLY GADJETS - Cart System SQL
+-- ATOMOBILES - Cart System SQL
 -- Run this in: Supabase Dashboard > SQL Editor > New Query
 -- ============================================================
 

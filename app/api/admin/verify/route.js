@@ -15,7 +15,18 @@ export async function POST(req) {
     if (password === adminPassword) {
       // Generate a token that the client will send with admin API requests
       const token = generateAdminToken();
-      return NextResponse.json({ success: true, token });
+      const response = NextResponse.json({ success: true, token });
+      
+      response.cookies.set({
+        name: 'admin_token',
+        value: token,
+        httpOnly: true,
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 60 * 60 * 24 * 7 // 1 week
+      });
+      
+      return response;
     }
     return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
   } catch {

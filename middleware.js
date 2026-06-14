@@ -56,39 +56,19 @@ export async function middleware(request) {
 
   const { data: { session } } = await supabase.auth.getSession()
 
-  // Protect /admin routes
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!session) {
-      return NextResponse.redirect(new URL('/login?error=unauthorized', request.url))
-    }
-
-    // Verify role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', session.user.id)
-      .single()
-
-    if (!profile || (profile.role !== 'SUPER_ADMIN' && profile.role !== 'STORE_MANAGER' && profile.role !== 'admin')) {
-      return NextResponse.redirect(new URL('/login?error=unauthorized', request.url))
+  // Protect /admin routes (except login page)
+  if (request.nextUrl.pathname.startsWith('/admin') && !request.nextUrl.pathname.startsWith('/admin/login')) {
+    const adminToken = request.cookies.get('admin_token')?.value;
+    if (!adminToken) {
+      return NextResponse.redirect(new URL('/admin/login', request.url))
     }
   }
 
-  // Protect /api/admin routes
-  if (request.nextUrl.pathname.startsWith('/api/admin')) {
-    if (!session) {
+  // Protect /api/admin routes (except verify route)
+  if (request.nextUrl.pathname.startsWith('/api/admin') && !request.nextUrl.pathname.startsWith('/api/admin/verify')) {
+    const adminToken = request.cookies.get('admin_token')?.value || request.headers.get('x-admin-token');
+    if (!adminToken) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Verify role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', session.user.id)
-      .single()
-
-    if (!profile || (profile.role !== 'SUPER_ADMIN' && profile.role !== 'STORE_MANAGER' && profile.role !== 'admin')) {
-      return NextResponse.json({ error: 'Forbidden: Insufficient privileges' }, { status: 403 })
     }
   }
 

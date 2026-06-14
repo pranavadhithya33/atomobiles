@@ -3,11 +3,11 @@ import '@/app/globals.css';
 import ClientLayoutWrapper from '@/components/ClientLayoutWrapper';
 
 export const metadata = {
-  title: 'Only Gadjets – Best Wholesale Mobile Deals',
+  title: 'Atomobiles – Best Wholesale Mobile Deals',
   description: 'India\'s trusted wholesale mobile dealer. Get the best prices on smartphones with Half COD and Full Prepaid options. No middlemen, direct savings.',
-  keywords: 'wholesale mobiles, best phone deals, wholesale dealer, smartphones India, Only Gadjets',
+  keywords: 'wholesale mobiles, best phone deals, wholesale dealer, smartphones India, Atomobiles',
   openGraph: {
-    title: 'Only Gadjets – Wholesale Mobile Dealer',
+    title: 'Atomobiles – Wholesale Mobile Dealer',
     description: 'Get best prices on top smartphones. Wholesale dealer with Half COD & Full Prepaid options.',
     type: 'website',
   },

@@ -1,5 +1,5 @@
 -- ============================================================
--- ONLY GADJETS - Auth + Coins System SQL
+-- ATOMOBILES - Auth + Coins System SQL
 -- Run this in: Supabase Dashboard > SQL Editor > New Query
 -- ============================================================
 

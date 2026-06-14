@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
             <Smartphone size={28} color="#f4a724" />
           </div>
           <div>
-            <h1 className={styles.loginTitle}>Only Gadjets</h1>
+            <h1 className={styles.loginTitle}>Atomobiles</h1>
             <p className={styles.loginSubtitle}>Admin Panel · Secure Login</p>
           </div>
         </div>

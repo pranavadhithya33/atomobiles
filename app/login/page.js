@@ -128,7 +128,7 @@ function LoginForm() {
           </button>
 
           <div style={{ textAlign: 'center', color: '#6b7280', fontSize: '13px' }}>
-            New to Only Gadjets?{' '}
+            New to Atomobiles?{' '}
             <Link href="/signup" style={{ color: '#f4a724', fontWeight: '700', textDecoration: 'none' }}>Create Account</Link>
           </div>
         </form>

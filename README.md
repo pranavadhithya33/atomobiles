@@ -1,4 +1,4 @@
-# Only Gadjets – Setup & Deployment Guide
+# Atomobiles – Setup & Deployment Guide
 
 ## Step 1: Add Your Supabase Keys
 
@@ -9,7 +9,7 @@ NEXT_PUBLIC_SUPABASE_URL=https://prxtqiifplqevxcvogsr.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<get from Supabase Dashboard>
 SUPABASE_SERVICE_ROLE_KEY=<get from Supabase Dashboard>
 NEXT_PUBLIC_WHATSAPP_NUMBER=917397189222
-NEXT_PUBLIC_BUSINESS_NAME=ONLY GADJETS
+NEXT_PUBLIC_BUSINESS_NAME=ATOMOBILES
 ADMIN_PASSWORD=admin123
 NEXT_PUBLIC_PREPAID_DISCOUNT_PCT=3
 ```

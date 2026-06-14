@@ -1,5 +1,5 @@
 -- ============================================================
--- ONLY GADJETS - Product Variants Migration
+-- ATOMOBILES - Product Variants Migration
 -- Run this in: Supabase Dashboard > SQL Editor > New Query
 -- ============================================================
 

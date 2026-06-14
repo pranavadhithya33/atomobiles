@@ -1,5 +1,5 @@
 -- ============================================================
--- ONLY GADJETS - Supabase SQL Update
+-- ATOMOBILES - Supabase SQL Update
 -- Copy and run this in: Supabase Dashboard > SQL Editor > New Query
 -- ============================================================
 

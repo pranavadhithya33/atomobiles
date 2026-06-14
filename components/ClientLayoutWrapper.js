@@ -29,7 +29,7 @@ export default function ClientLayoutWrapper({ children }) {
           marginTop: 48,
           borderTop: '1px solid rgba(255,255,255,0.1)'
         }}>
-          <div style={{ fontWeight: 800, color: '#fff', fontSize: 18, marginBottom: 8, letterSpacing: '-0.5px' }}>ONLY GADJETS</div>
+          <div style={{ fontWeight: 800, color: '#fff', fontSize: 18, marginBottom: 8, letterSpacing: '-0.5px' }}>ATOMOBILES</div>
           <div style={{ fontSize: 14 }}>India's Premium Wholesale Mobile Dealer</div>
           <div style={{ 
             marginTop: 32, 
@@ -95,7 +95,7 @@ export default function ClientLayoutWrapper({ children }) {
           </div>
           
           <div suppressHydrationWarning style={{ marginTop: 24, fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
-            © {new Date().getFullYear()} Only Gadjets. All rights reserved.
+            © {new Date().getFullYear()} Atomobiles. All rights reserved.
           </div>
         </footer>
       )}
