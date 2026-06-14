@@ -5,42 +5,42 @@
    DESIGN TOKENS
    ============================================================ */
 :root {
-  /* Brand Colors */
-  --brand-primary: #0a1628;
-  --brand-secondary: #1a3a6e;
-  --brand-accent: #f4a724;
-  --brand-accent-dark: #d4890a;
-  --brand-accent-light: #fef3d0;
+  /* Coffee Brand Colors */
+  --brand-primary: #2d1a11;    /* Deep Espresso */
+  --brand-secondary: #3e2723;  /* Dark Mocha */
+  --brand-accent: #c87941;     /* Caramel / Warm Amber */
+  --brand-accent-dark: #8b5e34;
+  --brand-accent-light: #e6c2a5;
 
-  /* Background */
-  --bg-page: #f0f2f5;
+  /* Backgrounds */
+  --bg-page: #fdfbf7;          /* Creamy Latte */
   --bg-card: #ffffff;
-  --bg-header: #0a1628;
-  --bg-footer: #0a1628;
-  --bg-highlight: #fff8e8;
+  --bg-header: #2d1a11;        /* Espresso Header */
+  --bg-footer: #2d1a11;        /* Espresso Footer */
+  --bg-highlight: #f8efe6;
 
-  /* Text */
-  --text-primary: #0a1628;
-  --text-secondary: #4a5568;
-  --text-muted: #9aa3b2;
+  /* Text Colors */
+  --text-primary: #3e2723;
+  --text-secondary: #5d4037;
+  --text-muted: #8d6e63;
   --text-white: #ffffff;
-  --text-accent: #f4a724;
+  --text-accent: #c87941;
 
   /* Price Colors */
-  --price-original: #9aa3b2;
-  --price-our: #0a1628;
-  --price-savings: #16a34a;
-  --price-prepaid: #2563eb;
+  --price-original: #a1887f;
+  --price-our: #3e2723;
+  --price-savings: #4caf50;
+  --price-prepaid: #3f51b5;
 
   /* Status Colors */
-  --success: #16a34a;
-  --success-bg: #dcfce7;
-  --error: #dc2626;
-  --error-bg: #fef2f2;
-  --warning: #d97706;
-  --warning-bg: #fffbeb;
-  --info: #2563eb;
-  --info-bg: #eff6ff;
+  --success: #4caf50;
+  --success-bg: #e8f5e9;
+  --error: #d32f2f;
+  --error-bg: #ffebee;
+  --warning: #f57c00;
+  --warning-bg: #fff3e0;
+  --info: #0288d1;
+  --info-bg: #e1f5fe;
 
   /* Borders */
   --border: #e2e8f0;
@@ -76,10 +76,10 @@
   --text-2xl: 32px;
 
   /* Header */
-  --header-height: 165px;
+  --header-height: 125px;
 
   /* Transitions */
-  --transition: 0.2s ease;
+  --transition: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* ============================================================

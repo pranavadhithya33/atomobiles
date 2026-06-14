@@ -9,7 +9,6 @@ import { supabase } from '@/lib/supabase';
 import styles from '@/styles/Header.module.css';
 import { formatINR } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
-import PromoBanner from '@/components/PromoBanner';
 
 export default function Header() {
   const [query, setQuery] = useState('');
@@ -104,12 +103,11 @@ export default function Header() {
 
   return (
     <header className={styles.header} style={{ height: 'auto', paddingBottom: '12px' }}>
-      <PromoBanner />
       {/* Row 1: Logo */}
       <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
         <Link href="/" className={styles.logo} style={{ gap: '10px' }}>
           <div className={styles.logoIcon} style={{ width: '36px', height: '36px' }}>
-            <Smartphone size={20} color="#0a1628" strokeWidth={2.5} />
+            <Smartphone size={20} color="var(--brand-primary)" strokeWidth={2.5} />
           </div>
           <div className={styles.logoText}>
             <span className={styles.logoName} style={{ fontSize: '16px' }}>Atomobiles</span>
@@ -132,12 +130,12 @@ export default function Header() {
       }}>
         {/* Auth Options */}
         {!user ? (
-          <Link href="/login" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap', padding: '6px 14px', borderRadius: '20px', background: 'rgba(244, 167, 36, 0.2)', border: '1px solid rgba(244, 167, 36, 0.4)' }}>
+          <Link href="/login" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap', padding: '6px 14px', borderRadius: '20px', background: 'rgba(200, 121, 65, 0.2)', border: '1px solid rgba(200, 121, 65, 0.4)' }}>
             <User size={16} /> Login / Signup
           </Link>
         ) : (
           <>
-            <Link href="/profile?view=orders" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#f4a724', whiteSpace: 'nowrap', padding: '6px 14px', borderRadius: '20px', background: 'rgba(244, 167, 36, 0.1)', border: '1px solid rgba(244, 167, 36, 0.3)' }}>
+            <Link href="/profile?view=orders" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: 'var(--brand-accent)', whiteSpace: 'nowrap', padding: '6px 14px', borderRadius: '20px', background: 'rgba(200, 121, 65, 0.1)', border: '1px solid rgba(200, 121, 65, 0.3)' }}>
               <LayoutGrid size={16} /> Orders
             </Link>
             <Link href="/profile?view=profile" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap', padding: '6px 14px', borderRadius: '20px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
@@ -164,14 +162,14 @@ export default function Header() {
           gap: '6px', 
           fontSize: '13px', 
           fontWeight: '800', 
-          color: '#000', 
+          color: '#fff', 
           whiteSpace: 'nowrap', 
           padding: '8px 16px', 
           borderRadius: '20px', 
-          background: '#f4a724', 
-          border: '1px solid #f4a724', 
+          background: 'var(--brand-accent)', 
+          border: '1px solid var(--brand-accent)', 
           position: 'relative',
-          boxShadow: '0 4px 12px rgba(244, 167, 36, 0.3)'
+          boxShadow: '0 4px 12px rgba(200, 121, 65, 0.3)'
         }}>
           <ShoppingCart size={16} strokeWidth={3} /> Cart
           {cartCount > 0 && (
@@ -180,12 +178,12 @@ export default function Header() {
               top: '-8px', 
               right: '-8px', 
               background: '#000', 
-              color: '#f4a724', 
+              color: 'var(--brand-accent)', 
               fontSize: '11px', 
               fontWeight: '900', 
               padding: '2px 7px', 
               borderRadius: '12px',
-              border: '2px solid #f4a724'
+              border: '2px solid var(--brand-accent)'
             }}>
               {cartCount}
             </span>

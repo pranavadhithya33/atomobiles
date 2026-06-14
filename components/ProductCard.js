@@ -1,8 +1,11 @@
 // components/ProductCard.js
 import Link from 'next/link';
 import { Smartphone, ShoppingBag } from 'lucide-react';
+import { motion } from 'framer-motion';
 import styles from '@/styles/ProductCard.module.css';
 import { formatINR } from '@/lib/utils';
+
+const MotionLink = motion(Link);
 
 export default function ProductCard({ product }) {
   // market_price is pre-computed by the API as max(amazon, flipkart, online)
@@ -17,7 +20,16 @@ export default function ProductCard({ product }) {
   const savings = marketPrice > ourPrice ? marketPrice - ourPrice : 0;
 
   return (
-    <Link href={`/products/${product.slug}`} className={styles.card} aria-label={product.name}>
+    <MotionLink 
+      href={`/products/${product.slug}`} 
+      className={styles.card} 
+      aria-label={product.name}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      whileHover={{ y: -6, scale: 1.02, boxShadow: '0 12px 24px rgba(62, 39, 35, 0.15)' }}
+      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+    >
       {/* Image */}
       <div className={styles.imageWrap}>
         {product.images?.[0] ? (
@@ -74,7 +86,7 @@ export default function ProductCard({ product }) {
           Buy Now
         </span>
       </div>
-    </Link>
+    </MotionLink>
   );
 }
 

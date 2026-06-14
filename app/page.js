@@ -4,8 +4,8 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import ProductCard, { SkeletonCard } from '@/components/ProductCard';
-import VideoReviewCarousel from '@/components/VideoReviewCarousel';
 import ReviewsSection from '@/components/ReviewsSection';
+import { motion } from 'framer-motion';
 import { Smartphone, Tag, Star, TrendingUp, ChevronRight, Zap, Truck } from 'lucide-react';
 
 function HomeContent() {
@@ -14,7 +14,6 @@ function HomeContent() {
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('');
 
@@ -27,13 +26,11 @@ function HomeContent() {
     setLoading(true);
     const fetchProducts = fetch(activeCategory ? `/api/products?category=${encodeURIComponent(activeCategory)}` : '/api/products').then(r => r.json());
     const fetchCategories = fetch('/api/categories').then(r => r.json());
-    const fetchVideos = fetch('/api/videos').then(r => r.json()).catch(() => []);
 
-    Promise.all([fetchProducts, fetchCategories, fetchVideos])
-      .then(([prodData, catData, vidData]) => {
+    Promise.all([fetchProducts, fetchCategories])
+      .then(([prodData, catData]) => {
         setProducts(prodData || []);
         setCategories(catData || []);
-        setVideos(vidData || []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -46,15 +43,28 @@ function HomeContent() {
         BUILD_VER: 2026-04-26-1700
       </div>
       {/* Hero Banner */}
-      <div style={{
-        background: 'linear-gradient(135deg, #0a1628 0%, #1a3a6e 60%, #0a1628 100%)',
-        padding: '28px 16px 32px',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        style={{
+          background: 'linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 60%, var(--brand-primary) 100%)',
+          padding: '28px 16px 32px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
         {/* Decorative circles */}
-        <div style={{ position:'absolute', top:-40, right:-40, width:180, height:180, borderRadius:'50%', background:'rgba(244,167,36,0.07)', pointerEvents:'none' }} />
-        <div style={{ position:'absolute', bottom:-30, left:-20, width:120, height:120, borderRadius:'50%', background:'rgba(255,255,255,0.04)', pointerEvents:'none' }} />
+        <motion.div 
+          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          style={{ position:'absolute', top:-40, right:-40, width:180, height:180, borderRadius:'50%', background:'var(--brand-accent)', filter: 'blur(40px)', pointerEvents:'none' }} 
+        />
+        <motion.div 
+          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          style={{ position:'absolute', bottom:-30, left:-20, width:120, height:120, borderRadius:'50%', background:'#fff', filter: 'blur(30px)', pointerEvents:'none' }} 
+        />
 
         <div style={{ position:'relative', zIndex:1 }}>
           <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:8 }}>
@@ -65,9 +75,9 @@ function HomeContent() {
               Direct from Dealer
             </span>
           </div>
-          <h1 style={{ fontSize:26, fontWeight:900, color:'#fff', lineHeight:1.2, letterSpacing:'-0.5px', marginBottom:8 }}>
-            Best Prices on<br />
-            <span style={{ color:'#f4a724' }}>Top Smartphones</span>
+          <h1 className="glitch-text" data-text="ATOMOBILES" style={{ fontSize:32, fontWeight:900, color:'#fff', lineHeight:1.2, letterSpacing:'-0.5px', marginBottom:8, textTransform: 'uppercase' }}>
+            ATOMOBILES<br />
+            <span style={{ color:'var(--brand-accent)', fontSize: 22, display: 'block', marginTop: 4 }}>High-Tech Wholesale Deals</span>
           </h1>
           <p style={{ fontSize:14, color:'rgba(255,255,255,0.7)', marginBottom:20, lineHeight:1.5 }}>
             Wholesale deals · Half COD available · Full prepaid gets extra savings
@@ -93,7 +103,7 @@ function HomeContent() {
             </a>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* USP Strip */}
       <div style={{
@@ -244,10 +254,7 @@ function HomeContent() {
         </div>
       </div>
 
-      {/* Video Reviews */}
-      {!loading && videos.length > 0 && (
-        <VideoReviewCarousel videos={videos} />
-      )}
+      {/* Video Reviews Removed */}
 
       {/* Store Reviews */}
       <div style={{ padding: '0 16px' }}>

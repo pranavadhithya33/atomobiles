@@ -1,5 +1,6 @@
 // app/layout.js
 import '@/app/globals.css';
+import '@/app/animations.css';
 import ClientLayoutWrapper from '@/components/ClientLayoutWrapper';
 
 export const metadata = {

@@ -50,48 +50,7 @@ export default function ClientLayoutWrapper({ children }) {
               </a>
             </div>
 
-            <div style={{ fontWeight: 700, color: '#fff', marginBottom: 16, fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <span style={{ fontSize: 20 }}>🚚</span> Cash on Delivery Locations
-            </div>
-            
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center' }}>
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 20px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>Ahamed:</span>
-                <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>Thondi, Ramanathapuram</span>
-              </div>
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 20px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>Rathina:</span>
-                <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>Tenkasi</span>
-              </div>
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 20px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>Jaganraj:</span>
-                <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>Attur</span>
-              </div>
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 20px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>Sarbudeen:</span>
-                <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>Trichy Central</span>
-              </div>
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 20px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>Sevagan:</span>
-                <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>Thitakudi, Cuddalore</span>
-              </div>
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 20px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>Karthick C:</span>
-                <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>Hosur</span>
-              </div>
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 20px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>Gerald:</span>
-                <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>Chinalapatti</span>
-              </div>
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 20px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>Lawrence:</span>
-                <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>Taramani, Chennai</span>
-              </div>
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 20px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontWeight: 600, color: '#25d366', fontSize: 14 }}>JK YASHWANTH RAJ:</span>
-                <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, letterSpacing: '0.2px' }}>RAJAPALAYAM</span>
-              </div>
-            </div>
+
           </div>
           
           <div suppressHydrationWarning style={{ marginTop: 24, fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>

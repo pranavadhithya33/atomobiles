@@ -1,0 +1,151 @@
+/* app/animations.css */
+
+/* ============================================================
+   KINETIC TYPOGRAPHY & GLITCH EFFECTS
+   ============================================================ */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+  color: var(--text-white);
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+
+.glitch-text::before {
+  left: 2px;
+  text-shadow: -1px 0 #d32f2f;
+  clip: rect(24px, 550px, 90px, 0);
+  animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: -2px;
+  text-shadow: -1px 0 #0288d1;
+  clip: rect(85px, 550px, 140px, 0);
+  animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(12px, 9999px, 86px, 0); }
+  5% { clip: rect(65px, 9999px, 2px, 0); }
+  10% { clip: rect(41px, 9999px, 54px, 0); }
+  15% { clip: rect(100px, 9999px, 20px, 0); }
+  20% { clip: rect(15px, 9999px, 90px, 0); }
+  25% { clip: rect(74px, 9999px, 11px, 0); }
+  30% { clip: rect(32px, 9999px, 66px, 0); }
+  35% { clip: rect(98px, 9999px, 45px, 0); }
+  40% { clip: rect(6px, 9999px, 88px, 0); }
+  45% { clip: rect(81px, 9999px, 22px, 0); }
+  50% { clip: rect(55px, 9999px, 77px, 0); }
+  55% { clip: rect(23px, 9999px, 34px, 0); }
+  60% { clip: rect(90px, 9999px, 6px, 0); }
+  65% { clip: rect(44px, 9999px, 99px, 0); }
+  70% { clip: rect(72px, 9999px, 51px, 0); }
+  75% { clip: rect(18px, 9999px, 83px, 0); }
+  80% { clip: rect(85px, 9999px, 14px, 0); }
+  85% { clip: rect(39px, 9999px, 62px, 0); }
+  90% { clip: rect(61px, 9999px, 29px, 0); }
+  95% { clip: rect(27px, 9999px, 95px, 0); }
+  100% { clip: rect(94px, 9999px, 48px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip: rect(82px, 9999px, 16px, 0); }
+  5% { clip: rect(25px, 9999px, 72px, 0); }
+  10% { clip: rect(91px, 9999px, 34px, 0); }
+  15% { clip: rect(40px, 9999px, 80px, 0); }
+  20% { clip: rect(65px, 9999px, 15px, 0); }
+  25% { clip: rect(14px, 9999px, 92px, 0); }
+  30% { clip: rect(78px, 9999px, 46px, 0); }
+  35% { clip: rect(32px, 9999px, 68px, 0); }
+  40% { clip: rect(96px, 9999px, 22px, 0); }
+  45% { clip: rect(51px, 9999px, 81px, 0); }
+  50% { clip: rect(15px, 9999px, 57px, 0); }
+  55% { clip: rect(83px, 9999px, 14px, 0); }
+  60% { clip: rect(49px, 9999px, 96px, 0); }
+  65% { clip: rect(24px, 9999px, 49px, 0); }
+  70% { clip: rect(92px, 9999px, 21px, 0); }
+  75% { clip: rect(68px, 9999px, 83px, 0); }
+  80% { clip: rect(15px, 9999px, 45px, 0); }
+  85% { clip: rect(89px, 9999px, 72px, 0); }
+  90% { clip: rect(31px, 9999px, 19px, 0); }
+  95% { clip: rect(67px, 9999px, 85px, 0); }
+  100% { clip: rect(24px, 9999px, 58px, 0); }
+}
+
+/* ============================================================
+   LIQUID MOTION (MORPHING GRADIENTS & SVG FILTERS)
+   ============================================================ */
+
+/* Liquid gradient background for loaders/errors */
+.liquid-bg {
+  background: linear-gradient(45deg, var(--brand-secondary), var(--brand-accent), #795548, var(--brand-primary));
+  background-size: 400% 400%;
+  animation: liquid-gradient 8s ease infinite;
+}
+
+@keyframes liquid-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Gooey filter wrapper */
+.gooey-wrapper {
+  filter: url('#gooey');
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gooey-blob {
+  background-color: var(--brand-accent);
+  border-radius: 50%;
+  position: absolute;
+  animation: blob-morph 3s infinite alternate cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.gooey-blob:nth-child(1) { width: 60px; height: 60px; animation-delay: 0s; }
+.gooey-blob:nth-child(2) { width: 45px; height: 45px; animation-delay: -1s; }
+.gooey-blob:nth-child(3) { width: 30px; height: 30px; animation-delay: -2s; }
+
+@keyframes blob-morph {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(25px, -15px) scale(1.2); }
+  100% { transform: translate(-25px, 15px) scale(0.8); }
+}
+
+/* ============================================================
+   SCROLL SNAPPING (HORIZONTAL CAROUSELS)
+   ============================================================ */
+.scroll-snap-x {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+}
+
+.scroll-snap-x::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.snap-center {
+  scroll-snap-align: center;
+  flex: 0 0 auto;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
