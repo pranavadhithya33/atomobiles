@@ -16,15 +16,11 @@ export default function CartPage() {
 
   useEffect(() => {
     async function loadUser() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('coins_balance')
-          .eq('id', session.user.id)
-          .single();
-        if (profile) setUserCoins(profile.coins_balance || 0);
+      const res = await fetch('/api/auth/me');
+      const data = await res.json();
+      if (data.user) {
+        setUser(data.user);
+        setUserCoins(data.user.coins_balance || 0);
       }
     }
     loadUser();

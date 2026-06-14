@@ -66,22 +66,16 @@ function OrderFormContent() {
   // Fetch user profile on load
   useEffect(() => {
     async function loadUser() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('name, phone, coins_balance')
-          .eq('id', session.user.id)
-          .single();
-        if (profile) {
-          setForm(prev => ({
-            ...prev,
-            fullName: profile.name || prev.fullName,
-            phone: profile.phone || prev.phone
-          }));
-          setUserCoins(profile.coins_balance || 0);
-        }
+      const res = await fetch('/api/auth/me');
+      const data = await res.json();
+      if (data.user) {
+        setUser(data.user);
+        setForm(prev => ({
+          ...prev,
+          fullName: data.user.name || prev.fullName,
+          phone: data.user.phone || prev.phone
+        }));
+        setUserCoins(data.user.coins_balance || 0);
       }
     }
     loadUser();
@@ -123,11 +117,7 @@ function OrderFormContent() {
     setSubmitError('');
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
       const headers = { 'Content-Type': 'application/json' };
-      if (session?.access_token) {
-        headers['Authorization'] = `Bearer ${session.access_token}`;
-      }
 
       const res = await fetch('/api/orders', {
         method: 'POST',

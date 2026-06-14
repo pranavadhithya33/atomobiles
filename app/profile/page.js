@@ -19,24 +19,20 @@ function ProfileContent() {
 
   useEffect(() => {
     async function fetchData() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-
-      setUser(session.user);
-
-      // Fetch profile
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .single();
+      // Fetch user and profile securely from API
+      const meRes = await fetch('/api/auth/me');
+      const meData = await meRes.json();
       
-      setProfile(profileData);
+      if (!meData.user) {
+        setLoading(false);
+        return;
+      }
 
-      // Fetch orders via API to ensure reliability
-      const ordersRes = await fetch('/api/orders', {
-        headers: { 'Authorization': `Bearer ${session.access_token}` }
-      });
+      setUser(meData.user);
+      setProfile(meData.user);
+
+      // Fetch orders via API
+      const ordersRes = await fetch('/api/orders');
       const ordersData = await ordersRes.json();
       setOrders(ordersData || []);
       setLoading(false);
@@ -46,7 +42,7 @@ function ProfileContent() {
   }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await fetch('/api/auth/logout', { method: 'POST' });
     window.location.href = '/';
   };
 

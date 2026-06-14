@@ -13,17 +13,16 @@ export function CartProvider({ children }) {
 
   // 1. Auth State Listener
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user || null);
-      setAuthLoaded(true);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user || null);
-      setAuthLoaded(true);
-    });
-
-    return () => subscription.unsubscribe();
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+        setUser(data.user || null);
+        setAuthLoaded(true);
+      })
+      .catch(err => {
+        console.error('Cart context auth fetch failed:', err);
+        setAuthLoaded(true);
+      });
   }, []);
 
   // 2. Load and Sync Cart

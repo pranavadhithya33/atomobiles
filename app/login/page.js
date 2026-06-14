@@ -23,37 +23,18 @@ function LoginForm() {
 
     setLoading(true);
     try {
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email: form.email.trim().toLowerCase(),
-        password: form.password,
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email, password: form.password }),
       });
 
-      if (signInError) {
-        if (signInError.message.includes('Invalid login credentials') || signInError.message.includes('invalid_credentials')) {
-          setError('Incorrect email or password.');
-        } else {
-          setError('Login failed. Please check your credentials.');
-        }
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Login failed. Please check your credentials.');
         setLoading(false);
         return;
-      }
-
-      // Ensure profile exists
-      if (data?.user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('id')
-          .eq('id', data.user.id)
-          .single();
-
-        if (!profile) {
-          await supabase.from('profiles').upsert({
-            id: data.user.id,
-            name: data.user.user_metadata?.name || '',
-            phone: data.user.user_metadata?.phone || '',
-            coins_balance: 0,
-          });
-        }
       }
 
       // Redirect back to where they came from

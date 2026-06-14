@@ -8,15 +8,8 @@ export async function GET(req) {
     const limit = parseInt(searchParams.get('limit') || '100');
     const adminSupabase = createAdminClient();
     
-    // Check if we're filtering by user
-    const authHeader = req.headers.get('Authorization');
-    let userId = null;
-    
-    if (authHeader) {
-      const token = authHeader.replace('Bearer ', '');
-      const { data: { user } } = await adminSupabase.auth.getUser(token);
-      if (user) userId = user.id;
-    }
+    const { cookies } = require('next/headers');
+    let userId = cookies().get('user_token')?.value || null;
 
     let query = adminSupabase.from('orders').select('*');
     if (userId) query = query.eq('user_id', userId);
@@ -51,16 +44,8 @@ export async function POST(req) {
 
     const adminSupabase = createAdminClient();
     
-    // Check for user session
-    const authHeader = req.headers.get('Authorization');
-    let userId = null;
-    if (authHeader) {
-      const token = authHeader.replace('Bearer ', '');
-      const { data: { user }, error: authError } = await adminSupabase.auth.getUser(token);
-      if (!authError && user) {
-        userId = user.id;
-      }
-    }
+    const { cookies } = require('next/headers');
+    let userId = cookies().get('user_token')?.value || null;
 
     const { coins_redeemed, items } = body;
 

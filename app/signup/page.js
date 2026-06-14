@@ -25,46 +25,23 @@ export default function SignupPage() {
 
     setLoading(true);
     try {
-      // Step 1: Create account
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: form.email.trim().toLowerCase(),
-        password: form.password,
-        options: {
-          data: { name: form.name.trim(), phone: form.phone.trim() }
-        }
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          password: form.password
+        }),
       });
 
-      if (signUpError) {
-        if (signUpError.message.includes('already registered') || signUpError.message.includes('User already registered')) {
-          setError('An account with this email already exists. Please log in instead.');
-        } else {
-          setError(signUpError.message);
-        }
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Failed to create account. Please try again.');
         setLoading(false);
         return;
-      }
-
-      // Step 2: Auto-login immediately after signup (works when email confirmation is disabled)
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email: form.email.trim().toLowerCase(),
-        password: form.password,
-      });
-
-      if (signInError) {
-        // Email confirmation might be required — show success with instruction
-        setSuccess(true);
-        setLoading(false);
-        return;
-      }
-
-      // Step 3: Create profile record
-      if (signInData?.user) {
-        await supabase.from('profiles').upsert({
-          id: signInData.user.id,
-          name: form.name.trim(),
-          phone: form.phone.trim(),
-          coins_balance: 0,
-        });
       }
 
       // Redirect to profile page after successful signup and login

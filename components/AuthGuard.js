@@ -12,29 +12,25 @@ export default function AuthGuard({ children, required = true }) {
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user || null);
-      setLoading(false);
+      try {
+        const res = await fetch('/api/auth/me');
+        const data = await res.json();
+        
+        setUser(data.user || null);
+        setLoading(false);
 
-      if (required && !session) {
-        // Redirect to login with current path as redirect param
-        const redirectUrl = `/login?redirect=${encodeURIComponent(pathname)}`;
-        router.push(redirectUrl);
+        if (required && !data.user) {
+          // Redirect to login with current path as redirect param
+          const redirectUrl = `/login?redirect=${encodeURIComponent(pathname)}`;
+          router.push(redirectUrl);
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        setLoading(false);
       }
     };
 
     checkUser();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null);
-      if (required && !session) {
-        router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
   }, [required, router, pathname]);
 
   if (loading) {

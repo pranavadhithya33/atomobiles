@@ -23,36 +23,19 @@ export default function Header() {
   const { cartCount } = useCart();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user || null);
-      if (session?.user) {
-        fetchCoins(session.user.id);
-      }
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user || null);
-      if (session?.user) {
-        fetchCoins(session.user.id);
-      } else {
-        setCoins(0);
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+        setUser(data.user || null);
+        if (data.user) {
+          setCoins(data.user.coins_balance || 0);
+        }
+      })
+      .catch(err => console.error(err));
   }, []);
 
-  const fetchCoins = async (userId) => {
-    const { data } = await supabase
-      .from('profiles')
-      .select('coins_balance')
-      .eq('id', userId)
-      .single();
-    if (data) setCoins(data.coins_balance || 0);
-  };
-
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await fetch('/api/auth/logout', { method: 'POST' });
     setUser(null);
     setCoins(0);
     window.location.href = '/';
