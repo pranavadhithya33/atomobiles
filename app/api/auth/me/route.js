@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { createAdminClient } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 
 export async function GET() {
@@ -11,6 +11,7 @@ export async function GET() {
     }
 
     // Query profiles using admin bypass
+    const supabaseAdmin = createAdminClient();
     const { data: user, error } = await supabaseAdmin
       .from('profiles')
       .select('id, name, phone, email, coins_balance, total_orders')

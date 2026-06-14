@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { createAdminClient } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 
 export async function POST(request) {
@@ -13,6 +13,7 @@ export async function POST(request) {
     const cleanEmail = email.trim().toLowerCase();
 
     // Query profiles using admin bypass
+    const supabaseAdmin = createAdminClient();
     const { data: user, error } = await supabaseAdmin
       .from('profiles')
       .select('*')
