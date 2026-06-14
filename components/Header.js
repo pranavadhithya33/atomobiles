@@ -57,9 +57,6 @@ export default function Header() {
     setCoins(0);
     window.location.href = '/';
   };
-
-  };
-
   const handleSearch = (val) => {
     setQuery(val);
     if (debounceRef.current) clearTimeout(debounceRef.current);
