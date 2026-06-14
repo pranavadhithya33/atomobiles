@@ -127,6 +127,15 @@ export async function POST(req) {
       } catch (coinErr) {
         console.error('Error handling coins:', coinErr);
       }
+
+      // --- Clear Cart Logic ---
+      if (product_slug === 'cart') {
+        try {
+          await adminSupabase.from('cart_items').delete().eq('user_id', userId);
+        } catch (cartErr) {
+          console.error('Failed to clear cart items:', cartErr);
+        }
+      }
     }
 
     return NextResponse.json(data, { status: 201 });

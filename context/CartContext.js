@@ -25,120 +25,28 @@ export function CartProvider({ children }) {
       });
   }, []);
 
-  // 2. Load and Sync Cart
+  // 2. Load Cart
   useEffect(() => {
-    if (!authLoaded) return; // Wait for auth status
-
-    async function loadAndSyncCart() {
-      if (!user) {
-        // Guest mode: load from localStorage
-        const savedCart = localStorage.getItem('og_cart');
-        if (savedCart) {
-          try {
-            setCart(JSON.parse(savedCart));
-          } catch (e) {
-            console.error('Failed to parse cart:', e);
-          }
-        }
-        setIsLoaded(true);
-        return;
-      }
-
-      // Logged in mode: Sync guest items then load from DB
+    const savedCart = localStorage.getItem('og_cart');
+    if (savedCart) {
       try {
-        const savedCart = localStorage.getItem('og_cart');
-        if (savedCart) {
-          const guestItems = JSON.parse(savedCart);
-          if (guestItems && guestItems.length > 0) {
-            console.log('Syncing guest items to account...');
-            for (const item of guestItems) {
-              await supabase.from('cart_items').upsert({
-                user_id: user.id,
-                product_id: item.id,
-                payment_option: item.paymentOption,
-                quantity: item.quantity,
-                variant_id: item.variantId || null,
-                variant_info: item.variantInfo || null
-              }, { onConflict: 'user_id, product_id, payment_option, variant_id' });
-            }
-            localStorage.removeItem('og_cart');
-          }
-        }
+        setCart(JSON.parse(savedCart));
       } catch (e) {
-        console.error('Cart sync failed:', e);
+        console.error('Failed to parse cart:', e);
       }
-
-      // Fetch final cart from DB
-      const { data, error } = await supabase
-        .from('cart_items')
-        .select(`
-          id,
-          quantity,
-          payment_option,
-          variant_id,
-          variant_info,
-          product:products (
-            id,
-            name,
-            slug,
-            images,
-            our_price
-          )
-        `)
-        .eq('user_id', user.id);
-
-      if (!error && data) {
-        const dbCart = data.map(item => ({
-          dbId: item.id,
-          id: item.product.id,
-          name: item.product.name,
-          slug: item.product.slug,
-          image: item.product.images?.[0],
-          basePrice: item.variant_info?.variantPrice || item.product.our_price,
-          paymentOption: item.payment_option,
-          quantity: item.quantity,
-          variantId: item.variant_id,
-          variantInfo: item.variant_info
-        }));
-        setCart(dbCart);
-      }
-      setIsLoaded(true);
     }
-    
-    if (isLoaded || !isLoaded) { // Run on mount and user change
-      loadAndSyncCart();
-    }
-  }, [user, authLoaded]);
+    setIsLoaded(true);
+  }, []);
 
-  // 3. Save Guest Cart to localStorage
+  // 3. Save Cart to localStorage
   useEffect(() => {
-    if (isLoaded && !user) {
+    if (isLoaded) {
       localStorage.setItem('og_cart', JSON.stringify(cart));
     }
-  }, [cart, isLoaded, user]);
+  }, [cart, isLoaded]);
 
   const addToCart = async (product, quantity = 1, paymentOption = 'half_cod', variantInfo = null) => {
     const variantId = variantInfo ? `${variantInfo.ram}GB-${variantInfo.storage}GB` : null;
-
-    if (user) {
-      // Get existing item to calculate new quantity
-      const existing = cart.find(item => item.id === product.id && item.paymentOption === paymentOption && item.variantId === variantId);
-      const newQuantity = (existing ? existing.quantity : 0) + quantity;
-
-      // Upsert to Database
-      const { data, error } = await supabase
-        .from('cart_items')
-        .upsert({
-          user_id: user.id,
-          product_id: product.id,
-          payment_option: paymentOption,
-          quantity: newQuantity,
-          variant_id: variantId,
-          variant_info: variantInfo
-        }, { onConflict: 'user_id, product_id, payment_option, variant_id' });
-      
-      if (error) console.error('Error adding to cart:', error);
-    }
 
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id && item.paymentOption === paymentOption && item.variantId === variantId);
@@ -164,43 +72,12 @@ export function CartProvider({ children }) {
   };
 
   const removeFromCart = async (id, paymentOption, variantId = null) => {
-    if (user) {
-      let query = supabase
-        .from('cart_items')
-        .delete()
-        .eq('user_id', user.id)
-        .eq('product_id', id)
-        .eq('payment_option', paymentOption);
-      
-      if (variantId) {
-        query = query.eq('variant_id', variantId);
-      } else {
-        query = query.is('variant_id', null);
-      }
-      await query;
-    }
     setCart(prev => prev.filter(item => !(item.id === id && item.paymentOption === paymentOption && item.variantId === variantId)));
   };
 
   const updateQuantity = async (id, paymentOption, quantity, variantId = null) => {
     if (quantity < 1) return removeFromCart(id, paymentOption, variantId);
     
-    if (user) {
-      let query = supabase
-        .from('cart_items')
-        .update({ quantity })
-        .eq('user_id', user.id)
-        .eq('product_id', id)
-        .eq('payment_option', paymentOption);
-      
-      if (variantId) {
-        query = query.eq('variant_id', variantId);
-      } else {
-        query = query.is('variant_id', null);
-      }
-      await query;
-    }
-
     setCart(prev => prev.map(item => 
       item.id === id && item.paymentOption === paymentOption && item.variantId === variantId
         ? { ...item, quantity }
