@@ -86,6 +86,27 @@ export default function SignupPage() {
     marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em',
   };
 
+  if (success) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-page)', padding: '24px' }}>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '24px', padding: '40px', width: '100%', maxWidth: '420px', textAlign: 'center', boxShadow: 'var(--shadow-lg)' }}
+        >
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>✉️</div>
+          <h2 style={{ fontSize: '24px', fontWeight: '900', color: 'var(--text-primary)', marginBottom: '8px' }}>Check your email!</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', marginBottom: '24px', lineHeight: '1.5' }}>
+            We've sent a confirmation link to <strong>{form.email}</strong>. Please click it to verify your account and log in.
+          </p>
+          <Link href="/login" style={{ display: 'inline-block', padding: '12px 24px', background: 'var(--brand-primary)', color: '#fff', borderRadius: '12px', fontWeight: '800', textDecoration: 'none' }}>
+            Go to Login
+          </Link>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-page)', padding: '24px' }}>
       <motion.div 
