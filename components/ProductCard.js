@@ -1,4 +1,5 @@
 // components/ProductCard.js
+import Image from 'next/image';
 import Link from 'next/link';
 import { Smartphone, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -34,10 +35,13 @@ export default function ProductCard({ product }) {
       {/* Image */}
       <div className={styles.imageWrap}>
         {product.images?.[0] ? (
-          <img
+          <Image
             src={product.images[0]}
             alt={product.name}
             className={styles.image}
+            width={300}
+            height={300}
+            style={{ objectFit: 'contain' }}
             loading="lazy"
             referrerPolicy="no-referrer"
           />

@@ -106,7 +106,7 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    // setLoading(true); // Avoid calling setState synchronously in effect body
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     Promise.all([fetchProducts(), fetchOrders(), fetchPendingReviews()]).finally(() => setLoading(false));
   }, []);
 

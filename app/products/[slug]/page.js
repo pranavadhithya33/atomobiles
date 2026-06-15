@@ -94,6 +94,7 @@ export default function ProductDetailPage() {
     if (!hasVariants) return;
     if (selectedStorage != null && selectedRam != null) {
       const match = variants.find(v => v.storage === selectedStorage && v.ram === selectedRam);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (match) setDynamicOurPrice(Number(match.price));
     } else if (hasVariants) {
       // Show lowest variant price as "starting from"

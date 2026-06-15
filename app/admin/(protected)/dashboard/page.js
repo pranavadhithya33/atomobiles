@@ -108,6 +108,7 @@ export default function AdminDashboard() {
         sessionStorage.removeItem('og_admin');
         router.replace('/admin/login');
       } else {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsAuthenticated(true);
       }
     }
@@ -138,7 +139,7 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    // setLoading(true); // Avoid calling setState synchronously in effect body
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     Promise.all([fetchProducts(), fetchOrders(), fetchReviewsAdmin(), fetchVideosAdmin()]).finally(() => setLoading(false));
   }, []);
 

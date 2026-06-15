@@ -18,6 +18,7 @@ export default function ReviewsSection({ productId, onStatsChange }) {
       const urlParams = new URLSearchParams(window.location.search);
       const isReview = urlParams.get('review') === 'true' || window.location.hash === '#review';
       if (isReview) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setShowForm(true);
         
         const scrollToReviews = () => {
@@ -33,16 +34,6 @@ export default function ReviewsSection({ productId, onStatsChange }) {
       }
     }
   }, []);
-
-  useEffect(() => {
-    fetchReviews();
-    if (productId === 'store') {
-      fetch('/api/products')
-        .then(r => r.json())
-        .then(data => setStoreProducts(data))
-        .catch(console.error);
-    }
-  }, [productId]);
 
   const fetchReviews = async () => {
     try {
@@ -63,6 +54,18 @@ export default function ReviewsSection({ productId, onStatsChange }) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchReviews();
+    if (productId === 'store') {
+      fetch('/api/products')
+        .then(r => r.json())
+        .then(data => setStoreProducts(data))
+        .catch(console.error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

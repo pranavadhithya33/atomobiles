@@ -511,7 +511,7 @@ function OrderFormContent() {
         </button>
 
         <p style={{ textAlign:'center', fontSize:12, color:'var(--text-muted)', marginTop:12 }}>
-          🔒 Your details are safe with us. We'll contact you before dispatching.
+          🔒 Your details are safe with us. We&apos;ll contact you before dispatching.
         </p>
       </form>
     </div>

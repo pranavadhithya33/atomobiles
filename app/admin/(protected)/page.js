@@ -57,7 +57,7 @@ export default function AdminDashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Command Center</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Overview of your store's performance.</p>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">Overview of your store&apos;s performance.</p>
         </div>
         <div className="flex gap-2">
           {["Today", "7D", "30D", "1Y"].map(filter => (

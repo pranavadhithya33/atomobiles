@@ -1,8 +1,3 @@
 {
-  "crons": [
-    {
-      "path": "/api/refresh-prices",
-      "schedule": "0 0 */10 * *"
-    }
-  ]
+  "name": "atomobiles-website"
 }

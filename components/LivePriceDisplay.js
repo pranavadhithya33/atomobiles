@@ -9,7 +9,7 @@ export default function LivePriceDisplay({ product, onPriceUpdate, onStockUpdate
     amazon: product.amazon_price || product.online_price || 0,
     flipkart: product.flipkart_price || product.online_price || 0,
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!!(product.amazon_url || product.flipkart_url));
 
   useEffect(() => {
     let isMounted = true;
@@ -55,14 +55,12 @@ export default function LivePriceDisplay({ product, onPriceUpdate, onStockUpdate
       if (isMounted) setIsLoading(false);
     }
 
-    // Only try to fetch live prices if URLs are provided, otherwise just use DB prices immediately
     if (product.amazon_url || product.flipkart_url) {
       fetchLivePrices();
-    } else {
-      setIsLoading(false);
     }
 
     return () => { isMounted = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product.amazon_url, product.flipkart_url]);
 
   // Determine highest competitor price to calculate maximum savings

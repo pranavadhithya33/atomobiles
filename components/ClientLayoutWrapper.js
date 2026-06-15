@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import Header from '@/components/Header';
 import { CartProvider } from '@/context/CartContext';
 import { MessageCircle } from 'lucide-react';
+import Link from 'next/link';
 
 export default function ClientLayoutWrapper({ children }) {
   const pathname = usePathname();
@@ -20,39 +21,60 @@ export default function ClientLayoutWrapper({ children }) {
       {!isAdmin && (
         <footer style={{
           background: 'var(--bg-footer)',
-          color: 'rgba(255,255,255,0.7)',
-          padding: '32px 16px',
-          textAlign: 'center',
-          fontSize: 13,
-          marginTop: 48,
-          borderTop: '1px solid rgba(255,255,255,0.1)'
+          padding: '48px 32px 24px',
+          borderTop: '1px solid rgba(255,255,255,0.05)',
+          marginTop: '60px'
         }}>
-          <div style={{ fontWeight: 800, color: '#fff', fontSize: 18, marginBottom: 8, letterSpacing: '-0.5px' }}>ATOMOBILES</div>
-          <div style={{ fontSize: 14 }}>India's Premium Wholesale Mobile Dealer</div>
-          <div style={{ 
-            marginTop: 32, 
-            background: 'linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 100%)', 
-            padding: '32px 24px', 
-            borderRadius: '16px', 
-            maxWidth: '700px', 
-            margin: '32px auto 0',
-            border: '1px solid rgba(255,255,255,0.1)',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
-          }}>
-            <h3 style={{ color: '#fff', fontSize: 20, fontWeight: 800, marginBottom: 24, letterSpacing: '-0.5px' }}>Contact Us</h3>
-            
-            <div style={{ marginBottom: 32 }}>
-              <a href={`https://wa.me/917397189222`} target="_blank" rel="noopener noreferrer"
-                style={{ color: 'var(--brand-primary)', fontWeight: 800, fontSize: 15, display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--brand-accent)', padding: '14px 28px', borderRadius: 30, textDecoration: 'none', boxShadow: '0 4px 12px rgba(200, 121, 65, 0.4)', transition: 'all 0.2s', letterSpacing: '-0.3px' }}>
-                <MessageCircle size={20} color="var(--brand-primary)" /> WhatsApp: +91 73971 89222
-              </a>
+          <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '32px' }}>
+            {/* Column 1 */}
+            <div>
+              <h4 style={{ color: 'var(--brand-accent)', fontSize: '15px', fontWeight: 700, marginBottom: '20px' }}>Categories</h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Server & Back Components</Link></li>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Phones</Link></li>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Tablets</Link></li>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Wearables</Link></li>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Accessories</Link></li>
+              </ul>
             </div>
 
+            {/* Column 2 */}
+            <div>
+              <h4 style={{ color: 'var(--brand-accent)', fontSize: '15px', fontWeight: 700, marginBottom: '20px' }}>Promos</h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Phones</Link></li>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Tablets</Link></li>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Wearables</Link></li>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Accessories</Link></li>
+              </ul>
+            </div>
 
+            {/* Column 3 */}
+            <div>
+              <h4 style={{ color: 'var(--brand-accent)', fontSize: '15px', fontWeight: 700, marginBottom: '20px' }}>B2B Services</h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Bulk Quote Requests</Link></li>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Corporate Gifting</Link></li>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Solutions</Link></li>
+              </ul>
+            </div>
+
+            {/* Column 4 */}
+            <div>
+              <h4 style={{ color: 'var(--brand-accent)', fontSize: '15px', fontWeight: 700, marginBottom: '20px' }}>Customer Support</h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <li><a href="https://wa.me/917397189222" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}><MessageCircle size={16} color="#25D366" /> WhatsApp</a></li>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Email</Link></li>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Terms</Link></li>
+                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Privacy Policy</Link></li>
+              </ul>
+            </div>
           </div>
           
-          <div suppressHydrationWarning style={{ marginTop: 24, fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
-            © {new Date().getFullYear()} Atomobiles. All rights reserved.
+          <div style={{ maxWidth: '1200px', margin: '48px auto 0', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '24px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', color: 'var(--text-muted)', fontSize: '12px', gap: '16px' }}>
+            <span>© 2024 Atomobiles. All rights reserved.</span>
+            <span>Premium Wholesale Deals for Businesses</span>
+            <span>Created by Atomobiles</span>
           </div>
         </footer>
       )}

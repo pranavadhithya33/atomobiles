@@ -202,7 +202,7 @@ function ProfileContent() {
                 <div style={{ ...cardStyle, textAlign: 'center', padding: '60px 40px' }}>
                   <Package size={48} color="var(--text-muted)" style={{ marginBottom: '16px' }} />
                   <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '8px' }}>No orders yet</h3>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>You haven't placed any orders yet. Start shopping to earn Atom coins!</p>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>You haven&apos;t placed any orders yet. Start shopping to earn Atom coins!</p>
                   <Link href="/" className="btn btn-primary" style={{ padding: '12px 24px', borderRadius: '12px', fontWeight: '800', textDecoration: 'none' }}>
                     Browse Products
                   </Link>

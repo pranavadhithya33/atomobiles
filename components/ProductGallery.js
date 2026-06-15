@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import styles from '@/styles/ProductDetail.module.css';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -33,10 +34,13 @@ export default function ProductGallery({ images, name }) {
           </button>
         )}
         
-        <img
+        <Image
           src={validImages[active]}
           alt={`${name} - Image ${active + 1}`}
           className={styles.mainImage}
+          width={600}
+          height={600}
+          style={{ objectFit: 'contain' }}
           referrerPolicy="no-referrer"
         />
 
@@ -62,7 +66,7 @@ export default function ProductGallery({ images, name }) {
               onClick={() => setActive(idx)}
               aria-label={`View image ${idx + 1}`}
             >
-              <img src={img} alt={`Thumbnail ${idx + 1}`} referrerPolicy="no-referrer" />
+              <Image src={img} alt={`Thumbnail ${idx + 1}`} width={80} height={80} style={{ objectFit: 'contain' }} referrerPolicy="no-referrer" />
             </button>
           ))}
         </div>

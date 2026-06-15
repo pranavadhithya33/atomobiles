@@ -1,19 +1,15 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import ProductCard, { SkeletonCard } from '@/components/ProductCard';
-import ReviewsSection from '@/components/ReviewsSection';
-import { motion } from 'framer-motion';
-import { Smartphone, Tag, Star, TrendingUp, ChevronRight, Zap, Truck, CheckCircle, CreditCard, ShieldCheck } from 'lucide-react';
+import Image from 'next/image';
+import { ShieldCheck, Truck, CreditCard, Award, Zap } from 'lucide-react';
 
-function HomeContent() {
+export default function HomeContent() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
     fetch('/api/products')
       .then(r => r.json())
       .then(prodData => {
@@ -24,239 +20,194 @@ function HomeContent() {
   }, []);
 
   return (
-    <div style={{ paddingBottom: 80 }}>
-      {/* Hero Banner */}
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        style={{
-          background: 'linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 60%, var(--brand-primary) 100%)',
-          padding: '28px 16px 32px',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Decorative circles */}
-        <motion.div 
-          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          style={{ position:'absolute', top:-40, right:-40, width:180, height:180, borderRadius:'50%', background:'var(--brand-accent)', filter: 'blur(40px)', pointerEvents:'none' }} 
-        />
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          style={{ position:'absolute', bottom:-30, left:-20, width:120, height:120, borderRadius:'50%', background:'#fff', filter: 'blur(30px)', pointerEvents:'none' }} 
-        />
-
-        <div style={{ position:'relative', zIndex:1 }}>
-          <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:8 }}>
-            <span style={{ background:'#f4a724', color:'#0a1628', fontSize:10, fontWeight:800, padding:'3px 9px', borderRadius:99, letterSpacing:'0.8px', textTransform:'uppercase' }}>
-              ⚡ Wholesale Price
-            </span>
-            <span style={{ background:'rgba(255,255,255,0.1)', color:'rgba(255,255,255,0.8)', fontSize:10, fontWeight:600, padding:'3px 9px', borderRadius:99 }}>
-              Direct from Dealer
-            </span>
-          </div>
-          <h1 className="glitch-text" data-text="ATOMOBILES" style={{ fontSize:32, fontWeight:900, color:'#fff', lineHeight:1.2, letterSpacing:'-0.5px', marginBottom:8, textTransform: 'uppercase' }}>
-            ATOMOBILES<br />
-            <span style={{ color:'var(--brand-accent)', fontSize: 22, display: 'block', marginTop: 4 }}>High-Tech Wholesale Deals</span>
+    <div style={{ paddingBottom: 80, background: 'var(--bg-page)', fontFamily: 'var(--font-base)' }}>
+      {/* 1. Hero Section */}
+      <div style={{
+        background: 'radial-gradient(circle at 70% 50%, #4a2c1d 0%, var(--bg-page) 70%)',
+        padding: '80px 40px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '40px',
+        borderBottom: '1px solid rgba(255,255,255,0.05)'
+      }}>
+        <div style={{ flex: '1 1 500px' }}>
+          <h1 style={{ fontSize: '64px', fontWeight: 900, color: '#fff', lineHeight: 1.1, marginBottom: '16px', letterSpacing: '1px' }}>
+            ATOMOBILES
           </h1>
-          <p style={{ fontSize:14, color:'rgba(255,255,255,0.7)', marginBottom:20, lineHeight:1.5 }}>
-            Wholesale deals · Half COD available · Full prepaid gets extra savings
-          </p>
+          <h2 style={{ fontSize: '24px', color: 'var(--brand-accent)', fontWeight: 500, marginBottom: '40px', letterSpacing: '1px' }}>
+            HIGH-TECH WHOLESALE DISTRIBUTION
+          </h2>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '48px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f3e3d3', fontSize: '16px' }}>
+              <span style={{ color: 'var(--brand-accent)' }}>✓</span> Verified B2B-only Pricing
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f3e3d3', fontSize: '16px' }}>
+              <span style={{ color: 'var(--brand-accent)' }}>✓</span> Nationwide Express Shipping
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f3e3d3', fontSize: '16px' }}>
+              <span style={{ color: 'var(--brand-accent)' }}>✓</span> Flexible Bulk Payment Plans
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f3e3d3', fontSize: '16px' }}>
+              <span style={{ color: 'var(--brand-accent)' }}>✓</span> 100% Quality Authenticated
+            </div>
+          </div>
 
-          <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
-            <a href="#products" style={{
-              background:'#f4a724', color:'#0a1628', padding:'11px 22px',
-              borderRadius:12, fontWeight:800, fontSize:14, display:'inline-flex',
-              alignItems:'center', gap:6, textDecoration:'none'
-            }}>
-              <Zap size={15} strokeWidth={2.5} />
-              Shop Now
-            </a>
-            <a href={`https://wa.me/917397189222?text=${encodeURIComponent('Hi! I want to know about your deals.')}`}
-              target="_blank" rel="noopener noreferrer"
-              style={{
-                background:'rgba(37,211,102,0.15)', color:'#25d366', padding:'11px 22px',
-                borderRadius:12, fontWeight:700, fontSize:14, display:'inline-flex',
-                alignItems:'center', gap:6, border:'1px solid rgba(37,211,102,0.3)', textDecoration:'none'
-              }}>
-              📱 WhatsApp Us
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <Link href="#products" style={{ background: 'var(--brand-accent)', color: '#160d0a', padding: '16px 32px', borderRadius: '30px', fontWeight: 800, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+              <Zap size={20} fill="#160d0a" /> Shop Now
+            </Link>
+            <a href="https://wa.me/917397189222" target="_blank" rel="noopener noreferrer" style={{ background: 'rgba(37, 211, 102, 0.1)', color: '#fff', padding: '16px 32px', borderRadius: '30px', fontWeight: 800, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', border: '1px solid rgba(37, 211, 102, 0.4)' }}>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" style={{ width: '20px', height: '20px' }} /> WhatsApp support
             </a>
           </div>
         </div>
-      </motion.div>
 
-      {/* USP Strip - Premium Feature Grid */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '16px' }}>
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={{
-            visible: { transition: { staggerChildren: 0.1 } }
-          }}
-          style={{ display: 'flex', overflowX: 'auto', scrollbarWidth: 'none', gap: '16px', scrollSnapType: 'x mandatory' }}
-        >
-          {[
-            { icon: <Tag size={20} color="var(--brand-accent)" />, title: 'Unbeatable Dealer Pricing', desc: 'Direct-to-retailer margins' },
-            { icon: <Truck size={20} color="var(--brand-accent)" />, title: 'Express Nationwide Shipping', desc: 'Secure transit across India' },
-            { icon: <CreditCard size={20} color="var(--brand-accent)" />, title: 'Flexible Payment Terms', desc: 'Pay 50% advance, rest on delivery' },
-            { icon: <ShieldCheck size={20} color="var(--brand-accent)" />, title: '100% Verified Authenticity', desc: 'Quality guaranteed on every unit' },
-          ].map((item, i) => (
-            <motion.div 
-              key={i} 
-              variants={{
-                hidden: { opacity: 0, x: -20 },
-                visible: { opacity: 1, x: 0 }
-              }}
-              style={{
-                display: 'flex', flexDirection: 'column', gap: '4px',
-                padding: '16px', background: 'var(--bg-page)', borderRadius: '12px',
-                minWidth: '220px', scrollSnapAlign: 'start', border: '1px solid var(--border)'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                {item.icon}
-                <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)' }}>{item.title}</span>
-              </div>
-              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{item.desc}</span>
-            </motion.div>
-          ))}
-        </motion.div>
+        <div style={{ flex: '1 1 400px', display: 'flex', justifyContent: 'center' }}>
+          <Image src="/hero_devices.png" alt="High-Tech Devices" width={500} height={400} style={{ objectFit: 'contain', width: '100%', height: 'auto', dropShadow: '0 20px 40px rgba(0,0,0,0.5)' }} priority />
+        </div>
       </div>
 
-      {/* Top Selling Section */}
-      {!loading && products.some(p => p.featured && p.stock > 0) && (
-        <div style={{ padding: '0 16px', marginTop: 32 }}>
-          <div className="section-header" style={{ marginBottom: 16 }}>
-            <h2 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <TrendingUp size={24} color="var(--brand-accent)" /> Top <span>Selling</span>
-            </h2>
+      {/* 2. Deal of the Day Section */}
+      <div style={{ padding: '60px 40px 20px' }}>
+        <div style={{ background: '#241710', borderRadius: '24px', padding: '40px', display: 'flex', alignItems: 'center', gap: '40px', flexWrap: 'wrap', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ flex: '1 1 300px', background: '#fdfbf7', borderRadius: '16px', padding: '24px', display: 'flex', justifyContent: 'center' }}>
+            <Image src="/multi_charger.png" alt="Server-rack-grade high-capacity multi-charger" width={300} height={200} style={{ objectFit: 'contain' }} />
           </div>
-          <div className="product-grid" style={{ marginBottom: 20 }}>
-            {products
-              .filter(p => p.featured && p.stock > 0)
-              .slice(0, 4)
-              .map(p => <ProductCard key={`featured-${p.id}`} product={p} />)
-            }
+          
+          <div style={{ flex: '2 1 400px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '24px' }}>
+            <div>
+              <div style={{ color: 'var(--brand-accent)', fontWeight: 800, fontSize: '18px', letterSpacing: '1px', marginBottom: '8px' }}>DEAL OF THE DAY</div>
+              <h3 style={{ color: '#fff', fontSize: '28px', fontWeight: 800, marginBottom: '8px', lineHeight: 1.2 }}>Server-rack-grade high-capacity<br/>multi-charger</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '16px', marginBottom: '24px' }}>A server-rack-grade high-capacity multi-charger.</p>
+              
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '24px' }}>
+                <span style={{ color: '#fff', fontSize: '40px', fontWeight: 900 }}>₹14,500</span>
+                <span style={{ color: 'var(--text-muted)', fontSize: '16px' }}>per unit</span>
+              </div>
+              
+              <button style={{ background: 'var(--brand-accent-light)', color: '#160d0a', border: 'none', padding: '14px 28px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', cursor: 'pointer' }}>
+                BUY NOW - BULK DEAL
+              </button>
+            </div>
+
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ color: '#fff', fontSize: '18px', fontWeight: 700, marginBottom: '16px' }}>Deal of the Day - Ends In:</div>
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center', marginBottom: '24px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <div style={{ background: '#1a100c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px', fontWeight: 700 }}>02</div>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Days</span>
+                </div>
+                <span style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <div style={{ background: '#1a100c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px', fontWeight: 700 }}>03</div>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Hours</span>
+                </div>
+                <span style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <div style={{ background: '#1a100c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px', fontWeight: 700 }}>40</div>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Minutes</span>
+                </div>
+                <span style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <div style={{ background: '#1a100c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px', fontWeight: 700 }}>42</div>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Seconds</span>
+                </div>
+              </div>
+              <button style={{ background: 'transparent', border: '1px solid var(--brand-accent-light)', color: 'var(--brand-accent-light)', padding: '14px 40px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', cursor: 'pointer', width: '100%' }}>
+                BUY NOW - BULK DEAL
+              </button>
+            </div>
           </div>
         </div>
-      )}
+      </div>
 
-
-
-      {/* Products Grid */}
-      <div id="products" style={{ padding:'12px 12px 0' }}>
-        <div className="section-header" style={{ padding:'0 4px', marginBottom:12 }}>
-          <h2 className="section-title">
-            All <span>Smartphones</span>
-          </h2>
-          {!loading && (
-            <span style={{ fontSize:12, color:'var(--text-muted)', fontWeight:600 }}>
-              {products.length} item{products.length !== 1 ? 's' : ''}
-            </span>
-          )}
+      {/* 3. Featured Bulk Deals */}
+      <div id="products" style={{ padding: '40px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
+            <div style={{ height: '2px', width: '40px', background: 'var(--brand-accent)' }} />
+            <h2 style={{ color: '#fff', fontSize: '28px', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase' }}>FEATURED BULK DEALS</h2>
+            <div style={{ height: '2px', width: '40px', background: 'var(--brand-accent)' }} />
+          </div>
+          <p style={{ color: 'var(--text-muted)', fontSize: '16px', marginTop: '8px' }}>Best deals for businesses & bulk buyers</p>
         </div>
 
         {loading ? (
-          <div className="product-grid">
-            {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
-          </div>
-        ) : products.length === 0 ? (
-          <div style={{
-            textAlign:'center', padding:'48px 16px',
-            background:'#fff', borderRadius:16, margin:'0 4px'
-          }}>
-            <div style={{ fontSize:48, marginBottom:12, display: 'flex', justifyContent: 'center' }}><Smartphone size={48} color="var(--brand-accent)" /></div>
-            <div style={{ fontWeight:700, fontSize:16, color:'var(--text-primary)', marginBottom:6 }}>
-              No products found
-            </div>
-            <div style={{ fontSize:13, color:'var(--text-muted)' }}>
-              Products will appear here once added.
-            </div>
-          </div>
+          <div style={{ color: '#fff', textAlign: 'center' }}>Loading products...</div>
         ) : (
-          <div className="product-grid">
-            {products
-              .filter(p => p.stock > 0)
-              .map(p => <ProductCard key={p.id} product={p} />)
-            }
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
+            {products.slice(0, 8).map(p => (
+              <div key={p.id} style={{ background: '#fdfbf7', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+                  {p.images && p.images[0] ? (
+                    <Image src={p.images[0]} alt={p.name} width={180} height={220} style={{ objectFit: 'contain', maxHeight: '100%' }} />
+                  ) : (
+                    <div style={{ width: '150px', height: '200px', background: '#eee', borderRadius: '8px' }} />
+                  )}
+                </div>
+                
+                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#160d0a', marginBottom: '8px', lineHeight: 1.3 }}>
+                  {p.name} Bulk
+                </h3>
+                
+                <div style={{ color: '#c87941', fontWeight: 800, fontSize: '16px', marginBottom: '4px' }}>
+                  From ₹41,250/month, min. 10 pcs
+                </div>
+                
+                <div style={{ color: '#5d4037', fontSize: '13px', marginBottom: '20px' }}>
+                  Verified | 100% Authentic
+                </div>
+                
+                <div style={{ marginTop: 'auto' }}>
+                  <Link href={`/products/${p.slug}`} style={{ display: 'block', textAlign: 'center', background: '#f4d3b6', color: '#160d0a', padding: '14px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', textDecoration: 'none' }}>
+                    Request Bulk Quote
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
 
-      {/* Why Choose Us */}
-      <div style={{ padding:'32px 16px 16px' }}>
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          style={{ background:'linear-gradient(135deg, var(--brand-secondary), var(--brand-primary))', borderRadius:20, padding:'24px 16px' }}
-        >
-          <h2 style={{ color:'#fff', fontWeight:900, fontSize:20, marginBottom:20, textAlign:'center' }}>
-            Why <span style={{ color:'var(--brand-accent)' }}>Atomobiles?</span>
-          </h2>
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
-            {[
-              { icon: <Tag size={24} color="var(--brand-accent)" />, title:'Best Wholesale Rates', desc:'No middlemen, direct savings' },
-              { icon: <Truck size={24} color="var(--brand-accent)" />, title:'Pan India Delivery', desc:'Fast & reliable shipping' },
-              { icon: <CreditCard size={24} color="var(--brand-accent)" />, title:'Half COD Available', desc:'Pay 50% advance, rest on delivery' },
-              { icon: <ShieldCheck size={24} color="var(--brand-accent)" />, title:'Genuine Products', desc:'100% authentic, verified stock' },
-            ].map((item, i) => (
-              <div key={i} style={{
-                background:'rgba(255,255,255,0.05)', borderRadius:16,
-                padding:'16px 12px', border:'1px solid rgba(255,255,255,0.08)',
-                backdropFilter: 'blur(10px)'
-              }}>
-                <div style={{ marginBottom:10 }}>{item.icon}</div>
-                <div style={{ fontSize:14, fontWeight:800, color:'#fff', marginBottom:4 }}>{item.title}</div>
-                <div style={{ fontSize:12, color:'rgba(255,255,255,0.6)' }}>{item.desc}</div>
-              </div>
-            ))}
+      {/* 4. Trust Badges */}
+      <div style={{ padding: '20px 40px' }}>
+        <div style={{ background: '#3e2820', borderRadius: '16px', padding: '32px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <ShieldCheck size={36} color="var(--brand-accent)" />
+            <div>
+              <div style={{ color: '#fff', fontWeight: 700, fontSize: '15px' }}>Verified B2B-only</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Verified for retailer only pricing</div>
+            </div>
           </div>
-        </motion.div>
-      </div>
-
-      {/* Video Reviews Removed */}
-
-      {/* Store Reviews */}
-      <div style={{ padding: '0 16px' }}>
-        <ReviewsSection productId="store" />
-      </div>
-
-      {/* Track Order CTA */}
-      <div style={{ padding:'24px 16px 0' }}>
-        <div style={{ background:'#fff', border:'1px solid #e2e8f0', borderRadius:20, padding:'24px', textAlign:'center', boxShadow:'0 4px 12px rgba(0,0,0,0.03)' }}>
-          <div style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', width:48, height:48, background:'#e0f2fe', borderRadius:12, marginBottom:16 }}>
-            <Truck size={24} color="#0ea5e9" />
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <Truck size={36} color="var(--brand-accent)" />
+            <div>
+              <div style={{ color: '#fff', fontWeight: 700, fontSize: '15px' }}>Nationwide Shipping</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Secure transit across India</div>
+            </div>
           </div>
-          <h2 style={{ fontSize:18, fontWeight:800, marginBottom:8, color:'#0a1628' }}>Track Your Shipment</h2>
-          <p style={{ fontSize:13, color:'#64748b', marginBottom:16 }}>Check your delivery status and download your invoice instantly.</p>
-          <Link href="/track" style={{ 
-            display:'block', width:'100%', padding:'14px', background:'#0a1628', color:'#fff', 
-            borderRadius:12, fontWeight:700, fontSize:14, textDecoration:'none' 
-          }}>
-            Track Order Now
-          </Link>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <CreditCard size={36} color="var(--brand-accent)" />
+            <div>
+              <div style={{ color: '#fff', fontWeight: 700, fontSize: '15px' }}>Flexible Bulk Payments</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Pay 50% advance, rest on delivery</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <Award size={36} color="var(--brand-accent)" />
+            <div>
+              <div style={{ color: '#fff', fontWeight: 700, fontSize: '15px' }}>100% Quality Authenticity</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Quality guaranteed on every unit</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  );
-}
-
-export default function HomePage() {
-  return (
-    <Suspense fallback={
-      <div style={{ padding:16 }}>
-        <div className="product-grid">
-          {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
-        </div>
-      </div>
-    }>
-      <HomeContent />
-    </Suspense>
   );
 }

@@ -6,28 +6,29 @@
    ============================================================ */
 :root {
   /* Coffee Brand Colors */
-  --brand-primary: #2d1a11;    /* Deep Espresso */
-  --brand-secondary: #3e2723;  /* Dark Mocha */
-  --brand-accent: #c87941;     /* Caramel / Warm Amber */
-  --brand-accent-dark: #8b5e34;
-  --brand-accent-light: #e6c2a5;
+  --brand-primary: #160d0a;    /* Deep Espresso / Almost Black */
+  --brand-secondary: #241814;  /* Dark Mocha */
+  --brand-accent: #e8a468;     /* Caramel / Warm Amber */
+  --brand-accent-dark: #c87941;
+  --brand-accent-light: #f4d3b6;
 
   /* Backgrounds */
-  --bg-page: #fdfbf7;          /* Creamy Latte */
-  --bg-card: #ffffff;
-  --bg-header: #2d1a11;        /* Espresso Header */
-  --bg-footer: #2d1a11;        /* Espresso Footer */
-  --bg-highlight: #f8efe6;
+  --bg-page: #2a1c16;          /* Dark Mocha Background */
+  --bg-card: #f8f6f0;          /* Warm White for Cards */
+  --bg-header: #1a100c;        /* Espresso Header */
+  --bg-footer: #1a100c;        /* Espresso Footer */
+  --bg-highlight: #3e2820;
 
   /* Text Colors */
-  --text-primary: #3e2723;
-  --text-secondary: #5d4037;
-  --text-muted: #8d6e63;
+  --text-primary: #fdfbf7;     /* Light text for dark background */
+  --text-secondary: #d4c2b3;
+  --text-muted: #a69385;
   --text-white: #ffffff;
-  --text-accent: #c87941;
+  --text-dark: #241814;        /* Dark text for white cards */
+  --text-accent: #e8a468;
 
   /* Price Colors */
-  --price-original: #a1887f;
+  --price-original: #a69385;
   --price-our: #3e2723;
   --price-savings: #4caf50;
   --price-prepaid: #3f51b5;

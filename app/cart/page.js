@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { formatINR } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
-import { Trash2, ShoppingBag, Plus, Minus, ArrowRight, ShoppingCart, CheckCircle } from 'lucide-react';
+import { ShoppingCart, Trash2, ArrowRight, ShieldCheck, Plus, Minus, CreditCard, AlertCircle, CheckCircle } from 'lucide-react';
 import styles from '@/styles/ProductDetail.module.css';
 
 export default function CartPage() {
@@ -45,7 +47,7 @@ export default function CartPage() {
           <ShoppingCart size={40} color="#9aa3b2" />
         </div>
         <h1 style={{ fontSize: '24px', fontWeight: '800', marginBottom: '8px', color: '#fff' }}>Your cart is empty</h1>
-        <p style={{ color: '#9aa3b2', marginBottom: '32px', maxWidth: '300px' }}>Looks like you haven't added anything to your cart yet.</p>
+        <p style={{ color: '#9aa3b2', marginBottom: '32px', maxWidth: '300px' }}>Looks like you haven&apos;t added anything to your cart yet.</p>
         <Link href="/" className="btn btn-primary btn-lg">
           Start Shopping
         </Link>
@@ -80,9 +82,11 @@ export default function CartPage() {
               flexShrink: 0,
               border: '1px solid var(--border)'
             }}>
-              <img 
+              <Image 
                 src={item.image} 
                 alt={item.name} 
+                width={80}
+                height={80}
                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 referrerPolicy="no-referrer"
               />

@@ -20,7 +20,7 @@ export default function ForgotPasswordPage() {
           </div>
           <h1 style={{ fontSize: '24px', fontWeight: '900', color: '#fff', marginBottom: '8px' }}>Forgot Password?</h1>
           <p style={{ color: '#6b7280', fontSize: '14px' }}>
-            Since we don't send emails for security, please contact us on WhatsApp to reset your password.
+            Since we don&apos;t send emails for security, please contact us on WhatsApp to reset your password.
           </p>
         </div>
 

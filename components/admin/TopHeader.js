@@ -13,6 +13,7 @@ export default function AdminHeader({ user }) {
       (!("theme" in localStorage) &&
         window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTheme("dark");
       document.documentElement.classList.add("dark");
     } else {

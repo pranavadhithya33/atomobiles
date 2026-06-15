@@ -73,7 +73,7 @@ export default function SignupPage() {
           <div style={{ fontSize: '48px', marginBottom: '16px' }}>✉️</div>
           <h2 style={{ fontSize: '24px', fontWeight: '900', color: 'var(--text-primary)', marginBottom: '8px' }}>Check your email!</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', marginBottom: '24px', lineHeight: '1.5' }}>
-            We've sent a confirmation link to <strong>{form.email}</strong>. Please click it to verify your account and log in.
+            We&apos;ve sent a confirmation link to <strong>{form.email}</strong>. Please click it to verify your account and log in.
           </p>
           <Link href="/login" style={{ display: 'inline-block', padding: '12px 24px', background: 'var(--brand-primary)', color: '#fff', borderRadius: '12px', fontWeight: '800', textDecoration: 'none' }}>
             Go to Login
