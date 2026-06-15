@@ -650,7 +650,7 @@ export default function AdminDashboard() {
                         alignItems: 'center',
                         padding: '6px 8px',
                         borderRadius: 8,
-                        background: v.enabled ? 'rgba(244,167,36,0.06)' : '#fff',
+                        background: v.enabled ? 'rgba(244,167,36,0.06)' : 'var(--bg-card)',
                         border: v.enabled ? '1px solid rgba(244,167,36,0.25)' : '1px solid var(--border)',
                         opacity: v.price ? 1 : 0.65,
                         transition: 'all 0.15s',
@@ -887,7 +887,7 @@ export default function AdminDashboard() {
             className={`${styles.tab} ${activeTab === 'reviews' ? styles.tabActive : ''}`}
             onClick={() => { setActiveTab('reviews'); fetchPendingReviews(); }}
           >
-            <MessageSquare size={15} /> Reviews {pendingReviews.length > 0 && <span style={{ background: '#ef4444', color: '#fff', fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 99, marginLeft: 4 }}>{pendingReviews.length}</span>}
+            <MessageSquare size={15} /> Reviews {pendingReviews.length > 0 && <span style={{ background: '#ef4444', color: 'var(--text-primary)', fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 99, marginLeft: 4 }}>{pendingReviews.length}</span>}
           </button>
         </div>
 
@@ -1149,7 +1149,7 @@ export default function AdminDashboard() {
                         {expandedRouteOrderId === o.id && (
                           <tr>
                             <td colSpan={9} style={{ background: '#f8fafc', padding: '24px', borderTop: '1px solid #e2e8f0', borderBottom: '2px solid #cbd5e1' }}>
-                              <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px', boxShadow: 'var(--shadow-md)' }}>
+                              <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px', boxShadow: 'var(--shadow-md)' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
                                   <h3 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--brand-primary)', margin: 0 }}>
                                     🗺️ Manage Shipment Route & Steps
@@ -1251,7 +1251,7 @@ export default function AdminDashboard() {
             ) : (
               <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
                 {pendingReviews.map(review => (
-                  <div key={review.id} style={{ background:'#fff', border:'1px solid var(--border)', borderRadius:'12px', padding:'16px', boxShadow:'0 1px 3px rgba(0,0,0,0.04)' }}>
+                  <div key={review.id} style={{ background: 'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'12px', padding:'16px', boxShadow:'0 1px 3px rgba(0,0,0,0.04)' }}>
                     <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'10px' }}>
                       <div>
                         <div style={{ fontWeight:700, fontSize:14, color:'var(--text-primary)', marginBottom:4 }}>{review.user_name}</div>
@@ -1274,7 +1274,7 @@ export default function AdminDashboard() {
                             });
                             fetchPendingReviews();
                           }}
-                          style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#16a34a', color:'#fff', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
+                          style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#16a34a', color: 'var(--text-primary)', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
                         >
                           <Check size={14} /> Approve
                         </button>
@@ -1287,7 +1287,7 @@ export default function AdminDashboard() {
                             });
                             fetchPendingReviews();
                           }}
-                          style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#ef4444', color:'#fff', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
+                          style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#ef4444', color: 'var(--text-primary)', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
                         >
                           <X size={14} /> Reject
                         </button>
@@ -1524,7 +1524,7 @@ export default function AdminDashboard() {
                         alignItems: 'center',
                         padding: '6px 8px',
                         borderRadius: 8,
-                        background: v.enabled ? 'rgba(244,167,36,0.06)' : '#fff',
+                        background: v.enabled ? 'rgba(244,167,36,0.06)' : 'var(--bg-card)',
                         border: v.enabled ? '1px solid rgba(244,167,36,0.25)' : '1px solid var(--border)',
                         opacity: v.price ? 1 : 0.65,
                         transition: 'all 0.15s',

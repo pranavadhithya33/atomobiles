@@ -37,7 +37,7 @@ export default function CartPage() {
         <div style={{ 
           width: '80px', 
           height: '80px', 
-          background: 'rgba(255,255,255,0.05)', 
+          background: 'var(--glass-bg)', 
           borderRadius: '40px', 
           display: 'flex', 
           alignItems: 'center', 
@@ -46,7 +46,7 @@ export default function CartPage() {
         }}>
           <ShoppingCart size={40} color="#9aa3b2" />
         </div>
-        <h1 style={{ fontSize: '24px', fontWeight: '800', marginBottom: '8px', color: '#fff' }}>Your cart is empty</h1>
+        <h1 style={{ fontSize: '24px', fontWeight: '800', marginBottom: '8px', color: 'var(--text-primary)' }}>Your cart is empty</h1>
         <p style={{ color: '#9aa3b2', marginBottom: '32px', maxWidth: '300px' }}>Looks like you haven&apos;t added anything to your cart yet.</p>
         <Link href="/" className="btn btn-primary btn-lg">
           Start Shopping
@@ -155,25 +155,25 @@ export default function CartPage() {
         {/* Atom Coins Section */}
         {userCoins > 0 && (
           <div style={{ 
-            background: 'rgba(255,255,255,0.05)', 
+            background: 'var(--glass-bg)', 
             padding: '16px', 
             borderRadius: '16px', 
             marginBottom: '20px',
-            border: useCoins ? '1px solid var(--brand-accent)' : '1px solid rgba(255,255,255,0.1)'
+            border: useCoins ? '1px solid var(--brand-accent)' : '1px solid var(--glass-border)'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontSize: '20px' }}>🪙</span>
                 <div>
-                  <div style={{ color: '#fff', fontSize: '14px', fontWeight: '700' }}>Use your Atom Coins</div>
+                  <div style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: '700' }}>Use your Atom Coins</div>
                   <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px' }}>Balance: {userCoins} coins (₹{userCoins})</div>
                 </div>
               </div>
               <button 
                 onClick={() => setUseCoins(!useCoins)}
                 style={{ 
-                  background: useCoins ? 'var(--brand-accent)' : 'rgba(255,255,255,0.1)',
-                  color: useCoins ? '#000' : '#fff',
+                  background: useCoins ? 'var(--brand-accent)' : 'var(--glass-border)',
+                  color: useCoins ? '#000' : 'var(--text-primary)',
                   padding: '6px 14px',
                   borderRadius: '12px',
                   fontSize: '13px',
@@ -194,7 +194,7 @@ export default function CartPage() {
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
           <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '15px' }}>Subtotal ({cartCount} items)</span>
-          <span style={{ color: '#fff', fontSize: '18px', fontWeight: '700' }}>{formatINR(cartTotal)}</span>
+          <span style={{ color: 'var(--text-primary)', fontSize: '18px', fontWeight: '700' }}>{formatINR(cartTotal)}</span>
         </div>
 
         {useCoins && (
@@ -204,11 +204,11 @@ export default function CartPage() {
           </div>
         )}
 
-        <div style={{ width: '100%', height: '1px', background: 'rgba(255,255,255,0.1)', margin: '16px 0' }} />
+        <div style={{ width: '100%', height: '1px', background: 'var(--glass-border)', margin: '16px 0' }} />
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <span style={{ color: '#fff', fontSize: '17px', fontWeight: '700' }}>Total Amount</span>
-          <span style={{ color: '#fff', fontSize: '28px', fontWeight: '900', color: 'var(--brand-accent)' }}>{formatINR(discountedTotal)}</span>
+          <span style={{ color: 'var(--text-primary)', fontSize: '17px', fontWeight: '700' }}>Total Amount</span>
+          <span style={{ color: 'var(--text-primary)', fontSize: '28px', fontWeight: '900', color: 'var(--brand-accent)' }}>{formatINR(discountedTotal)}</span>
         </div>
 
         <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', marginBottom: '24px' }}>

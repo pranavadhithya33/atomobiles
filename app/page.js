@@ -25,7 +25,7 @@ export default function HomeContent() {
       {/* 1. Hero Section */}
       <div className="heroSection" style={{
         background: 'radial-gradient(circle at 70% 50%, #4a2c1d 0%, var(--bg-page) 70%)',
-        borderBottom: '1px solid rgba(255,255,255,0.05)'
+        borderBottom: '1px solid var(--glass-bg)'
       }}>
         <div style={{ flex: '1 1 500px' }}>
           <h1 className="hero-title">

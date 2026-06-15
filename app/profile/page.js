@@ -86,12 +86,12 @@ function ProfileContent() {
           }}>
             <div>
               <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: '600', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Your Atom Coins Balance</div>
-              <div style={{ fontSize: '42px', fontWeight: '900', color: '#fff', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ fontSize: '42px', fontWeight: '900', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ color: 'var(--brand-accent)' }}>🪙</span> {profile?.coins_balance || 0}
               </div>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--brand-accent)', padding: '8px 16px', borderRadius: '12px', fontSize: '12px', fontWeight: '800', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ background: 'var(--glass-bg)', color: 'var(--brand-accent)', padding: '8px 16px', borderRadius: '12px', fontSize: '12px', fontWeight: '800', border: '1px solid var(--glass-border)' }}>
                 ₹1000 Spent = 1 Coin
               </div>
             </div>

@@ -756,7 +756,7 @@ export default function AdminDashboard() {
                         alignItems: 'center',
                         padding: '6px 8px',
                         borderRadius: 8,
-                        background: v.enabled ? 'rgba(244,167,36,0.06)' : '#fff',
+                        background: v.enabled ? 'rgba(244,167,36,0.06)' : 'var(--bg-card)',
                         border: v.enabled ? '1px solid rgba(244,167,36,0.25)' : '1px solid var(--border)',
                         opacity: v.price ? 1 : 0.65,
                         transition: 'all 0.15s',
@@ -975,7 +975,7 @@ export default function AdminDashboard() {
             className={`${styles.tab} ${activeTab === 'reviews' ? styles.tabActive : ''}`}
             onClick={() => { setActiveTab('reviews'); fetchReviewsAdmin(); }}
           >
-            <MessageSquare size={15} /> Reviews {allReviews.filter(r => r.status === 'pending').length > 0 && <span style={{ background: '#ef4444', color: '#fff', fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 99, marginLeft: 4 }}>{allReviews.filter(r => r.status === 'pending').length}</span>}
+            <MessageSquare size={15} /> Reviews {allReviews.filter(r => r.status === 'pending').length > 0 && <span style={{ background: '#ef4444', color: 'var(--text-primary)', fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 99, marginLeft: 4 }}>{allReviews.filter(r => r.status === 'pending').length}</span>}
           </button>
           <button
             className={`${styles.tab} ${activeTab === 'deal' ? styles.tabActive : ''}`}
@@ -1249,7 +1249,7 @@ export default function AdminDashboard() {
             ) : (
               <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
                 {allReviews.map(review => (
-                  <div key={review.id} style={{ background:'#fff', border:'1px solid var(--border)', borderRadius:'12px', padding:'16px', boxShadow:'0 1px 3px rgba(0,0,0,0.04)' }}>
+                  <div key={review.id} style={{ background: 'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'12px', padding:'16px', boxShadow:'0 1px 3px rgba(0,0,0,0.04)' }}>
                     <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'10px' }}>
                       <div>
                         <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
@@ -1283,7 +1283,7 @@ export default function AdminDashboard() {
                               });
                               fetchReviewsAdmin();
                             }}
-                            style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#16a34a', color:'#fff', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
+                            style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#16a34a', color: 'var(--text-primary)', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
                           >
                             <Check size={14} /> Approve
                           </button>
@@ -1298,7 +1298,7 @@ export default function AdminDashboard() {
                               });
                               fetchReviewsAdmin();
                             }}
-                            style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#ef4444', color:'#fff', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
+                            style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#ef4444', color: 'var(--text-primary)', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
                           >
                             <X size={14} /> Reject
                           </button>
@@ -1336,7 +1336,7 @@ export default function AdminDashboard() {
               </button>
             </div>
 
-            <div style={{ background: '#fff', borderRadius: '16px', padding: '24px', boxShadow: 'var(--shadow-card)', border: '1px solid var(--border)', maxWidth: '600px' }}>
+            <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '24px', boxShadow: 'var(--shadow-card)', border: '1px solid var(--border)', maxWidth: '600px' }}>
               {currentDeal && (
                 <div style={{ padding: '16px', background: 'var(--success-bg)', color: 'var(--success)', borderRadius: '12px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ fontSize: '24px' }}>🔥</div>
@@ -1632,7 +1632,7 @@ export default function AdminDashboard() {
                         alignItems: 'center',
                         padding: '6px 8px',
                         borderRadius: 8,
-                        background: v.enabled ? 'rgba(244,167,36,0.06)' : '#fff',
+                        background: v.enabled ? 'rgba(244,167,36,0.06)' : 'var(--bg-card)',
                         border: v.enabled ? '1px solid rgba(244,167,36,0.25)' : '1px solid var(--border)',
                         opacity: v.price ? 1 : 0.65,
                         transition: 'all 0.15s',

@@ -21,7 +21,7 @@ export default function ThemeSwitcher() {
   const themeOptions = [
     { id: 'cafe', label: 'Cafe Style', color: '#e8a468' },
     { id: 'neon-dark', label: 'Neon Dark', color: '#39ff14' },
-    { id: 'minimalist-bw', label: 'Minimalist B&W', color: '#ffffff' },
+    { id: 'minimalist-bw', label: 'Minimalist B&W', color: 'var(--text-primary)' },
   ];
 
   return (
@@ -32,8 +32,8 @@ export default function ThemeSwitcher() {
           display: 'flex', 
           alignItems: 'center', 
           gap: '8px', 
-          background: 'rgba(255,255,255,0.05)', 
-          border: '1px solid rgba(255,255,255,0.1)', 
+          background: 'var(--glass-bg)', 
+          border: '1px solid var(--glass-border)', 
           padding: '8px 12px', 
           borderRadius: '8px',
           color: 'var(--text-primary)',

@@ -46,7 +46,7 @@ function LoginForm() {
   };
 
   const inputStyle = {
-    width: '100%', padding: '12px 16px', background: '#fff',
+    width: '100%', padding: '12px 16px', background: 'var(--bg-card)',
     border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-dark)',
     fontSize: '14px', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s',
   };
@@ -62,7 +62,7 @@ function LoginForm() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="darkTextCard"
-        style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '24px', padding: '40px', width: '100%', maxWidth: '400px', boxShadow: 'var(--shadow-lg)' }}
+        style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '24px', padding: '40px', width: '100%', maxWidth: '400px', boxShadow: 'var(--shadow-lg)' }}
       >
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{ fontSize: '28px', fontWeight: '900', marginBottom: '8px' }}>
@@ -110,7 +110,7 @@ function LoginForm() {
             whileTap={{ scale: 0.95 }}
             type="submit"
             disabled={loading}
-            style={{ padding: '14px', background: 'var(--brand-primary)', color: '#fff', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '800', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}
+            style={{ padding: '14px', background: 'var(--brand-primary)', color: 'var(--text-primary)', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '800', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}
           >
             {loading ? 'Logging in...' : 'Log In →'}
           </motion.button>

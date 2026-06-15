@@ -63,7 +63,7 @@ export default function TrackOrderPage({ params }) {
                 border: '1px solid #e2e8f0', 
                 fontSize: 14, 
                 outline: 'none',
-                background: '#fff'
+                background: 'var(--bg-card)'
               }}
             />
             <button 
@@ -71,7 +71,7 @@ export default function TrackOrderPage({ params }) {
               style={{ 
                 padding: '0 24px', 
                 background: 'var(--brand-primary)', 
-                color: '#fff', 
+                color: 'var(--text-primary)', 
                 border: 'none', 
                 borderRadius: 12, 
                 fontSize: 14, 
@@ -123,7 +123,7 @@ export default function TrackOrderPage({ params }) {
         <ArrowLeft size={16} /> Back to Home
       </Link>
 
-      <div style={{ background: '#fff', borderRadius: 20, padding: 24, boxShadow: '0 10px 25px rgba(0,0,0,0.05)', border: '1px solid var(--border)' }}>
+      <div style={{ background: 'var(--bg-card)', borderRadius: 20, padding: 24, boxShadow: '0 10px 25px rgba(0,0,0,0.05)', border: '1px solid var(--border)' }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, paddingBottom: 16, borderBottom: '1px dashed var(--border)' }}>
           <div>
@@ -192,7 +192,7 @@ export default function TrackOrderPage({ params }) {
             }}>
               <div style={{
                 width: 48, height: 48, borderRadius: '50%',
-                background: 'var(--brand-accent)', color: '#fff',
+                background: 'var(--brand-accent)', color: 'var(--text-primary)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 boxShadow: '0 0 0 6px rgba(244,167,36,0.15)',
                 flexShrink: 0,
@@ -213,7 +213,7 @@ export default function TrackOrderPage({ params }) {
 
         {/* 6-Step Flowchart Timeline */}
         {!isCancelled && (
-          <div style={{ marginBottom: 32, background: '#fff', border: '1px solid var(--border)', borderRadius: 20, padding: '24px 16px', boxShadow: 'var(--shadow-sm)' }}>
+          <div style={{ marginBottom: 32, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 20, padding: '24px 16px', boxShadow: 'var(--shadow-sm)' }}>
             <div className="flowchart-timeline" style={{ '--fill-pct': `${((currentStep - 1) / 5) * 100}%` }}>
               <div className="flowchart-line">
                 <div className="flowchart-progress-fill" />
@@ -289,7 +289,7 @@ export default function TrackOrderPage({ params }) {
       </div>
 
       {/* Track Another Order Section */}
-      <div style={{ marginTop: 32, padding: 24, background: '#fff', borderRadius: 20, boxShadow: '0 4px 15px rgba(0,0,0,0.03)', border: '1px solid var(--border)' }}>
+      <div style={{ marginTop: 32, padding: 24, background: 'var(--bg-card)', borderRadius: 20, boxShadow: '0 4px 15px rgba(0,0,0,0.03)', border: '1px solid var(--border)' }}>
         <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 8, color: 'var(--text-dark)' }}>Track Another Order</h3>
         <p style={{ fontSize: 13, color: '#64748b', marginBottom: 16 }}>Enter a different Order ID to check its status or download invoice.</p>
         
@@ -314,7 +314,7 @@ export default function TrackOrderPage({ params }) {
             style={{ 
               padding: '0 24px', 
               background: 'var(--brand-primary)', 
-              color: '#fff', 
+              color: 'var(--text-primary)', 
               border: 'none', 
               borderRadius: 12, 
               fontSize: 14, 

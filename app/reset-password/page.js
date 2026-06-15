@@ -38,7 +38,7 @@ export default function ResetPasswordPage() {
 
   const inputStyle = {
     width: '100%', padding: '12px 16px', background: '#1a1a2e',
-    border: '1px solid #2d2d3f', borderRadius: '10px', color: '#fff',
+    border: '1px solid #2d2d3f', borderRadius: '10px', color: 'var(--text-primary)',
     fontSize: '14px', outline: 'none', boxSizing: 'border-box',
   };
   const labelStyle = {
@@ -51,7 +51,7 @@ export default function ResetPasswordPage() {
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0f', padding: '24px' }}>
         <div style={{ background: '#13131a', border: '1px solid #1e1e2e', borderRadius: '20px', padding: '40px', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
           <div style={{ fontSize: '48px', marginBottom: '16px' }}>✅</div>
-          <h2 style={{ color: '#fff', fontSize: '22px', fontWeight: '800', marginBottom: '12px' }}>Password Updated!</h2>
+          <h2 style={{ color: 'var(--text-primary)', fontSize: '22px', fontWeight: '800', marginBottom: '12px' }}>Password Updated!</h2>
           <p style={{ color: '#9aa3b2', fontSize: '14px' }}>Your password has been changed successfully. Redirecting you to login...</p>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default function ResetPasswordPage() {
           <div style={{ width: '56px', height: '56px', background: 'rgba(244, 167, 36, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
             <Lock size={24} color="#f4a724" />
           </div>
-          <h1 style={{ fontSize: '24px', fontWeight: '900', color: '#fff', marginBottom: '8px' }}>Reset Password</h1>
+          <h1 style={{ fontSize: '24px', fontWeight: '900', color: 'var(--text-primary)', marginBottom: '8px' }}>Reset Password</h1>
           <p style={{ color: '#6b7280', fontSize: '14px' }}>Set a strong new password for your account.</p>
         </div>
 

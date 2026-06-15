@@ -97,6 +97,11 @@
   --bg-footer: #000000;
   --bg-highlight: #27272a;
 
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-icon: #ffffff;
+  --header-text: #ffffff;
+
   --text-primary: #ffffff;
   --text-secondary: #d4d4d8;
   --text-muted: #a1a1aa;
@@ -123,6 +128,11 @@
   --bg-header: #ffffff;
   --bg-footer: #ffffff;
   --bg-highlight: #f4f4f5;
+
+  --glass-bg: rgba(0, 0, 0, 0.05);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --glass-icon: #000000;
+  --header-text: #000000;
 
   --text-primary: #000000;
   --text-secondary: #3f3f46;

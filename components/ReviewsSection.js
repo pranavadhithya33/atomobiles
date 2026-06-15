@@ -109,7 +109,7 @@ export default function ReviewsSection({ productId, onStatsChange }) {
           <h2 style={{ fontSize: '20px', fontWeight: '800', margin: '0 0 8px 0' }}>Ratings & Reviews</h2>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ 
-              display: 'flex', alignItems: 'center', gap: '4px', background: '#16a34a', color: '#fff', 
+              display: 'flex', alignItems: 'center', gap: '4px', background: '#16a34a', color: 'var(--text-primary)', 
               padding: '4px 10px', borderRadius: '16px', fontWeight: '700', fontSize: '15px' 
             }}>
               {averageRating} <Star size={14} fill="currentColor" />
@@ -122,7 +122,7 @@ export default function ReviewsSection({ productId, onStatsChange }) {
         <button 
           onClick={() => setShowForm(!showForm)}
           style={{ 
-            background: '#fff', color: '#2874f0', border: '1px solid #e0e0e0', padding: '8px 16px', 
+            background: 'var(--bg-card)', color: '#2874f0', border: '1px solid var(--border)', padding: '8px 16px', 
             borderRadius: '4px', fontWeight: '600', fontSize: '14px', cursor: 'pointer', boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
           }}
         >
@@ -198,7 +198,7 @@ export default function ReviewsSection({ productId, onStatsChange }) {
                     selected_product_id: p ? p.id : ''
                   });
                 }}
-                style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff' }}
+                style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: 'var(--bg-card)' }}
               />
               <datalist id="store-products-list">
                 {storeProducts.map(p => (
@@ -219,7 +219,7 @@ export default function ReviewsSection({ productId, onStatsChange }) {
             <button 
               type="submit" 
               disabled={submitting}
-              style={{ padding: '8px 24px', background: '#fb641b', color: '#fff', border: 'none', borderRadius: '4px', fontWeight: '700', cursor: 'pointer' }}
+              style={{ padding: '8px 24px', background: '#fb641b', color: 'var(--text-primary)', border: 'none', borderRadius: '4px', fontWeight: '700', cursor: 'pointer' }}
             >
               {submitting ? 'Submitting...' : 'Submit'}
             </button>
@@ -240,7 +240,7 @@ export default function ReviewsSection({ productId, onStatsChange }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
                   <div style={{ 
                     background: review.rating >= 3 ? '#16a34a' : '#ef4444', 
-                    color: '#fff', fontSize: '12px', fontWeight: '700', padding: '2px 6px', borderRadius: '4px',
+                    color: 'var(--text-primary)', fontSize: '12px', fontWeight: '700', padding: '2px 6px', borderRadius: '4px',
                     display: 'flex', alignItems: 'center', gap: '2px'
                   }}>
                     {review.rating} <Star size={10} fill="currentColor" />

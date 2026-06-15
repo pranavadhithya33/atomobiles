@@ -53,7 +53,7 @@ export default function SignupPage() {
   };
 
   const inputStyle = {
-    width: '100%', padding: '12px 16px', background: '#fff',
+    width: '100%', padding: '12px 16px', background: 'var(--bg-card)',
     border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-primary)',
     fontSize: '14px', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s',
   };
@@ -68,14 +68,14 @@ export default function SignupPage() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '24px', padding: '40px', width: '100%', maxWidth: '420px', textAlign: 'center', boxShadow: 'var(--shadow-lg)' }}
+          style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '24px', padding: '40px', width: '100%', maxWidth: '420px', textAlign: 'center', boxShadow: 'var(--shadow-lg)' }}
         >
           <div style={{ fontSize: '48px', marginBottom: '16px' }}>✉️</div>
           <h2 style={{ fontSize: '24px', fontWeight: '900', color: 'var(--text-primary)', marginBottom: '8px' }}>Check your email!</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', marginBottom: '24px', lineHeight: '1.5' }}>
             We&apos;ve sent a confirmation link to <strong>{form.email}</strong>. Please click it to verify your account and log in.
           </p>
-          <Link href="/login" style={{ display: 'inline-block', padding: '12px 24px', background: 'var(--brand-primary)', color: '#fff', borderRadius: '12px', fontWeight: '800', textDecoration: 'none' }}>
+          <Link href="/login" style={{ display: 'inline-block', padding: '12px 24px', background: 'var(--brand-primary)', color: 'var(--text-primary)', borderRadius: '12px', fontWeight: '800', textDecoration: 'none' }}>
             Go to Login
           </Link>
         </motion.div>
@@ -89,7 +89,7 @@ export default function SignupPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '24px', padding: '40px', width: '100%', maxWidth: '420px', boxShadow: 'var(--shadow-lg)' }}
+        style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '24px', padding: '40px', width: '100%', maxWidth: '420px', boxShadow: 'var(--shadow-lg)' }}
       >
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{ fontSize: '28px', fontWeight: '900', color: 'var(--text-primary)', marginBottom: '8px' }}>
@@ -129,7 +129,7 @@ export default function SignupPage() {
           <motion.button 
             whileTap={{ scale: 0.95 }}
             type="submit" disabled={loading}
-            style={{ padding: '14px', background: 'var(--brand-primary)', color: '#fff', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '800', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
+            style={{ padding: '14px', background: 'var(--brand-primary)', color: 'var(--text-primary)', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '800', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
             {loading ? 'Creating Account...' : 'Create Account 🚀'}
           </motion.button>
 

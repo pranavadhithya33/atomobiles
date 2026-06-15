@@ -92,7 +92,7 @@ export default function Header() {
 
       {/* Center: Search Bar */}
       <div className="header-search-wrap" ref={searchRef}>
-        <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', borderRadius: '8px', overflow: 'hidden' }}>
           <input
             id="header-search"
             type="text"
@@ -107,7 +107,7 @@ export default function Header() {
         </div>
         
         {showDropdown && (
-          <div className={styles.searchDropdown} style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'var(--bg-page)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', marginTop: '8px', zIndex: 10, boxShadow: 'var(--shadow-lg)', overflow: 'hidden' }}>
+          <div className={styles.searchDropdown} style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'var(--bg-page)', border: '1px solid var(--glass-border)', borderRadius: '8px', marginTop: '8px', zIndex: 10, boxShadow: 'var(--shadow-lg)', overflow: 'hidden' }}>
             {isSearching ? (
               <div style={{ padding: '16px', textAlign: 'center', color: 'var(--text-muted)' }}>Searching…</div>
             ) : results.length > 0 ? (
@@ -116,12 +116,12 @@ export default function Header() {
                   key={product.id}
                   href={`/products/${product.slug}`}
                   onClick={() => { setShowDropdown(false); setQuery(''); }}
-                  style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', textDecoration: 'none', borderBottom: '1px solid var(--glass-bg)' }}
                 >
                   {product.images?.[0] ? (
-                    <Image src={product.images[0]} alt={product.name} width={40} height={40} style={{ objectFit: 'contain', background: '#fff', borderRadius: '4px' }} unoptimized referrerPolicy="no-referrer" />
+                    <Image src={product.images[0]} alt={product.name} width={40} height={40} style={{ objectFit: 'contain', background: 'var(--bg-card)', borderRadius: '4px' }} unoptimized referrerPolicy="no-referrer" />
                   ) : (
-                    <div style={{ width: '40px', height: '40px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '40px', height: '40px', background: 'var(--glass-border)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Smartphone size={18} color="var(--brand-accent)" />
                     </div>
                   )}
@@ -143,34 +143,34 @@ export default function Header() {
         {user ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Link href="/profile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
-              <User size={18} color="#fff" />
+              <User size={18} color="var(--header-text)" />
               <span className="header-action-text" style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Account</span>
             </Link>
             <Link href="/profile" style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--brand-accent)', overflow: 'hidden', display: 'flex' }}>
                <img src={`https://ui-avatars.com/api/?name=${user.email || 'User'}&background=c87941&color=fff`} style={{ width: '100%', height: '100%' }} alt="User" />
             </Link>
-            <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer' }}>
-              <LogOut size={14} color="#fff" />
+            <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', borderRadius: '50%', background: 'var(--glass-border)', border: 'none', cursor: 'pointer' }}>
+              <LogOut size={14} color="var(--header-text)" />
             </button>
           </div>
         ) : (
           <Link href="/login" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
-            <User size={18} color="#fff" />
+            <User size={18} color="var(--header-text)" />
             <span className="header-action-text" style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Account</span>
           </Link>
         )}
 
         <Link href="/track" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
-          <Truck size={18} color="#fff" />
+          <Truck size={18} color="var(--header-text)" />
           <span className="header-action-text" style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Track</span>
         </Link>
 
-        <Link href="/profile" className="header-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.2)', padding: '6px 12px', borderRadius: '6px' }}>
+        <Link href="/profile" className="header-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', border: '1px solid var(--glass-border)', padding: '6px 12px', borderRadius: '6px' }}>
           <span style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Account settings</span>
         </Link>
 
         <Link href="/profile?view=orders" className="header-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
-          <LayoutGrid size={18} color="#fff" />
+          <LayoutGrid size={18} color="var(--header-text)" />
           <span style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Bulk Orders</span>
         </Link>
 

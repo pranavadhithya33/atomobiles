@@ -219,7 +219,7 @@ function OrderFormContent() {
             <button 
               onClick={() => generateInvoice(orderData)}
               className="btn btn-full btn-lg" 
-              style={{ background: '#fff', color: '#1a1a2e', border: '1px solid #e2e8f0', marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+              style={{ background: 'var(--bg-card)', color: '#1a1a2e', border: '1px solid #e2e8f0', marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             >
               <Download size={18} /> Download Invoice
             </button>
@@ -289,7 +289,7 @@ function OrderFormContent() {
                 borderRadius: '8px', 
                 border: '1.5px solid',
                 borderColor: selectedPayment === opt.id ? 'var(--brand-accent)' : 'var(--border)',
-                background: selectedPayment === opt.id ? 'var(--brand-accent-light)' : '#fff',
+                background: selectedPayment === opt.id ? 'var(--brand-accent-light)' : 'var(--bg-card)',
                 cursor: 'pointer',
                 transition: '0.2s'
               }}>
@@ -352,7 +352,7 @@ function OrderFormContent() {
       {/* Coin Redemption Section */}
       {user && userCoins > 0 && (
         <div style={{ 
-          background: useCoins ? 'var(--brand-accent-light)' : '#fff', 
+          background: useCoins ? 'var(--brand-accent-light)' : 'var(--bg-card)', 
           border: '1.5px solid',
           borderColor: useCoins ? 'var(--brand-accent)' : 'var(--border)',
           borderRadius: '16px', 

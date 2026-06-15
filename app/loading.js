@@ -19,7 +19,7 @@ export default function Loading() {
       </div>
       
       <h2 style={{ 
-        color: '#fff', 
+        color: 'var(--text-primary)', 
         marginTop: '2rem', 
         fontFamily: 'var(--font-base)', 
         fontWeight: 800, 

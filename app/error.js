@@ -24,7 +24,7 @@ export default function Error({ error, reset }) {
     }}>
       
       <h2 className="glitch-text" data-text="SYSTEM ERROR" style={{ 
-        color: '#fff', 
+        color: 'var(--text-primary)', 
         fontSize: '48px',
         fontFamily: 'var(--font-base)', 
         fontWeight: 900, 

@@ -32,7 +32,7 @@ export default function TrackingLandingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="darkTextCard"
-        style={{ background: '#fff', borderRadius: 24, padding: '40px 32px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)', textAlign: 'center' }}
+        style={{ background: 'var(--bg-card)', borderRadius: 24, padding: '40px 32px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)', textAlign: 'center' }}
       >
         <div style={{ width: 64, height: 64, background: 'rgba(244, 167, 36, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
           <Truck size={32} color="var(--brand-accent)" />
@@ -74,7 +74,7 @@ export default function TrackingLandingPage() {
               width: '100%', 
               padding: '16px', 
               background: 'var(--brand-primary)', 
-              color: '#fff', 
+              color: 'var(--text-primary)', 
               border: 'none', 
               borderRadius: 16, 
               fontSize: 16, 

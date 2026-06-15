@@ -22,7 +22,7 @@ export default function ClientLayoutWrapper({ children }) {
         <footer style={{
           background: 'var(--bg-footer)',
           padding: '48px 32px 24px',
-          borderTop: '1px solid rgba(255,255,255,0.05)',
+          borderTop: '1px solid var(--glass-bg)',
           marginTop: '60px'
         }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '32px' }}>
@@ -71,7 +71,7 @@ export default function ClientLayoutWrapper({ children }) {
             </div>
           </div>
           
-          <div style={{ maxWidth: '1200px', margin: '48px auto 0', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '24px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', color: 'var(--text-muted)', fontSize: '12px', gap: '16px' }}>
+          <div style={{ maxWidth: '1200px', margin: '48px auto 0', borderTop: '1px solid var(--glass-bg)', paddingTop: '24px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', color: 'var(--text-muted)', fontSize: '12px', gap: '16px' }}>
             <span>© 2024 Atomobiles. All rights reserved.</span>
             <span>Premium Wholesale Deals for Businesses</span>
             <span>Created by Atomobiles</span>

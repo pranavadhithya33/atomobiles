@@ -18,7 +18,7 @@ export default function ForgotPasswordPage() {
           <div style={{ width: '56px', height: '56px', background: 'rgba(244, 167, 36, 0.1)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
             <MessageSquare size={24} color="#f4a724" />
           </div>
-          <h1 style={{ fontSize: '24px', fontWeight: '900', color: '#fff', marginBottom: '8px' }}>Forgot Password?</h1>
+          <h1 style={{ fontSize: '24px', fontWeight: '900', color: 'var(--text-primary)', marginBottom: '8px' }}>Forgot Password?</h1>
           <p style={{ color: '#6b7280', fontSize: '14px' }}>
             Since we don&apos;t send emails for security, please contact us on WhatsApp to reset your password.
           </p>
@@ -33,7 +33,7 @@ export default function ForgotPasswordPage() {
             textAlign: 'center',
             padding: '14px', 
             background: '#25d366', 
-            color: '#fff', 
+            color: 'var(--text-primary)', 
             border: 'none', 
             borderRadius: '12px', 
             fontSize: '15px', 
