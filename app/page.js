@@ -144,11 +144,11 @@ export default function HomeContent() {
                 </div>
                 
                 <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#160d0a', marginBottom: '8px', lineHeight: 1.3 }}>
-                  {p.name} Bulk
+                  {p.name}
                 </h3>
                 
                 <div style={{ color: '#c87941', fontWeight: 800, fontSize: '16px', marginBottom: '4px' }}>
-                  From ₹41,250/month, min. 10 pcs
+                  {p.our_price ? `₹${p.our_price.toLocaleString('en-IN')}` : 'Price not set'}
                 </div>
                 
                 <div style={{ color: '#5d4037', fontSize: '13px', marginBottom: '20px' }}>
@@ -157,7 +157,7 @@ export default function HomeContent() {
                 
                 <div style={{ marginTop: 'auto' }}>
                   <div style={{ display: 'block', textAlign: 'center', background: '#f4d3b6', color: '#160d0a', padding: '14px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', textDecoration: 'none' }}>
-                    Request Bulk Quote
+                    Buy Now
                   </div>
                 </div>
               </Link>

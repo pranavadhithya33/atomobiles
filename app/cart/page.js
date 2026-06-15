@@ -93,7 +93,7 @@ export default function CartPage() {
             </div>
 
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '4px' }}>
+              <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-dark)', marginBottom: '4px' }}>
                 {item.name}
               </div>
               {item.variantInfo && (
@@ -105,21 +105,21 @@ export default function CartPage() {
                 {item.paymentOption === 'full_prepaid' ? 'Full Prepaid' : item.paymentOption === 'token_advance' ? 'Token Advance' : 'Half COD'}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ fontSize: '17px', fontWeight: '800', color: 'var(--text-primary)' }}>
+                <div style={{ fontSize: '17px', fontWeight: '800', color: 'var(--text-dark)' }}>
                   {formatINR(item.basePrice * item.quantity)}
                 </div>
                 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#f8fafc', padding: '4px 12px', borderRadius: '24px', border: '1px solid var(--border)' }}>
                   <button 
                     onClick={() => updateQuantity(item.id, item.paymentOption, item.quantity - 1, item.variantId)}
-                    style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', padding: '4px' }}
+                    style={{ background: 'none', border: 'none', color: 'var(--text-dark)', cursor: 'pointer', padding: '4px' }}
                   >
                     <Minus size={14} />
                   </button>
-                  <span style={{ fontSize: '14px', fontWeight: '700', minWidth: '20px', textAlign: 'center', color: 'var(--text-primary)' }}>{item.quantity}</span>
+                  <span style={{ fontSize: '14px', fontWeight: '700', minWidth: '20px', textAlign: 'center', color: 'var(--text-dark)' }}>{item.quantity}</span>
                   <button 
                     onClick={() => updateQuantity(item.id, item.paymentOption, item.quantity + 1, item.variantId)}
-                    style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', padding: '4px' }}
+                    style={{ background: 'none', border: 'none', color: 'var(--text-dark)', cursor: 'pointer', padding: '4px' }}
                   >
                     <Plus size={14} />
                   </button>

@@ -622,7 +622,7 @@ ul, ol {
 }
 
 .flowchart-node.active .flowchart-node-label {
-  color: var(--text-primary);
+  color: var(--text-dark);
   font-weight: 800;
 }
 

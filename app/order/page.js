@@ -261,7 +261,7 @@ function OrderFormContent() {
           {items.map((item, idx) => (
             <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: '12px', borderBottom: idx === items.length - 1 ? 'none' : '1px solid rgba(0,0,0,0.05)' }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>{item.name}</div>
+                <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-dark)' }}>{item.name}</div>
                 {item.variantInfo && (
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
                     {item.variantInfo.ram}GB RAM / {item.variantInfo.storage}GB Storage
@@ -276,7 +276,7 @@ function OrderFormContent() {
 
         {/* Payment Selection */}
         <div style={{ marginBottom: '20px', padding: '16px', background: '#f8fafc', borderRadius: '12px', border: '1px solid var(--border)' }}>
-          <div style={{ fontSize: '13px', fontWeight: '800', marginBottom: '12px', color: 'var(--text-primary)' }}>Choose Payment Method</div>
+          <div style={{ fontSize: '13px', fontWeight: '800', marginBottom: '12px', color: 'var(--text-dark)' }}>Choose Payment Method</div>
           <div style={{ display: 'grid', gap: '8px' }}>
             {[
               { id: 'half_cod', label: '🚚 Half COD', sub: 'Pay 50% now, 50% on delivery' },
@@ -300,7 +300,7 @@ function OrderFormContent() {
                   onChange={() => setSelectedPayment(opt.id)}
                   style={{ display: 'none' }}
                 />
-                <div style={{ fontSize: '13px', fontWeight: '700', color: selectedPayment === opt.id ? 'var(--brand-accent-dark)' : 'var(--text-primary)' }}>{opt.label}</div>
+                <div style={{ fontSize: '13px', fontWeight: '700', color: selectedPayment === opt.id ? 'var(--brand-accent-dark)' : 'var(--text-dark)' }}>{opt.label}</div>
                 <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{opt.sub}</div>
               </label>
             ))}
@@ -330,7 +330,7 @@ function OrderFormContent() {
 
         <div className={styles.summaryRow}>
           <span style={{ fontSize: '15px', fontWeight: '700' }}>Payable Amount</span>
-          <strong style={{ color: 'var(--text-primary)', fontSize: '20px' }}>
+          <strong style={{ color: 'var(--text-dark)', fontSize: '20px', fontWeight: '900' }}>
             {formatINR(finalOrderPrice)}
           </strong>
         </div>
@@ -365,8 +365,8 @@ function OrderFormContent() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ fontSize: '24px' }}>🪙</div>
             <div>
-              <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)' }}>Redeem Atom Coins</div>
-              <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>You have ₹{userCoins} savings available</div>
+              <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-dark)' }}>Redeem Atom Coins</div>
+              <div style={{ fontSize: '12px', color: '#64748b' }}>You have ₹{userCoins} savings available</div>
             </div>
           </div>
           <button 
@@ -376,7 +376,7 @@ function OrderFormContent() {
               padding: '8px 16px', 
               borderRadius: '8px', 
               background: useCoins ? 'var(--brand-accent)' : '#f1f5f9', 
-              color: useCoins ? '#000' : 'var(--text-primary)',
+              color: useCoins ? '#000' : 'var(--text-dark)',
               fontSize: '12px',
               fontWeight: '800',
               cursor: 'pointer'
@@ -393,8 +393,8 @@ function OrderFormContent() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ fontSize: '20px' }}>🪙</div>
             <div>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>Login to earn Atom Coins</div>
-              <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Earn 1 coin per ₹1000 spent on this order.</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-dark)' }}>Login to earn Atom Coins</div>
+              <div style={{ fontSize: '12px', color: '#64748b' }}>Earn 1 coin per ₹1000 spent on this order.</div>
             </div>
           </div>
           <Link href={typeof window !== 'undefined' ? `/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}` : '/login'} className="btn btn-outline" style={{ padding: '8px 16px', fontSize: '12px' }}>Login Now</Link>

@@ -127,8 +127,8 @@ export default function TrackOrderPage({ params }) {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, paddingBottom: 16, borderBottom: '1px dashed var(--border)' }}>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 900, margin: '0 0 4px 0', color: 'var(--text-primary)' }}>Live Tracking</h1>
-            <div style={{ color: 'var(--text-secondary)', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600 }}>
+            <h1 style={{ fontSize: 22, fontWeight: 900, margin: '0 0 4px 0', color: 'var(--text-dark)' }}>Live Tracking</h1>
+            <div style={{ color: '#64748b', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600 }}>
               <Hash size={14} /> {order.id.slice(0, 8).toUpperCase()}
             </div>
           </div>
@@ -203,7 +203,7 @@ export default function TrackOrderPage({ params }) {
                 <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--brand-accent)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>
                   📍 Current Location
                 </div>
-                <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.3 }}>
+                <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--text-dark)', lineHeight: 1.3 }}>
                   {activeStepText}
                 </div>
               </div>
@@ -259,12 +259,12 @@ export default function TrackOrderPage({ params }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
               <span style={{ color: '#64748b', fontWeight: 600 }}>Item</span>
-              <span style={{ fontWeight: 700, color: 'var(--text-primary)', maxWidth: '60%', textAlign: 'right' }}>{order.product_name}</span>
+              <span style={{ fontWeight: 700, color: 'var(--text-dark)', maxWidth: '60%', textAlign: 'right' }}>{order.product_name}</span>
             </div>
             
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
               <span style={{ color: '#64748b', fontWeight: 600 }}>Payment Method</span>
-              <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
+              <span style={{ fontWeight: 700, color: 'var(--text-dark)' }}>
                 {order.payment_option === 'full_prepaid' ? 'Full Prepaid' : (order.payment_option === 'half_cod' ? 'Half COD' : 'Token Advance')}
               </span>
             </div>
@@ -281,7 +281,7 @@ export default function TrackOrderPage({ params }) {
             <div style={{ color: '#64748b', fontWeight: 600, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
               <MapPin size={14} /> Shipping To:
             </div>
-            <div style={{ fontWeight: 800, color: 'var(--text-primary)', marginBottom: 2 }}>{order.full_name}</div>
+            <div style={{ fontWeight: 800, color: 'var(--text-dark)', marginBottom: 2 }}>{order.full_name}</div>
             <div style={{ color: '#64748b', lineHeight: 1.4 }}>{order.address}</div>
             <div style={{ color: '#64748b', fontWeight: 600, marginTop: 4 }}>PIN: {order.pincode}</div>
           </div>
@@ -290,7 +290,7 @@ export default function TrackOrderPage({ params }) {
 
       {/* Track Another Order Section */}
       <div style={{ marginTop: 32, padding: 24, background: '#fff', borderRadius: 20, boxShadow: '0 4px 15px rgba(0,0,0,0.03)', border: '1px solid var(--border)' }}>
-        <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 8, color: 'var(--text-primary)' }}>Track Another Order</h3>
+        <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 8, color: 'var(--text-dark)' }}>Track Another Order</h3>
         <p style={{ fontSize: 13, color: '#64748b', marginBottom: 16 }}>Enter a different Order ID to check its status or download invoice.</p>
         
         <div style={{ display: 'flex', gap: 10 }}>

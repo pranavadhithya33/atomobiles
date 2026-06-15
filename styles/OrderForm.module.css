@@ -48,7 +48,7 @@
   align-items: center;
   padding: 5px 0;
   font-size: 14px;
-  color: var(--text-secondary);
+  color: #64748b;
 }
 
 .summaryRow:last-child {
@@ -56,8 +56,7 @@
   padding-top: 10px;
   margin-top: 4px;
   font-size: 17px;
-  font-weight: 800;
-  color: var(--text-primary);
+  color: var(--text-dark);
 }
 
 .summaryPaymentTag {
@@ -87,7 +86,7 @@
 .sectionLabel {
   font-size: 13px;
   font-weight: 700;
-  color: var(--text-secondary);
+  color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   padding-bottom: 6px;
@@ -102,7 +101,7 @@
   border: 1.5px solid var(--border);
   border-radius: var(--radius-md);
   font-size: var(--text-base);
-  color: var(--text-secondary);
+  color: #64748b;
   cursor: not-allowed;
 }
 
@@ -176,12 +175,12 @@
 .successTitle {
   font-size: 22px;
   font-weight: 800;
-  color: var(--text-primary);
+  color: var(--text-dark);
 }
 
 .successSubtitle {
   font-size: 14px;
-  color: var(--text-secondary);
+  color: #475569;
   line-height: 1.6;
 }
 
