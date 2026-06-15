@@ -77,7 +77,7 @@ export default function Header() {
   if (pathname?.startsWith('/admin')) return null;
 
   return (
-    <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 32px', background: 'var(--bg-header)', borderBottom: '1px solid rgba(255,255,255,0.05)', position: 'sticky', top: 0, zIndex: 100, gap: '24px', flexWrap: 'wrap' }}>
+    <header className="header-container">
       {/* Left: Logo */}
       <Link href="/" className={styles.logo} style={{ gap: '10px', textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
         <div className={styles.logoIcon} style={{ width: '40px', height: '40px', background: 'rgba(232, 164, 104, 0.1)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -90,7 +90,7 @@ export default function Header() {
       </Link>
 
       {/* Center: Search Bar */}
-      <div style={{ flex: '1 1 300px', maxWidth: '600px', position: 'relative' }} ref={searchRef}>
+      <div className="header-search-wrap" ref={searchRef}>
         <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', overflow: 'hidden' }}>
           <input
             id="header-search"
@@ -138,12 +138,12 @@ export default function Header() {
       </div>
 
       {/* Right: Actions */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexShrink: 0 }}>
+      <div className="header-actions">
         {user ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Link href="/profile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
               <User size={18} color="#fff" />
-              <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Account</span>
+              <span className="header-action-text" style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Account</span>
             </Link>
             <Link href="/profile" style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--brand-accent)', overflow: 'hidden', display: 'flex' }}>
                <img src={`https://ui-avatars.com/api/?name=${user.email || 'User'}&background=c87941&color=fff`} style={{ width: '100%', height: '100%' }} alt="User" />
@@ -155,27 +155,27 @@ export default function Header() {
         ) : (
           <Link href="/login" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
             <User size={18} color="#fff" />
-            <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Account</span>
+            <span className="header-action-text" style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Account</span>
           </Link>
         )}
 
         <Link href="/track" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
           <Truck size={18} color="#fff" />
-          <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Track</span>
+          <span className="header-action-text" style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Track</span>
         </Link>
 
-        <Link href="/profile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.2)', padding: '6px 12px', borderRadius: '6px' }}>
+        <Link href="/profile" className="header-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.2)', padding: '6px 12px', borderRadius: '6px' }}>
           <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Account settings</span>
         </Link>
 
-        <Link href="/profile?view=orders" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
+        <Link href="/profile?view=orders" className="header-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
           <LayoutGrid size={18} color="#fff" />
           <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Bulk Orders</span>
         </Link>
 
-        <Link href="/cart" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', background: 'var(--brand-accent)', padding: '10px 16px', borderRadius: '6px' }}>
+        <Link href="/cart" className="header-checkout-btn" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', background: 'var(--brand-accent)', padding: '10px 16px', borderRadius: '6px' }}>
           <ShoppingCart size={16} color="#160d0a" strokeWidth={2.5} />
-          <span style={{ color: '#160d0a', fontSize: '15px', fontWeight: 700 }}>Checkout</span>
+          <span className="header-action-text" style={{ color: '#160d0a', fontSize: '15px', fontWeight: 700 }}>Checkout</span>
           {cartCount > 0 && <span style={{ marginLeft: '4px', background: '#160d0a', color: 'var(--brand-accent)', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 800 }}>{cartCount}</span>}
         </Link>
       </div>
