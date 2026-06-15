@@ -1,0 +1,10 @@
+
+.discountBadgeLarge {
+  background: #cc0c39;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 800;
+  display: inline-block;
+}
