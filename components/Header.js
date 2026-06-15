@@ -165,14 +165,7 @@ export default function Header() {
           <span className="header-action-text" style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Track</span>
         </Link>
 
-        <Link href="/profile" className="header-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', border: '1px solid var(--glass-border)', padding: '6px 12px', borderRadius: '6px' }}>
-          <span style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Account settings</span>
-        </Link>
 
-        <Link href="/profile?view=orders" className="header-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
-          <LayoutGrid size={18} color="var(--header-text)" />
-          <span style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Bulk Orders</span>
-        </Link>
 
         <ThemeSwitcher />
 

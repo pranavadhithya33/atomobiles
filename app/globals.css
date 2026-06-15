@@ -803,11 +803,11 @@ ul, ol {
 .deal-info-wrap { flex: 2 1 300px; display: flex; flex-direction: column; gap: 8px; }
 .deal-timer-container { flex: 1 1 100%; text-align: center; margin-top: 24px; }
 .deal-timer-wrap { display: flex; gap: 8px; justify-content: center; align-items: center; margin-bottom: 24px; }
-.deal-timer-box { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; color: var(--deal-text); font-size: 24px; font-weight: 700; }
-.deal-title { color: #fff; font-size: 28px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+.deal-timer-box { background: rgba(255, 255, 255, 0.08); border: 2px solid var(--deal-muted); border-radius: 8px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; color: var(--deal-text); font-size: 24px; font-weight: 700; }
+.deal-title { color: var(--deal-text); font-size: 28px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
 .deal-subtitle { color: var(--brand-accent); font-weight: 800; font-size: 18px; letter-spacing: 1px; margin-bottom: 8px; }
 .deal-price-wrap { display: flex; align-items: baseline; gap: 8px; margin-bottom: 24px; }
-.deal-price-our { color: #fff; font-size: 40px; font-weight: 900; }
+.deal-price-our { color: var(--deal-text); font-size: 40px; font-weight: 900; }
 .deal-price-original { color: var(--text-muted); font-size: 16px; text-decoration: line-through; }
 .deal-desc { color: var(--text-muted); font-size: 16px; margin-bottom: 24px; }
 .deal-buy-btn { background: var(--brand-accent-light); color: #160d0a; border: none; padding: 14px 28px; border-radius: 8px; font-weight: 800; font-size: 14px; cursor: pointer; align-self: flex-start; text-decoration: none; display: inline-block; }
