@@ -747,3 +747,17 @@ ul, ol {
   .header-hide-mobile { display: none !important; }
   .header-checkout-btn { padding: 8px 12px !important; }
 }
+
+/* Product Card Responsive Styles */
+.product-card-wrap { background: #fdfbf7; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; text-decoration: none; overflow: hidden; }
+.product-image-wrap { height: 220px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+.product-image-placeholder { width: 150px; height: 200px; background: #eee; border-radius: 8px; max-width: 100%; }
+.product-card-title { font-size: 18px; font-weight: 800; color: #160d0a; margin-bottom: 8px; line-height: 1.3; }
+
+@media (max-width: 768px) {
+  .product-card-wrap { padding: 16px; border-radius: 12px; }
+  .product-image-wrap { height: 160px; margin-bottom: 12px; }
+  .product-image-placeholder { width: 100%; height: 150px; }
+  .product-card-title { font-size: 15px; margin-bottom: 4px; }
+  .price-our { font-size: 16px !important; }
+}

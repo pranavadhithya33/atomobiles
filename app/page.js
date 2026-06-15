@@ -11,7 +11,7 @@ export default function HomeContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/products')
+    fetch('/api/products', { cache: 'no-store' })
       .then(r => r.json())
       .then(prodData => {
         setProducts(prodData || []);
@@ -84,16 +84,16 @@ export default function HomeContent() {
         ) : (
           <div className="product-grid">
             {products.map(p => (
-              <Link href={`/products/${p.slug}`} key={p.id} style={{ background: '#fdfbf7', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', textDecoration: 'none' }}>
-                <div style={{ height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+              <Link href={`/products/${p.slug}`} key={p.id} className="product-card-wrap">
+                <div className="product-image-wrap">
                   {p.images && p.images[0] ? (
-                    <Image src={p.images[0]} alt={p.name} width={180} height={220} style={{ objectFit: 'contain', maxHeight: '100%' }} unoptimized referrerPolicy="no-referrer" />
+                    <Image src={p.images[0]} alt={p.name} width={180} height={220} style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }} unoptimized referrerPolicy="no-referrer" />
                   ) : (
-                    <div style={{ width: '150px', height: '200px', background: '#eee', borderRadius: '8px' }} />
+                    <div className="product-image-placeholder" />
                   )}
                 </div>
                 
-                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#160d0a', marginBottom: '8px', lineHeight: 1.3 }}>
+                <h3 className="product-card-title">
                   {p.name}
                 </h3>
                 
