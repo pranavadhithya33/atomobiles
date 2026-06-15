@@ -60,7 +60,7 @@ export default function HomeContent() {
           </div>
         </div>
 
-        <div style={{ flex: '1 1 400px', display: 'flex', justifyContent: 'center' }}>
+        <div className="hero-image-container" style={{ flex: '1 1 400px', display: 'flex', justifyContent: 'center' }}>
           <Image src="/hero_devices.png" alt="High-Tech Devices" width={500} height={400} style={{ objectFit: 'contain', width: '100%', height: 'auto', dropShadow: '0 20px 40px rgba(0,0,0,0.5)' }} priority />
         </div>
       </div>
