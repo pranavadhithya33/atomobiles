@@ -716,9 +716,9 @@ export default function AdminDashboard() {
                 <div className="form-group">
                   <label className="form-label">Stock Status</label>
                   <div style={{ display: 'flex', gap: '10px' }}>
-                    <button type="button" className={`${styles.stockToggle} ${form.stock > 0 ? styles.stockToggleActive : ''}`}
+                    <button type="button" className={`${styles.stockToggle} ${form.stock > 0 ? styles.stockToggleIn : ''}`}
                       onClick={() => handleFormChange('stock', 100)}>In Stock</button>
-                    <button type="button" className={`${styles.stockToggle} ${form.stock === 0 ? styles.stockToggleInactive : ''}`}
+                    <button type="button" className={`${styles.stockToggle} ${form.stock === 0 ? styles.stockToggleOut : ''}`}
                       onClick={() => handleFormChange('stock', 0)}>Out of Stock</button>
                   </div>
                 </div>
@@ -967,7 +967,6 @@ export default function AdminDashboard() {
           >
             <option value="minimalist-bw">Light (B&W)</option>
             <option value="neon-dark">Dark Theme</option>
-            <option value="cafe">Cafe Theme</option>
           </select>
           <button onClick={handleLogout} className={styles.logoutBtn}>
             <LogOut size={14} style={{ display:'inline', marginRight:5, verticalAlign:'middle' }} />
@@ -1894,8 +1893,8 @@ export default function AdminDashboard() {
             <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #e2e8f0' }}>
               <button
                 type="button"
-                className="btn btn-outline"
-                style={{ padding: '8px 16px', fontSize: '13px', height: '36px', display: 'flex', alignItems: 'center' }}
+                className={styles.modalCancelBtn}
+                style={{ padding: '8px 16px', fontSize: '13px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 onClick={() => setExpandedRouteOrderId(null)}
               >
                 Cancel
