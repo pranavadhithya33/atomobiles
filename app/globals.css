@@ -696,3 +696,10 @@ ul, ol {
   cursor: pointer;
   accent-color: var(--brand-accent);
 }
+
+/* ============================================================
+   UI/UX FIXES
+   ============================================================ */
+.darkTextCard, .darkTextCard * { color: var(--text-dark) !important; }
+.heroSection { padding: 80px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
+@media (max-width: 768px) { .heroSection { padding: 40px 16px; justify-content: center; text-align: center; } .responsivePadding { padding: 40px 16px !important; } }

@@ -26,6 +26,7 @@
 /* Order Summary Card */
 .summaryCard {
   background: var(--bg-card);
+  color: var(--text-dark);
   border-radius: var(--radius-lg);
   padding: var(--space-md);
   box-shadow: var(--shadow-card);
@@ -74,6 +75,7 @@
 /* Form Card */
 .formCard {
   background: var(--bg-card);
+  color: var(--text-dark);
   border-radius: var(--radius-lg);
   padding: var(--space-md);
   box-shadow: var(--shadow-card);
@@ -155,6 +157,7 @@
   gap: var(--space-md);
   padding: var(--space-xl) var(--space-md);
   background: var(--bg-card);
+  color: var(--text-dark);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   animation: fadeIn 0.4s ease;

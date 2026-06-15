@@ -340,7 +340,7 @@ export default function ProductDetailPage() {
 
       {/* Description */}
       {product.description && (
-        <motion.div className={styles.descSection} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+        <motion.div className={`${styles.descSection} darkTextCard`} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
           <h2 className={styles.descTitle}>
             <Package size={16} strokeWidth={2} style={{ display:'inline', marginRight:6, verticalAlign:'middle' }} />
             Product Details

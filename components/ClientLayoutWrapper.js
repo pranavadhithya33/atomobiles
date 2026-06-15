@@ -30,11 +30,11 @@ export default function ClientLayoutWrapper({ children }) {
             <div>
               <h4 style={{ color: 'var(--brand-accent)', fontSize: '15px', fontWeight: 700, marginBottom: '20px' }}>Categories</h4>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Server & Back Components</Link></li>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Phones</Link></li>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Tablets</Link></li>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Wearables</Link></li>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Accessories</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Server & Back Components</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Phones</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Tablets</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Wearables</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Accessories</Link></li>
               </ul>
             </div>
 
@@ -42,10 +42,10 @@ export default function ClientLayoutWrapper({ children }) {
             <div>
               <h4 style={{ color: 'var(--brand-accent)', fontSize: '15px', fontWeight: 700, marginBottom: '20px' }}>Promos</h4>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Phones</Link></li>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Tablets</Link></li>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Wearables</Link></li>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Accessories</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Phones</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Tablets</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Wearables</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Accessories</Link></li>
               </ul>
             </div>
 
@@ -53,9 +53,9 @@ export default function ClientLayoutWrapper({ children }) {
             <div>
               <h4 style={{ color: 'var(--brand-accent)', fontSize: '15px', fontWeight: 700, marginBottom: '20px' }}>B2B Services</h4>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Bulk Quote Requests</Link></li>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Corporate Gifting</Link></li>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Solutions</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Bulk Quote Requests</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Corporate Gifting</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Solutions</Link></li>
               </ul>
             </div>
 
@@ -64,9 +64,9 @@ export default function ClientLayoutWrapper({ children }) {
               <h4 style={{ color: 'var(--brand-accent)', fontSize: '15px', fontWeight: 700, marginBottom: '20px' }}>Customer Support</h4>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <li><a href="https://wa.me/917397189222" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}><MessageCircle size={16} color="#25D366" /> WhatsApp</a></li>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Email</Link></li>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Terms</Link></li>
-                <li><Link href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Privacy Policy</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Email</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Terms</Link></li>
+                <li><Link href="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '14px' }}>Privacy Policy</Link></li>
               </ul>
             </div>
           </div>

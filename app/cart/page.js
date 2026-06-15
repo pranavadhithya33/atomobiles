@@ -63,7 +63,7 @@ export default function CartPage() {
 
       <div style={{ display: 'grid', gap: '16px' }}>
         {cart.map((item) => (
-          <div key={`${item.id}-${item.paymentOption}-${item.variantId || 'base'}`} style={{ 
+          <div key={`${item.id}-${item.paymentOption}-${item.variantId || 'base'}`} className="darkTextCard" style={{ 
             background: 'var(--bg-card)', 
             border: '1px solid var(--border)', 
             borderRadius: '16px', 

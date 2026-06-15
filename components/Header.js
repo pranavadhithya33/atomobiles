@@ -77,7 +77,7 @@ export default function Header() {
   if (pathname?.startsWith('/admin')) return null;
 
   return (
-    <header className={styles.header} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 32px', background: 'var(--bg-header)', borderBottom: '1px solid rgba(255,255,255,0.05)', position: 'sticky', top: 0, zIndex: 100, gap: '24px' }}>
+    <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 32px', background: 'var(--bg-header)', borderBottom: '1px solid rgba(255,255,255,0.05)', position: 'sticky', top: 0, zIndex: 100, gap: '24px', flexWrap: 'wrap' }}>
       {/* Left: Logo */}
       <Link href="/" className={styles.logo} style={{ gap: '10px', textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
         <div className={styles.logoIcon} style={{ width: '40px', height: '40px', background: 'rgba(232, 164, 104, 0.1)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -90,7 +90,7 @@ export default function Header() {
       </Link>
 
       {/* Center: Search Bar */}
-      <div style={{ flex: 1, maxWidth: '600px', position: 'relative' }} ref={searchRef}>
+      <div style={{ flex: '1 1 300px', maxWidth: '600px', position: 'relative' }} ref={searchRef}>
         <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', overflow: 'hidden' }}>
           <input
             id="header-search"
@@ -100,7 +100,7 @@ export default function Header() {
             onChange={e => handleSearch(e.target.value)}
             style={{ flex: 1, background: 'transparent', border: 'none', color: '#fff', padding: '12px 16px', outline: 'none', fontSize: '14px' }}
           />
-          <button style={{ background: 'var(--brand-accent)', border: 'none', padding: '12px 20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <button onClick={() => handleSearch(query)} style={{ background: 'var(--brand-accent)', border: 'none', padding: '12px 20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Search size={18} color="#160d0a" />
           </button>
         </div>

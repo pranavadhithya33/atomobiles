@@ -10,7 +10,7 @@ export default function PaymentSelector({ ourPrice, selectedOption, onSelect }) 
   const fullDetails = calcPaymentDetails(ourPrice, 'full_prepaid');
 
   return (
-    <div className={styles.paymentSection}>
+    <div className={`${styles.paymentSection} darkTextCard`}>
       <h3 className={styles.paymentTitle}>
         <CreditCard size={18} strokeWidth={2} />
         Choose Payment Option

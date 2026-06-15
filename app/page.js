@@ -22,14 +22,8 @@ export default function HomeContent() {
   return (
     <div style={{ paddingBottom: 80, background: 'var(--bg-page)', fontFamily: 'var(--font-base)' }}>
       {/* 1. Hero Section */}
-      <div style={{
+      <div className="heroSection" style={{
         background: 'radial-gradient(circle at 70% 50%, #4a2c1d 0%, var(--bg-page) 70%)',
-        padding: '80px 40px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '40px',
         borderBottom: '1px solid rgba(255,255,255,0.05)'
       }}>
         <div style={{ flex: '1 1 500px' }}>
@@ -71,7 +65,7 @@ export default function HomeContent() {
       </div>
 
       {/* 2. Deal of the Day Section */}
-      <div style={{ padding: '60px 40px 20px' }}>
+      <div className="responsivePadding" style={{ padding: '60px 40px 20px' }}>
         <div style={{ background: '#241710', borderRadius: '24px', padding: '40px', display: 'flex', alignItems: 'center', gap: '40px', flexWrap: 'wrap', border: '1px solid rgba(255,255,255,0.05)' }}>
           <div style={{ flex: '1 1 300px', background: '#fdfbf7', borderRadius: '16px', padding: '24px', display: 'flex', justifyContent: 'center' }}>
             <Image src="/multi_charger.png" alt="Server-rack-grade high-capacity multi-charger" width={300} height={200} style={{ objectFit: 'contain' }} />
@@ -88,7 +82,7 @@ export default function HomeContent() {
                 <span style={{ color: 'var(--text-muted)', fontSize: '16px' }}>per unit</span>
               </div>
               
-              <button style={{ background: 'var(--brand-accent-light)', color: '#160d0a', border: 'none', padding: '14px 28px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', cursor: 'pointer' }}>
+              <button onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: 'var(--brand-accent-light)', color: '#160d0a', border: 'none', padding: '14px 28px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', cursor: 'pointer' }}>
                 BUY NOW - BULK DEAL
               </button>
             </div>
@@ -116,7 +110,7 @@ export default function HomeContent() {
                   <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Seconds</span>
                 </div>
               </div>
-              <button style={{ background: 'transparent', border: '1px solid var(--brand-accent-light)', color: 'var(--brand-accent-light)', padding: '14px 40px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', cursor: 'pointer', width: '100%' }}>
+              <button onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: 'transparent', border: '1px solid var(--brand-accent-light)', color: 'var(--brand-accent-light)', padding: '14px 40px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', cursor: 'pointer', width: '100%' }}>
                 BUY NOW - BULK DEAL
               </button>
             </div>
@@ -125,7 +119,7 @@ export default function HomeContent() {
       </div>
 
       {/* 3. Featured Bulk Deals */}
-      <div id="products" style={{ padding: '40px' }}>
+      <div id="products" className="responsivePadding" style={{ padding: '40px' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
             <div style={{ height: '2px', width: '40px', background: 'var(--brand-accent)' }} />

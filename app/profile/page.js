@@ -47,7 +47,7 @@ function ProfileContent() {
   };
 
   const cardStyle = {
-    background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '20px', padding: '24px', marginBottom: '24px', boxShadow: 'var(--shadow-sm)'
+    background: 'var(--bg-card)', color: 'var(--text-dark)', border: '1px solid var(--border)', borderRadius: '20px', padding: '24px', marginBottom: '24px', boxShadow: 'var(--shadow-sm)'
   };
 
   return (

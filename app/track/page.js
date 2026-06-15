@@ -31,6 +31,7 @@ export default function TrackingLandingPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
+        className="darkTextCard"
         style={{ background: '#fff', borderRadius: 24, padding: '40px 32px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)', textAlign: 'center' }}
       >
         <div style={{ width: 64, height: 64, background: 'rgba(244, 167, 36, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>

@@ -1,0 +1,96 @@
+﻿
+> atomobiles@0.1.0 lint
+> eslint
+
+
+C:\Users\user\OneDrive\Desktop\atom\website\app\admin\(protected)\dashboard\page-gohan.js
+   988:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  1466:27  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\user\OneDrive\Desktop\atom\website\app\admin\(protected)\dashboard\page.js
+  1012:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  1411:27  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\user\OneDrive\Desktop\atom\website\app\admin\(protected)\page.js
+  60:86  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\user\OneDrive\Desktop\atom\website\app\cart\page.js
+  48:102  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  83:15   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\user\OneDrive\Desktop\atom\website\app\forgot-password\page.js
+  23:25  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\user\OneDrive\Desktop\atom\website\app\order\page.js
+  514:47  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\user\OneDrive\Desktop\atom\website\app\products\[slug]\page.js
+  97:18  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+   95 |     if (selectedStorage != null && selectedRam != null) {
+   96 |       const match = variants.find(v => v.storage === selectedStorage && v.ram === selectedRam);
+>  97 |       if (match) setDynamicOurPrice(Number(match.price));
+      |                  ^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+   98 |     } else if (hasVariants) {
+   99 |       // Show lowest variant price as "starting from"
+  100 |       const lowest = Math.min(...variants.map(v => Number(v.price)));  react-hooks/set-state-in-effect
+
+C:\Users\user\OneDrive\Desktop\atom\website\app\profile\page.js
+  205:114  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\user\OneDrive\Desktop\atom\website\app\signup\page.js
+  76:15  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\user\OneDrive\Desktop\atom\website\components\ClientLayoutWrapper.js
+  31:46  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\user\OneDrive\Desktop\atom\website\components\Header.js
+  202:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\user\OneDrive\Desktop\atom\website\components\ProductCard.js
+  37:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\user\OneDrive\Desktop\atom\website\components\ProductGallery.js
+  36:9   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  65:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\user\OneDrive\Desktop\atom\website\components\ReviewsSection.js
+  21:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  19 |       const isReview = urlParams.get('review') === 'true' || window.location.hash === '#review';
+  20 |       if (isReview) {
+> 21 |         setShowForm(true);
+     |         ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  22 |         
+  23 |         const scrollToReviews = () => {
+  24 |           const el = document.getElementById('reviews-section');  react-hooks/set-state-in-effect
+  58:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  56 |
+  57 |   useEffect(() => {
+> 58 |     fetchReviews();
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  59 |     if (productId === 'store') {
+  60 |       fetch('/api/products')
+  61 |         .then(r => r.json())                                                                                                                                      react-hooks/set-state-in-effect
+
+Γ£û 19 problems (10 errors, 9 warnings)
+
