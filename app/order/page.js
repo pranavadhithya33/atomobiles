@@ -314,7 +314,7 @@ function OrderFormContent() {
         
         {totals.discountTotal > 0 && (
           <div className={styles.summaryRow}>
-            <span style={{ color: 'var(--success)' }}>Bulk Discount</span>
+            <span style={{ color: 'var(--success)' }}>Discount</span>
             <strong style={{ color: 'var(--success)' }}>- {formatINR(totals.discountTotal)}</strong>
           </div>
         )}
@@ -393,7 +393,7 @@ function OrderFormContent() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ fontSize: '20px' }}>🪙</div>
             <div>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-dark)' }}>Login to earn Atom Coins</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>Login to earn Atom Coins</div>
               <div style={{ fontSize: '12px', color: '#64748b' }}>Earn 1 coin per ₹1000 spent on this order.</div>
             </div>
           </div>
@@ -482,14 +482,22 @@ function OrderFormContent() {
 
           <div className="form-group">
             <label className="form-label">Selected Payment Option</label>
-            <div className={styles.readOnlyField}>{paymentLabel}</div>
+            <input
+              className={styles.readOnlyField}
+              value={paymentLabel}
+              readOnly
+              style={{ width: '100%', color: 'var(--text-dark)' }}
+            />
           </div>
 
           <div className="form-group">
             <label className="form-label">Final Price (Auto-calculated)</label>
-            <div className={styles.readOnlyField} style={{ fontWeight:700, fontSize:17, color:'var(--text-primary)' }}>
-              {formatINR(finalOrderPrice)}
-            </div>
+            <input
+              className={styles.readOnlyField}
+              value={formatINR(finalOrderPrice)}
+              readOnly
+              style={{ width: '100%', fontWeight: 800, color: 'var(--text-dark)', fontSize: '17px' }}
+            />
           </div>
         </div>
 

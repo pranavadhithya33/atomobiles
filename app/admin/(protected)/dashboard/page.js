@@ -76,6 +76,14 @@ export default function AdminDashboard() {
   });
   const [orderSaving, setOrderSaving] = useState(false);
   const [orderError, setOrderError] = useState('');
+  
+  // Order Details Expansion
+  const [expandedOrderId, setExpandedOrderId] = useState(null);
+
+  // Deal of the Day State
+  const [dealState, setDealState] = useState({ productId: '', price: '', expiresAt: '' });
+  const [savingDeal, setSavingDeal] = useState(false);
+  const [currentDeal, setCurrentDeal] = useState(null);
 
   // Route Editor state
   const [expandedRouteOrderId, setExpandedRouteOrderId] = useState(null);
@@ -138,9 +146,63 @@ export default function AdminDashboard() {
       .finally(() => setVideosLoading(false));
   };
 
+  const fetchCurrentDeal = async () => {
+    try {
+      const res = await fetch('/api/deal');
+      const data = await res.json();
+      if (data.deal) {
+        setCurrentDeal(data.deal);
+        setDealState({
+          productId: data.deal.id,
+          price: data.deal.deal_price || '',
+          expiresAt: data.deal.deal_expires_at ? new Date(new Date(data.deal.deal_expires_at).getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, 16) : ''
+        });
+      } else {
+        setCurrentDeal(null);
+        setDealState({ productId: '', price: '', expiresAt: '' });
+      }
+    } catch (err) {
+      console.error('Failed to fetch deal:', err);
+    }
+  };
+
+  const handleSaveDeal = async () => {
+    if (!dealState.productId) {
+      setSavingDeal(true);
+      try {
+        await fetch('/api/deal', { method: 'POST', body: JSON.stringify({ product_id: null }) });
+        await fetchCurrentDeal();
+        alert('Deal of the Day cleared!');
+      } catch (err) { alert('Failed to clear deal'); }
+      setSavingDeal(false);
+      return;
+    }
+    
+    if (!dealState.price || !dealState.expiresAt) return alert('Price and expiry are required');
+    
+    setSavingDeal(true);
+    try {
+      const res = await fetch('/api/deal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product_id: dealState.productId,
+          deal_price: dealState.price,
+          expires_at: new Date(dealState.expiresAt).toISOString()
+        })
+      });
+      if (!res.ok) throw new Error('Save failed');
+      await fetchCurrentDeal();
+      alert('Deal of the Day updated!');
+    } catch (err) {
+      alert(err.message);
+    }
+    setSavingDeal(false);
+  };
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    Promise.all([fetchProducts(), fetchOrders(), fetchReviewsAdmin(), fetchVideosAdmin()]).finally(() => setLoading(false));
+    Promise.all([fetchProducts(), fetchOrders(), fetchReviewsAdmin(), fetchVideosAdmin(), fetchCurrentDeal()]).finally(() => setLoading(false));
   }, []);
 
   const handleLogout = () => {
@@ -910,6 +972,12 @@ export default function AdminDashboard() {
           >
             <MessageSquare size={15} /> Reviews {allReviews.filter(r => r.status === 'pending').length > 0 && <span style={{ background: '#ef4444', color: '#fff', fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 99, marginLeft: 4 }}>{allReviews.filter(r => r.status === 'pending').length}</span>}
           </button>
+          <button
+            className={`${styles.tab} ${activeTab === 'deal' ? styles.tabActive : ''}`}
+            onClick={() => setActiveTab('deal')}
+          >
+            <Clock size={15} /> Deal of the Day
+          </button>
         </div>
 
         <AnimatePresence mode="wait">
@@ -1250,6 +1318,78 @@ export default function AdminDashboard() {
                 ))}
               </div>
             )}
+          </motion.div>
+        )}
+
+        {/* Deal of the Day Tab */}
+        {activeTab === 'deal' && (
+          <motion.div key="deal" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Deal of the Day</h2>
+              <button onClick={fetchCurrentDeal} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-secondary)', display:'flex', alignItems:'center', gap:5, fontSize:13, fontWeight:600 }}>
+                <RefreshCw size={14} /> Refresh
+              </button>
+            </div>
+
+            <div style={{ background: '#fff', borderRadius: '16px', padding: '24px', boxShadow: 'var(--shadow-card)', border: '1px solid var(--border)', maxWidth: '600px' }}>
+              {currentDeal && (
+                <div style={{ padding: '16px', background: 'var(--success-bg)', color: 'var(--success)', borderRadius: '12px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ fontSize: '24px' }}>🔥</div>
+                  <div>
+                    <div style={{ fontWeight: 800 }}>Active Deal: {currentDeal.name}</div>
+                    <div style={{ fontSize: '13px', opacity: 0.9 }}>Expires: {new Date(currentDeal.deal_expires_at).toLocaleString()}</div>
+                  </div>
+                </div>
+              )}
+
+              <div className="form-group">
+                <label className="form-label">Select Product</label>
+                <select 
+                  className="form-input" 
+                  value={dealState.productId}
+                  onChange={(e) => setDealState(prev => ({ ...prev, productId: e.target.value }))}
+                >
+                  <option value="">-- No Active Deal --</option>
+                  {products.map(p => (
+                    <option key={p.id} value={p.id}>{p.name} - Reg: {formatINR(p.our_price)}</option>
+                  ))}
+                </select>
+              </div>
+
+              {dealState.productId && (
+                <>
+                  <div className="form-group">
+                    <label className="form-label">Deal Price (₹)</label>
+                    <input 
+                      type="number" 
+                      className="form-input" 
+                      placeholder="e.g. 15999"
+                      value={dealState.price}
+                      onChange={(e) => setDealState(prev => ({ ...prev, price: e.target.value }))}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">Expiration Date & Time</label>
+                    <input 
+                      type="datetime-local" 
+                      className="form-input" 
+                      value={dealState.expiresAt}
+                      onChange={(e) => setDealState(prev => ({ ...prev, expiresAt: e.target.value }))}
+                    />
+                  </div>
+                </>
+              )}
+
+              <button 
+                onClick={handleSaveDeal}
+                disabled={savingDeal}
+                className="btn btn-primary"
+                style={{ width: '100%', marginTop: '12px', padding: '14px', fontWeight: 800 }}
+              >
+                {savingDeal ? 'Saving...' : (dealState.productId ? 'Save Deal of the Day' : 'Clear Active Deal')}
+              </button>
+            </div>
           </motion.div>
         )}
         </AnimatePresence>

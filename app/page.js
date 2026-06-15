@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ShieldCheck, Truck, CreditCard, Award, Zap } from 'lucide-react';
+import DealOfTheDay from '@/components/DealOfTheDay';
 
 export default function HomeContent() {
   const [products, setProducts] = useState([]);
@@ -42,7 +43,7 @@ export default function HomeContent() {
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> Nationwide Express Shipping
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f3e3d3', fontSize: '16px' }}>
-              <span style={{ color: 'var(--brand-accent)' }}>✓</span> Flexible Bulk Payment Plans
+              <span style={{ color: 'var(--brand-accent)' }}>✓</span> Flexible Payment Plans
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f3e3d3', fontSize: '16px' }}>
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> 100% Quality Authenticated
@@ -61,72 +62,20 @@ export default function HomeContent() {
 
         <div style={{ flex: '1 1 400px', display: 'flex', justifyContent: 'center' }}>
           <Image src="/hero_devices.png" alt="High-Tech Devices" width={500} height={400} style={{ objectFit: 'contain', width: '100%', height: 'auto', dropShadow: '0 20px 40px rgba(0,0,0,0.5)' }} priority />
-        </div>
       </div>
 
-      {/* 2. Deal of the Day Section */}
-      <div className="responsivePadding" style={{ padding: '60px 40px 20px' }}>
-        <div style={{ background: '#241710', borderRadius: '24px', padding: '40px', display: 'flex', alignItems: 'center', gap: '40px', flexWrap: 'wrap', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div style={{ flex: '1 1 300px', background: '#fdfbf7', borderRadius: '16px', padding: '24px', display: 'flex', justifyContent: 'center' }}>
-            <Image src="/multi_charger.png" alt="Server-rack-grade high-capacity multi-charger" width={300} height={200} style={{ objectFit: 'contain' }} />
-          </div>
-          
-          <div style={{ flex: '2 1 400px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '24px' }}>
-            <div>
-              <div style={{ color: 'var(--brand-accent)', fontWeight: 800, fontSize: '18px', letterSpacing: '1px', marginBottom: '8px' }}>DEAL OF THE DAY</div>
-              <h3 style={{ color: '#fff', fontSize: '28px', fontWeight: 800, marginBottom: '8px', lineHeight: 1.2 }}>Server-rack-grade high-capacity<br/>multi-charger</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '16px', marginBottom: '24px' }}>A server-rack-grade high-capacity multi-charger.</p>
-              
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '24px' }}>
-                <span style={{ color: '#fff', fontSize: '40px', fontWeight: 900 }}>₹14,500</span>
-                <span style={{ color: 'var(--text-muted)', fontSize: '16px' }}>per unit</span>
-              </div>
-              
-              <button onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: 'var(--brand-accent-light)', color: '#160d0a', border: 'none', padding: '14px 28px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', cursor: 'pointer' }}>
-                BUY NOW - BULK DEAL
-              </button>
-            </div>
+      {/* 2. Dynamic Deal of the Day Section */}
+      <DealOfTheDay />
 
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ color: '#fff', fontSize: '18px', fontWeight: 700, marginBottom: '16px' }}>Deal of the Day - Ends In:</div>
-              <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center', marginBottom: '24px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ background: '#1a100c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px', fontWeight: 700 }}>02</div>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Days</span>
-                </div>
-                <span style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ background: '#1a100c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px', fontWeight: 700 }}>03</div>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Hours</span>
-                </div>
-                <span style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ background: '#1a100c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px', fontWeight: 700 }}>40</div>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Minutes</span>
-                </div>
-                <span style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ background: '#1a100c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px', fontWeight: 700 }}>42</div>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Seconds</span>
-                </div>
-              </div>
-              <button onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: 'transparent', border: '1px solid var(--brand-accent-light)', color: 'var(--brand-accent-light)', padding: '14px 40px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', cursor: 'pointer', width: '100%' }}>
-                BUY NOW - BULK DEAL
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Featured Bulk Deals */}
+      {/* 3. Featured Products */}
       <div id="products" className="responsivePadding" style={{ padding: '40px' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
             <div style={{ height: '2px', width: '40px', background: 'var(--brand-accent)' }} />
-            <h2 style={{ color: '#fff', fontSize: '28px', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase' }}>FEATURED BULK DEALS</h2>
+            <h2 style={{ color: '#fff', fontSize: '28px', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase' }}>FEATURED PRODUCTS</h2>
             <div style={{ height: '2px', width: '40px', background: 'var(--brand-accent)' }} />
           </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '16px', marginTop: '8px' }}>Best deals for businesses & bulk buyers</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '16px', marginTop: '8px' }}>Best deals for our customers</p>
         </div>
 
         {loading ? (
@@ -188,7 +137,7 @@ export default function HomeContent() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <CreditCard size={36} color="var(--brand-accent)" />
             <div>
-              <div style={{ color: '#fff', fontWeight: 700, fontSize: '15px' }}>Flexible Bulk Payments</div>
+              <div style={{ color: '#fff', fontWeight: 700, fontSize: '15px' }}>Flexible Payments</div>
               <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Pay 50% advance, rest on delivery</div>
             </div>
           </div>
