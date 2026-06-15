@@ -178,8 +178,8 @@ export default function Header() {
 
         <Link href="/cart" className="header-checkout-btn" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', background: 'var(--brand-accent)', padding: '10px 16px', borderRadius: '6px' }}>
           <ShoppingCart size={16} color="var(--brand-primary)" strokeWidth={2.5} />
-          <span className="header-action-text" style={{ color: '#160d0a', fontSize: '15px', fontWeight: 700 }}>Checkout</span>
-          {cartCount > 0 && <span style={{ marginLeft: '4px', background: '#160d0a', color: 'var(--brand-accent)', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 800 }}>{cartCount}</span>}
+          <span className="header-action-text" style={{ color: 'var(--brand-primary)', fontSize: '15px', fontWeight: 700 }}>Checkout</span>
+          {cartCount > 0 && <span style={{ marginLeft: '4px', background: 'var(--brand-primary)', color: 'var(--brand-accent)', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 800 }}>{cartCount}</span>}
         </Link>
       </div>
     </header>

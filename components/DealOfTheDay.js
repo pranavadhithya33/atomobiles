@@ -92,37 +92,37 @@ export default function DealOfTheDay() {
         </div>
 
         <div className="deal-timer-container">
-            <div style={{ color: 'var(--text-white)', fontSize: '18px', fontWeight: 700, marginBottom: '16px' }}>Deal of the Day - Ends In:</div>
+            <div style={{ color: 'var(--deal-text)', fontSize: '18px', fontWeight: 700, marginBottom: '16px' }}>Deal of the Day - Ends In:</div>
             <div className="deal-timer-wrap">
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div className="deal-timer-box">
                   {timeLeft.days.toString().padStart(2, '0')}
                 </div>
-                <span style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '8px' }}>Days</span>
+                <span style={{ color: 'var(--deal-muted)', fontSize: '12px', marginTop: '8px' }}>Days</span>
               </div>
-              <span style={{ color: 'var(--text-white)', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
+              <span style={{ color: 'var(--deal-text)', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div className="deal-timer-box">
                   {timeLeft.hours.toString().padStart(2, '0')}
                 </div>
-                <span style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '8px' }}>Hours</span>
+                <span style={{ color: 'var(--deal-muted)', fontSize: '12px', marginTop: '8px' }}>Hours</span>
               </div>
-              <span style={{ color: 'var(--text-white)', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
+              <span style={{ color: 'var(--deal-text)', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div className="deal-timer-box">
                   {timeLeft.mins.toString().padStart(2, '0')}
                 </div>
-                <span style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '8px' }}>Mins</span>
+                <span style={{ color: 'var(--deal-muted)', fontSize: '12px', marginTop: '8px' }}>Mins</span>
               </div>
-              <span style={{ color: 'var(--text-white)', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
+              <span style={{ color: 'var(--deal-text)', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div className="deal-timer-box" style={{ color: 'var(--brand-accent)' }}>
                   {timeLeft.secs.toString().padStart(2, '0')}
                 </div>
-                <span style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '8px' }}>Secs</span>
+                <span style={{ color: 'var(--deal-muted)', fontSize: '12px', marginTop: '8px' }}>Secs</span>
               </div>
             </div>
-            <div style={{ color: 'var(--text-white)', fontSize: '14px', background: 'var(--glass-bg)', padding: '12px', borderRadius: '8px' }}>
+            <div style={{ color: 'var(--deal-text)', fontSize: '14px', background: 'var(--glass-bg)', padding: '12px', borderRadius: '8px' }}>
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> Exclusive offer online
             </div>
           </div>
