@@ -36,16 +36,16 @@ export default function HomeContent() {
           </h2>
           
           <div className="hero-features-grid">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-white)', fontSize: '16px' }}>
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> Verified B2B-only Pricing
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-white)', fontSize: '16px' }}>
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> Nationwide Express Shipping
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-white)', fontSize: '16px' }}>
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> Flexible Payment Plans
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-white)', fontSize: '16px' }}>
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> 100% Quality Authenticated
             </div>
           </div>
@@ -54,7 +54,7 @@ export default function HomeContent() {
             <Link href="#products" className="hero-btn" style={{ background: 'var(--brand-accent)', color: 'var(--brand-primary)', padding: '16px 32px', borderRadius: '30px', fontWeight: 800, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
               <Zap size={20} fill='var(--brand-primary)' /> Shop Now
             </Link>
-            <a href="https://wa.me/917397189222" target="_blank" rel="noopener noreferrer" className="hero-btn" style={{ background: 'rgba(37, 211, 102, 0.1)', color: 'var(--text-primary)', padding: '16px 32px', borderRadius: '30px', fontWeight: 800, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', border: '1px solid rgba(37, 211, 102, 0.4)' }}>
+            <a href="https://wa.me/917397189222" target="_blank" rel="noopener noreferrer" className="hero-btn" style={{ background: 'rgba(37, 211, 102, 0.1)', color: 'var(--text-white)', padding: '16px 32px', borderRadius: '30px', fontWeight: 800, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', border: '1px solid rgba(37, 211, 102, 0.4)' }}>
               <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" style={{ width: '20px', height: '20px' }} /> WhatsApp support
             </a>
           </div>
@@ -73,14 +73,14 @@ export default function HomeContent() {
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
             <div style={{ height: '2px', width: '40px', background: 'var(--brand-accent)' }} />
-            <h2 style={{ color: 'var(--text-primary)', fontSize: '28px', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase' }}>FEATURED PRODUCTS</h2>
+            <h2 style={{ color: 'var(--text-white)', fontSize: '28px', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase' }}>FEATURED PRODUCTS</h2>
             <div style={{ height: '2px', width: '40px', background: 'var(--brand-accent)' }} />
           </div>
           <p style={{ color: 'var(--text-muted)', fontSize: '16px', marginTop: '8px' }}>Best deals for our customers</p>
         </div>
 
         {loading ? (
-          <div style={{ color: 'var(--text-primary)', textAlign: 'center' }}>Loading products...</div>
+          <div style={{ color: 'var(--text-white)', textAlign: 'center' }}>Loading products...</div>
         ) : (
           <div className="product-grid">
             {products.map(p => (
@@ -100,7 +100,7 @@ export default function HomeContent() {
                 <div style={{ color: '#c87941', fontWeight: 800, fontSize: '16px', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                   {p.is_deal_of_the_day && p.deal_expires_at && new Date(p.deal_expires_at).getTime() > new Date().getTime() ? (
                     <>
-                      <span>₹{p.deal_price?.toLocaleString('en-IN')} <span style={{fontSize: 10, background: '#c87941', color: 'var(--text-primary)', padding: '2px 4px', borderRadius: 4, marginLeft: 4}}>🔥 DEAL</span></span>
+                      <span>₹{p.deal_price?.toLocaleString('en-IN')} <span style={{fontSize: 10, background: '#c87941', color: 'var(--text-white)', padding: '2px 4px', borderRadius: 4, marginLeft: 4}}>🔥 DEAL</span></span>
                       <span style={{ color: '#9aa3b2', textDecoration: 'line-through', fontSize: '12px' }}>₹{p.our_price?.toLocaleString('en-IN')}</span>
                     </>
                   ) : (
@@ -129,7 +129,7 @@ export default function HomeContent() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <ShieldCheck size={36} color="var(--brand-accent)" />
             <div>
-              <div style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: '15px' }}>Verified B2B-only</div>
+              <div style={{ color: 'var(--text-white)', fontWeight: 700, fontSize: '15px' }}>Verified B2B-only</div>
               <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Verified for retailer only pricing</div>
             </div>
           </div>
@@ -137,7 +137,7 @@ export default function HomeContent() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <Truck size={36} color="var(--brand-accent)" />
             <div>
-              <div style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: '15px' }}>Nationwide Shipping</div>
+              <div style={{ color: 'var(--text-white)', fontWeight: 700, fontSize: '15px' }}>Nationwide Shipping</div>
               <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Secure transit across India</div>
             </div>
           </div>
@@ -145,7 +145,7 @@ export default function HomeContent() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <CreditCard size={36} color="var(--brand-accent)" />
             <div>
-              <div style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: '15px' }}>Flexible Payments</div>
+              <div style={{ color: 'var(--text-white)', fontWeight: 700, fontSize: '15px' }}>Flexible Payments</div>
               <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Pay 50% advance, rest on delivery</div>
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function HomeContent() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <Award size={36} color="var(--brand-accent)" />
             <div>
-              <div style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: '15px' }}>100% Quality Authenticity</div>
+              <div style={{ color: 'var(--text-white)', fontWeight: 700, fontSize: '15px' }}>100% Quality Authenticity</div>
               <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Quality guaranteed on every unit</div>
             </div>
           </div>

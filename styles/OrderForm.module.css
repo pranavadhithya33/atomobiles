@@ -48,7 +48,7 @@
   align-items: center;
   padding: 5px 0;
   font-size: 14px;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .summaryRow:last-child {
@@ -86,7 +86,7 @@
 .sectionLabel {
   font-size: 13px;
   font-weight: 700;
-  color: #64748b;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.8px;
   padding-bottom: 6px;
@@ -97,11 +97,11 @@
 /* Read-only field */
 .readOnlyField {
   padding: 12px 14px;
-  background: #f8fafc;
+  background: var(--bg-page);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-md);
   font-size: var(--text-base);
-  color: #64748b;
+  color: var(--text-muted);
   cursor: not-allowed;
 }
 
@@ -180,7 +180,7 @@
 
 .successSubtitle {
   font-size: 14px;
-  color: #475569;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
