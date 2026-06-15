@@ -3,6 +3,8 @@ import { supabase, createAdminClient } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 import { verifyAdminRequest } from '@/lib/adminAuth';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
