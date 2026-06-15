@@ -32,7 +32,7 @@ export default function PaymentSelector({ ourPrice, selectedOption, onSelect }) 
             <div className={styles.paymentOptionName}>
               <CheckCircle size={15} strokeWidth={2} />
               Full Prepaid
-              <span className={styles.prepaidBadge}>₹{fullDetails.discount} OFF</span>
+              <span className={styles.prepaidBadge} style={{ background: 'var(--success)', color: '#fff' }}>₹{fullDetails.discount} OFF</span>
             </div>
             <div className={styles.paymentOptionDesc}>
               Pay full amount and save ₹{fullDetails.discount} instantly!
@@ -74,7 +74,7 @@ export default function PaymentSelector({ ourPrice, selectedOption, onSelect }) 
             <div className={styles.paymentOptionName}>
               <Truck size={15} strokeWidth={2} />
               Half Payment + Cash on Delivery
-              <span className={styles.prepaidBadge} style={{ background: 'var(--bg-page)', color: 'var(--text-primary)', marginLeft: '6px' }}>₹{halfDetails.discount} OFF</span>
+              <span className={styles.prepaidBadge} style={{ background: 'var(--glass-border)', color: 'var(--text-primary)', marginLeft: '6px' }}>₹{halfDetails.discount} OFF</span>
             </div>
             <div className={styles.paymentOptionDesc}>
               Pay advance now, rest on delivery
@@ -120,7 +120,7 @@ export default function PaymentSelector({ ourPrice, selectedOption, onSelect }) 
             <div className={styles.paymentOptionName}>
               <Tag size={15} strokeWidth={2} />
               30% Token Advance
-              <span className={styles.prepaidBadge} style={{ background: 'var(--bg-page)', color: 'var(--text-primary)', marginLeft: '6px' }}>₹{tokenDetails.discount} OFF</span>
+              <span className={styles.prepaidBadge} style={{ background: 'var(--glass-border)', color: 'var(--text-primary)', marginLeft: '6px' }}>₹{tokenDetails.discount} OFF</span>
             </div>
             <div className={styles.paymentOptionDesc}>
               Pay 30% now, remaining on delivery
