@@ -108,7 +108,7 @@ export default function HomeContent() {
                   )}
                 </div>
                 
-                <div style={{ color: '#5d4037', fontSize: '13px', marginBottom: '20px' }}>
+                <div className="product-card-badge">
                   Verified | 100% Authentic
                 </div>
                 
