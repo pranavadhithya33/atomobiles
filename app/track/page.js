@@ -38,8 +38,8 @@ export default function TrackingLandingPage() {
           <Truck size={32} color="var(--brand-accent)" />
         </div>
         
-        <h1 style={{ fontSize: 28, fontWeight: 900, marginBottom: 12, color: 'var(--text-primary)' }}>Track Your Shipment</h1>
-        <p style={{ fontSize: 15, color: 'var(--text-secondary)', marginBottom: 32, lineHeight: 1.6 }}>
+        <h1 style={{ fontSize: 28, fontWeight: 900, marginBottom: 12 }}>Track Your Shipment</h1>
+        <p style={{ fontSize: 15, marginBottom: 32, lineHeight: 1.6 }}>
           Enter your Order ID to view real-time delivery status, tracking timeline, and download your invoice.
         </p>
 
@@ -59,10 +59,8 @@ export default function TrackingLandingPage() {
                 border: '2px solid var(--border)', 
                 fontSize: 16, 
                 outline: 'none',
-                background: 'var(--bg-page)',
                 transition: 'border-color 0.2s',
                 fontWeight: 600,
-                color: 'var(--text-primary)'
               }}
               onFocus={(e) => e.target.style.borderColor = 'var(--brand-accent)'}
               onBlur={(e) => e.target.style.borderColor = 'var(--border)'}

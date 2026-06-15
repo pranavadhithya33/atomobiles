@@ -118,7 +118,7 @@ export default function Header() {
                   style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,0.05)' }}
                 >
                   {product.images?.[0] ? (
-                    <Image src={product.images[0]} alt={product.name} width={40} height={40} style={{ objectFit: 'contain', background: '#fff', borderRadius: '4px' }} referrerPolicy="no-referrer" />
+                    <Image src={product.images[0]} alt={product.name} width={40} height={40} style={{ objectFit: 'contain', background: '#fff', borderRadius: '4px' }} unoptimized referrerPolicy="no-referrer" />
                   ) : (
                     <div style={{ width: '40px', height: '40px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Smartphone size={18} color="var(--brand-accent)" />

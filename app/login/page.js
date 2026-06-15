@@ -65,10 +65,10 @@ function LoginForm() {
         style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '24px', padding: '40px', width: '100%', maxWidth: '400px', boxShadow: 'var(--shadow-lg)' }}
       >
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{ fontSize: '28px', fontWeight: '900', color: 'var(--text-primary)', marginBottom: '8px' }}>
+          <div style={{ fontSize: '28px', fontWeight: '900', marginBottom: '8px' }}>
             Atomobiles
           </div>
-          <div style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Login to place orders & use your Atom Coins</div>
+          <div style={{ fontSize: '14px' }}>Login to place orders & use your Atom Coins</div>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
   return (
     <div className={styles.loginPage}>
       <motion.div 
-        className={styles.loginCard}
+        className={`${styles.loginCard} darkTextCard`}
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 400, damping: 30 }}

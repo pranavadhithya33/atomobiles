@@ -66,7 +66,7 @@ export default function ProductGallery({ images, name }) {
               onClick={() => setActive(idx)}
               aria-label={`View image ${idx + 1}`}
             >
-              <Image src={img} alt={`Thumbnail ${idx + 1}`} width={80} height={80} style={{ objectFit: 'contain' }} referrerPolicy="no-referrer" />
+              <Image src={img} alt={`Thumbnail ${idx + 1}`} width={80} height={80} style={{ objectFit: 'contain' }} unoptimized referrerPolicy="no-referrer" />
             </button>
           ))}
         </div>

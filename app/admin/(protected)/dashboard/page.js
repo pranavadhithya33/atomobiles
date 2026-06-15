@@ -926,7 +926,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Amazon Quick Importer */}
-            <div style={{ background: 'var(--bg-highlight)', padding: '16px', borderRadius: '12px', marginBottom: '16px', border: '1px solid var(--border-focus)' }}>
+            <div className="darkTextCard" style={{ background: 'var(--bg-highlight)', padding: '16px', borderRadius: '12px', marginBottom: '16px', border: '1px solid var(--border-focus)' }}>
               <div style={{ fontWeight: 800, color: 'var(--brand-primary)', marginBottom: '12px', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <RefreshCw size={18} className={importing ? 'spin' : ''} />
                 One-Click Auto-Upload from Amazon/Flipkart
@@ -993,7 +993,7 @@ export default function AdminDashboard() {
               </div>
             ) : (
               <div className={styles.tableWrap}>
-                <table className={styles.table}>
+                <table className={`${styles.table} darkTextCard`}>
                   <thead>
                     <tr>
                       <th>Image</th>
@@ -1009,7 +1009,7 @@ export default function AdminDashboard() {
                       <tr key={p.id}>
                         <td data-label="Image">
                           {p.images?.[0] ? (
-                            <img src={p.images[0]} alt={p.name} className={styles.productThumb} />
+                            <img src={p.images[0]} alt={p.name} className={styles.productThumb} referrerPolicy="no-referrer" />
                           ) : (
                             <div className={styles.productThumbPlaceholder}>
                               <Smartphone size={18} color="#9aa3b2" />

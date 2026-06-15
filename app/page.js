@@ -137,7 +137,7 @@ export default function HomeContent() {
               <Link href={`/products/${p.slug}`} key={p.id} style={{ background: '#fdfbf7', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', textDecoration: 'none' }}>
                 <div style={{ height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
                   {p.images && p.images[0] ? (
-                    <Image src={p.images[0]} alt={p.name} width={180} height={220} style={{ objectFit: 'contain', maxHeight: '100%' }} />
+                    <Image src={p.images[0]} alt={p.name} width={180} height={220} style={{ objectFit: 'contain', maxHeight: '100%' }} unoptimized referrerPolicy="no-referrer" />
                   ) : (
                     <div style={{ width: '150px', height: '200px', background: '#eee', borderRadius: '8px' }} />
                   )}
