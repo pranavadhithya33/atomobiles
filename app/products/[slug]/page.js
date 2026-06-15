@@ -45,7 +45,8 @@ export default function ProductDetailPage() {
       })
       .then(data => {
         setProduct(data);
-        setDynamicOurPrice(data.our_price);
+        const isActiveDeal = data.is_deal_of_the_day && data.deal_expires_at && new Date(data.deal_expires_at).getTime() > new Date().getTime();
+        setDynamicOurPrice(isActiveDeal ? data.deal_price : data.our_price);
         setDynamicStock(data.stock > 0);
         setLoading(false);
         // Fetch variants for this product
@@ -271,13 +272,24 @@ export default function ProductDetailPage() {
           </div>
         )}
 
-        {/* Live Price Display — hidden when variants are selected */}
-        {(!hasVariants || (selectedStorage == null && selectedRam == null)) && (
+        {/* Live Price Display — hidden when variants are selected or if active deal */}
+        {(!hasVariants || (selectedStorage == null && selectedRam == null)) && !(product.is_deal_of_the_day && product.deal_expires_at && new Date(product.deal_expires_at).getTime() > new Date().getTime()) && (
           <LivePriceDisplay
             product={product}
             onPriceUpdate={!hasVariants ? setDynamicOurPrice : undefined}
             onStockUpdate={setDynamicStock}
           />
+        )}
+        
+        {/* Deal Badge */}
+        {product.is_deal_of_the_day && product.deal_expires_at && new Date(product.deal_expires_at).getTime() > new Date().getTime() && (
+          <div style={{ background: '#fef3c7', border: '1px solid #fbbf24', padding: '12px 16px', borderRadius: '12px', marginTop: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '24px' }}>🔥</span>
+            <div>
+              <div style={{ fontWeight: 800, color: '#d97706', fontSize: '14px' }}>DEAL OF THE DAY ACTIVE!</div>
+              <div style={{ color: '#92400e', fontSize: '13px' }}>Special promotional price applied. Ends soon!</div>
+            </div>
+          </div>
         )}
       </motion.div>
 

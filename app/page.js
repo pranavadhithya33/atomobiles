@@ -97,8 +97,15 @@ export default function HomeContent() {
                   {p.name}
                 </h3>
                 
-                <div style={{ color: '#c87941', fontWeight: 800, fontSize: '16px', marginBottom: '4px' }}>
-                  {p.our_price ? `₹${p.our_price.toLocaleString('en-IN')}` : 'Price not set'}
+                <div style={{ color: '#c87941', fontWeight: 800, fontSize: '16px', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  {p.is_deal_of_the_day && p.deal_expires_at && new Date(p.deal_expires_at).getTime() > new Date().getTime() ? (
+                    <>
+                      <span>₹{p.deal_price?.toLocaleString('en-IN')} <span style={{fontSize: 10, background: '#c87941', color: '#fff', padding: '2px 4px', borderRadius: 4, marginLeft: 4}}>🔥 DEAL</span></span>
+                      <span style={{ color: '#9aa3b2', textDecoration: 'line-through', fontSize: '12px' }}>₹{p.our_price?.toLocaleString('en-IN')}</span>
+                    </>
+                  ) : (
+                    p.our_price ? `₹${p.our_price.toLocaleString('en-IN')}` : 'Price not set'
+                  )}
                 </div>
                 
                 <div style={{ color: '#5d4037', fontSize: '13px', marginBottom: '20px' }}>

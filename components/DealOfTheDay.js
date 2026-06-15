@@ -85,7 +85,7 @@ export default function DealOfTheDay() {
             </div>
             
             <button 
-              onClick={() => router.push(`/product/${deal.id}`)} 
+              onClick={() => router.push(`/products/${deal.slug}`)} 
               style={{ background: 'var(--brand-accent-light)', color: '#160d0a', border: 'none', padding: '14px 28px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', cursor: 'pointer' }}
             >
               BUY NOW
