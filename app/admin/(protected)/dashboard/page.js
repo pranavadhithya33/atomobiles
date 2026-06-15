@@ -926,7 +926,7 @@ export default function AdminDashboard() {
 
             {/* Amazon Quick Importer */}
             <div style={{ background: 'var(--bg-highlight)', padding: '16px', borderRadius: '12px', marginBottom: '16px', border: '1px solid var(--border-focus)' }}>
-              <div style={{ fontWeight: 800, color: 'var(--brand-primary)', marginBottom: '12px', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ fontWeight: 800, color: 'var(--brand-accent)', marginBottom: '12px', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <RefreshCw size={18} className={importing ? 'spin' : ''} />
                 One-Click Auto-Upload from Amazon/Flipkart
               </div>
@@ -961,7 +961,7 @@ export default function AdminDashboard() {
             {/* Bulk Refresh Button */}
             <button 
               className="btn btn-outline"
-              style={{ width: '100%', marginBottom: '20px', display: 'flex', justifyContent: 'center', gap: '8px', padding: '12px', border: '1px solid var(--border)' }}
+              style={{ width: '100%', marginBottom: '20px', display: 'flex', justifyContent: 'center', gap: '8px', padding: '12px', border: '1px solid var(--border)', color: 'var(--brand-accent)' }}
               onClick={async () => {
                 if (!confirm('This will refresh prices for all products in our master list. This may take several minutes. Proceed?')) return;
                 setImporting(true);
