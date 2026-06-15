@@ -93,30 +93,28 @@ export default function HomeContent() {
                   )}
                 </div>
                 
-                <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, justifyContent: 'center' }}>
-                  <h3 className="product-card-title">
-                    {p.name}
-                  </h3>
-                  
-                  <div style={{ color: '#c87941', fontWeight: 800, fontSize: '16px', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    {p.is_deal_of_the_day && p.deal_expires_at && new Date(p.deal_expires_at).getTime() > new Date().getTime() ? (
-                      <>
-                        <span>₹{p.deal_price?.toLocaleString('en-IN')} <span style={{fontSize: 10, background: '#c87941', color: '#ffffff', padding: '2px 4px', borderRadius: 4, marginLeft: 4}}>🔥 DEAL</span></span>
-                        <span style={{ color: '#9aa3b2', textDecoration: 'line-through', fontSize: '12px' }}>₹{p.our_price?.toLocaleString('en-IN')}</span>
-                      </>
-                    ) : (
-                      p.our_price ? `₹${p.our_price.toLocaleString('en-IN')}` : 'Price not set'
-                    )}
-                  </div>
-                  
-                  <div className="product-card-badge">
-                    Verified | 100% Authentic
-                  </div>
-                  
-                  <div style={{ marginTop: 'auto' }}>
-                    <div style={{ display: 'block', textAlign: 'center', background: 'var(--brand-accent)', color: 'var(--brand-primary)', padding: '10px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', textDecoration: 'none' }}>
-                      Buy Now
-                    </div>
+                <h3 className="product-card-title">
+                  {p.name}
+                </h3>
+                
+                <div style={{ color: '#c87941', fontWeight: 800, fontSize: '16px', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  {p.is_deal_of_the_day && p.deal_expires_at && new Date(p.deal_expires_at).getTime() > new Date().getTime() ? (
+                    <>
+                      <span>₹{p.deal_price?.toLocaleString('en-IN')} <span style={{fontSize: 10, background: '#c87941', color: '#ffffff', padding: '2px 4px', borderRadius: 4, marginLeft: 4}}>🔥 DEAL</span></span>
+                      <span style={{ color: '#9aa3b2', textDecoration: 'line-through', fontSize: '12px' }}>₹{p.our_price?.toLocaleString('en-IN')}</span>
+                    </>
+                  ) : (
+                    p.our_price ? `₹${p.our_price.toLocaleString('en-IN')}` : 'Price not set'
+                  )}
+                </div>
+                
+                <div className="product-card-badge">
+                  Verified | 100% Authentic
+                </div>
+                
+                <div style={{ marginTop: 'auto' }}>
+                  <div style={{ display: 'block', textAlign: 'center', background: 'var(--brand-accent)', color: 'var(--brand-primary)', padding: '14px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', textDecoration: 'none' }}>
+                    Buy Now
                   </div>
                 </div>
               </Link>
