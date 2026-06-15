@@ -83,7 +83,7 @@ export default function HomeContent() {
           <div style={{ color: '#fff', textAlign: 'center' }}>Loading products...</div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
-            {products.slice(0, 8).map(p => (
+            {products.map(p => (
               <Link href={`/products/${p.slug}`} key={p.id} style={{ background: '#fdfbf7', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', textDecoration: 'none' }}>
                 <div style={{ height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
                   {p.images && p.images[0] ? (
