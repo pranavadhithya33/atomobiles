@@ -470,7 +470,8 @@ input:-webkit-autofill:active{
 .product-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-sm);
+  gap: var(--space-md);
+  padding: var(--space-xs);
 }
 
 @media (min-width: 480px) {
@@ -871,17 +872,18 @@ input:-webkit-autofill:active{
 }
 
 /* Product Card Responsive Styles */
-.product-card-wrap { background: #fdfbf7; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; text-decoration: none; overflow: hidden; }
+.product-card-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; text-decoration: none; overflow: hidden; }
 .product-image-wrap { height: 200px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
-.product-image-placeholder { width: 150px; height: 180px; background: #eee; border-radius: 8px; max-width: 100%; }
-.product-card-title { font-size: 16px; font-weight: 800; color: #160d0a; margin-bottom: 8px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-.product-card-badge { color: #5d4037; font-size: 13px; margin-bottom: 16px; }
+.product-image-placeholder { width: 150px; height: 180px; background: var(--bg-page); border-radius: 8px; max-width: 100%; }
+.product-card-title { font-size: 16px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+.product-card-badge { color: var(--text-secondary); font-size: 13px; margin-bottom: 16px; }
 
 @media (max-width: 768px) {
-  .product-card-wrap { padding: 12px; border-radius: 10px; }
-  .product-image-wrap { height: 130px; margin-bottom: 8px; }
+  .product-grid { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
+  .product-card-wrap { padding: 16px; border-radius: 12px; flex-direction: row; gap: 16px; }
+  .product-image-wrap { height: 120px; width: 120px; margin-bottom: 0; flex-shrink: 0; }
   .product-image-placeholder { width: 100%; height: 120px; }
-  .product-card-title { font-size: 14px; margin-bottom: 4px; -webkit-line-clamp: 2; }
+  .product-card-title { font-size: 15px; margin-bottom: 8px; -webkit-line-clamp: 2; }
   .price-our { font-size: 16px !important; }
   .product-card-badge { font-size: 11px; margin-bottom: 10px; }
 }

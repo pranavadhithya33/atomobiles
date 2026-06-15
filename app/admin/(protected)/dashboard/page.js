@@ -60,6 +60,13 @@ export default function AdminDashboard() {
   const [form, setForm] = useState(EMPTY_PRODUCT);
   const [saving, setSaving] = useState(false);
   const { theme, setTheme } = useTheme();
+  
+  useEffect(() => {
+    if (theme === 'cafe') {
+      setTheme('neon-dark');
+    }
+  }, [theme, setTheme]);
+
   const [saveError, setSaveError] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
   
