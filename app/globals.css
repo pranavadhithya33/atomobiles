@@ -700,6 +700,8 @@ ul, ol {
 /* ============================================================
    UI/UX FIXES
    ============================================================ */
-.darkTextCard, .darkTextCard * { color: var(--text-dark) !important; }
+.darkTextCard { color: var(--text-dark); }
+.darkTextCard h1, .darkTextCard h2, .darkTextCard h3, .darkTextCard p, .darkTextCard span, .darkTextCard div { color: var(--text-dark); }
+.darkTextCard input { color: var(--text-dark); background: #fdfbf7 !important; border: 1px solid #ddd !important; }
 .heroSection { padding: 80px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
 @media (max-width: 768px) { .heroSection { padding: 40px 16px; justify-content: center; text-align: center; } .responsivePadding { padding: 40px 16px !important; } }

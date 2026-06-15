@@ -200,7 +200,7 @@ export default function ProductDetailPage() {
       </motion.div>
 
       {/* Info Card */}
-      <motion.div className={styles.infoSection} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+      <motion.div className={`${styles.infoSection} darkTextCard`} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:8, flexWrap:'wrap' }}>
           <div style={{ flex:1 }}>
             {product.category && <div className={styles.productCategory}>{product.category}</div>}
