@@ -10,6 +10,13 @@ export default function DealOfTheDay() {
   const [isActive, setIsActive] = useState(false);
   const router = useRouter();
 
+  const checkActive = (expiresAt) => {
+    if (!expiresAt) return;
+    const now = new Date().getTime();
+    const expiry = new Date(expiresAt).getTime();
+    setIsActive(now < expiry);
+  };
+
   useEffect(() => {
     fetch('/api/deal')
       .then(res => res.json())
@@ -21,13 +28,6 @@ export default function DealOfTheDay() {
       })
       .catch(err => console.error(err));
   }, []);
-
-  const checkActive = (expiresAt) => {
-    if (!expiresAt) return;
-    const now = new Date().getTime();
-    const expiry = new Date(expiresAt).getTime();
-    setIsActive(now < expiry);
-  };
 
   useEffect(() => {
     if (!deal || !deal.deal_expires_at) return;
@@ -69,30 +69,29 @@ export default function DealOfTheDay() {
           />
         </div>
         
-        <div className="deal-content-wrap">
-          <div>
-            <div style={{ color: 'var(--brand-accent)', fontWeight: 800, fontSize: '18px', letterSpacing: '1px', marginBottom: '8px' }}>DEAL OF THE DAY</div>
-            <h3 style={{ color: '#fff', fontSize: '28px', fontWeight: 800, marginBottom: '8px', lineHeight: 1.2 }}>{deal.name}</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '16px', marginBottom: '24px' }}>{deal.description ? (deal.description.length > 60 ? deal.description.substring(0, 60) + '...' : deal.description) : 'A special offer just for you.'}</p>
-            
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '24px' }}>
-              <span style={{ color: '#fff', fontSize: '40px', fontWeight: 900 }}>
-                {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(deal.deal_price)}
-              </span>
-              <span style={{ color: 'var(--text-muted)', fontSize: '16px', textDecoration: 'line-through' }}>
-                {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(deal.our_price)}
-              </span>
-            </div>
-            
-            <button 
-              onClick={() => router.push(`/products/${deal.slug}`)} 
-              style={{ background: 'var(--brand-accent-light)', color: '#160d0a', border: 'none', padding: '14px 28px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', cursor: 'pointer' }}
-            >
-              BUY NOW
-            </button>
+        <div className="deal-info-wrap">
+          <div className="deal-subtitle">DEAL OF THE DAY</div>
+          <h3 className="deal-title">{deal.name}</h3>
+          <p className="deal-desc">{deal.description ? (deal.description.length > 60 ? deal.description.substring(0, 60) + '...' : deal.description) : 'A special offer just for you.'}</p>
+          
+          <div className="deal-price-wrap">
+            <span className="deal-price-our">
+              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(deal.deal_price)}
+            </span>
+            <span className="deal-price-original">
+              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(deal.our_price)}
+            </span>
           </div>
+          
+          <button 
+            onClick={() => router.push(`/products/${deal.slug}`)} 
+            className="deal-buy-btn"
+          >
+            BUY NOW
+          </button>
+        </div>
 
-          <div style={{ textAlign: 'center' }}>
+        <div className="deal-timer-container">
             <div style={{ color: '#fff', fontSize: '18px', fontWeight: 700, marginBottom: '16px' }}>Deal of the Day - Ends In:</div>
             <div className="deal-timer-wrap">
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -129,6 +128,5 @@ export default function DealOfTheDay() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
