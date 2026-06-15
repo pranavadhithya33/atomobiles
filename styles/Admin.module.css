@@ -347,7 +347,7 @@
   padding: 12px;
   border: 2px solid var(--border);
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--text-dark);
   border-radius: var(--radius-md);
   font-size: 14px;
   font-weight: 600;

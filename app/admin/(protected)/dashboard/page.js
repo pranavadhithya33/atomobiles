@@ -667,16 +667,15 @@ export default function AdminDashboard() {
                 <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--brand-primary)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
                   📦 RAM &amp; Storage Variants
                 </div>
-                <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 14 }}>
+                <p style={{ fontSize: 12, color: 'var(--text-dark)', marginBottom: 14 }}>
                   Set a price for each combination. Toggle the eye icon to show/hide that combo from customers. Leave price empty to skip.
                 </p>
 
-                {/* Column headers */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 110px 44px', gap: 6, marginBottom: 6, padding: '0 4px' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>RAM</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Storage</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Price (₹)</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Show</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>RAM</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Storage</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Price (₹)</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Show</div>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 320, overflowY: 'auto' }}>
@@ -696,8 +695,8 @@ export default function AdminDashboard() {
                         transition: 'all 0.15s',
                       }}
                     >
-                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{v.ram} GB</span>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{v.storage} GB</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-dark)' }}>{v.ram} GB</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-dark)' }}>{v.storage} GB</span>
                       <input
                         type="number"
                         className="form-input"
@@ -926,7 +925,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Amazon Quick Importer */}
-            <div className="darkTextCard" style={{ background: 'var(--bg-highlight)', padding: '16px', borderRadius: '12px', marginBottom: '16px', border: '1px solid var(--border-focus)' }}>
+            <div style={{ background: 'var(--bg-highlight)', padding: '16px', borderRadius: '12px', marginBottom: '16px', border: '1px solid var(--border-focus)' }}>
               <div style={{ fontWeight: 800, color: 'var(--brand-primary)', marginBottom: '12px', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <RefreshCw size={18} className={importing ? 'spin' : ''} />
                 One-Click Auto-Upload from Amazon/Flipkart
@@ -1446,16 +1445,15 @@ export default function AdminDashboard() {
                 <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--brand-primary)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
                   📦 RAM &amp; Storage Variants
                 </div>
-                <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 14 }}>
+                <p style={{ fontSize: 12, color: 'var(--text-dark)', marginBottom: 14 }}>
                   Set a price for each combination. Toggle the eye icon to show/hide that combo from customers. Leave price empty to skip.
                 </p>
 
-                {/* Column headers */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 110px 44px', gap: 6, marginBottom: 6, padding: '0 4px' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>RAM</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Storage</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Price (₹)</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Show</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>RAM</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Storage</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Price (₹)</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Show</div>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 320, overflowY: 'auto' }}>
@@ -1475,8 +1473,8 @@ export default function AdminDashboard() {
                         transition: 'all 0.15s',
                       }}
                     >
-                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{v.ram} GB</span>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{v.storage} GB</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-dark)' }}>{v.ram} GB</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-dark)' }}>{v.storage} GB</span>
                       <input
                         type="number"
                         className="form-input"
@@ -1665,7 +1663,7 @@ export default function AdminDashboard() {
               </span>
             </div>
 
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-dark)', marginBottom: '20px' }}>
               Customize the destination name for each milestone of this shipment. Choose which step is the current package location.
             </p>
 
