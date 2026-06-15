@@ -49,7 +49,7 @@
 .logoName {
   font-size: 13px;
   font-weight: 900;
-  color: #fff;
+  color: var(--header-text);
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -67,7 +67,7 @@
   flex: 1;
   display: flex;
   align-items: center;
-  background: #fff;
+  background: var(--bg-card);
   border-radius: var(--radius-md);
   overflow: hidden;
   height: 38px;
@@ -126,7 +126,7 @@
   align-items: center;
   gap: 6px;
   background: #25d366;
-  color: #fff;
+  color: var(--text-white);
   padding: 7px 12px;
   border-radius: var(--radius-md);
   font-size: 13px;
@@ -155,7 +155,7 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: #fff;
+  background: var(--bg-card);
   border-top: 1px solid var(--border);
   box-shadow: var(--shadow-lg);
   max-height: 380px;
@@ -231,7 +231,7 @@
 .navLink {
   font-size: 12px;
   font-weight: 500;
-  color: rgba(255,255,255,0.85);
+  color: var(--text-secondary);
   white-space: nowrap;
   padding: 2px 0;
   transition: color var(--transition);
@@ -246,20 +246,20 @@
   display: inline-flex;
   align-items: center;
   padding: 6px 14px;
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.7);
+  background: var(--glass-bg);
+  color: var(--text-secondary);
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid var(--glass-border);
   transition: all 0.2s;
 }
 
 .categoryPill:hover {
-  background: rgba(255,255,255,0.1);
-  color: #fff;
+  background: var(--glass-border);
+  color: var(--text-primary);
 }
 
 .categoryPillActive {

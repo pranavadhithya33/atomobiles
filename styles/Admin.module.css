@@ -16,7 +16,7 @@
 .adminHeaderTitle {
   font-size: 18px;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -27,9 +27,9 @@
 }
 
 .logoutBtn {
-  background: rgba(255,255,255,0.1);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.2);
+  background: var(--glass-border);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
   padding: 8px 16px;
   border-radius: var(--radius-md);
   font-size: 13px;
@@ -39,7 +39,7 @@
 }
 
 .logoutBtn:hover {
-  background: rgba(255,255,255,0.2);
+  background: var(--glass-border);
 }
 
 .adminBody {
@@ -89,7 +89,7 @@
 
 .tabActive {
   background: var(--brand-primary);
-  color: #fff;
+  color: var(--text-primary);
 }
 
 /* Stats Bar */
@@ -245,7 +245,7 @@
 
 .editBtn:hover {
   background: var(--info);
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .deleteBtn {
@@ -262,7 +262,7 @@
 
 .deleteBtn:hover {
   background: var(--error);
-  color: #fff;
+  color: var(--text-primary);
 }
 
 /* Stock Toggle */
@@ -389,7 +389,7 @@
   border-radius: var(--radius-md);
   font-size: 14px;
   color: var(--text-dark);
-  background: #fff;
+  background: var(--bg-card);
   resize: vertical;
   min-height: 80px;
   outline: none;
@@ -487,7 +487,7 @@
   width: 100%;
   padding: 14px;
   background: var(--brand-primary);
-  color: #fff;
+  color: var(--text-primary);
   border: none;
   border-radius: var(--radius-md);
   font-size: 15px;
@@ -558,7 +558,7 @@
 
 .addImgBtn:hover {
   background: var(--info);
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .emptyState {
