@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Search, Smartphone, Truck, User, LogOut, LayoutGrid, ShoppingCart, Coins } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import ThemeSwitcher from './ThemeSwitcher';
 import styles from '@/styles/Header.module.css';
 import { formatINR } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
@@ -84,7 +85,7 @@ export default function Header() {
           <Smartphone size={24} color="var(--brand-accent)" strokeWidth={2} />
         </div>
         <div className={styles.logoText} style={{ display: 'flex', flexDirection: 'column' }}>
-          <span className={styles.logoName} style={{ fontSize: '18px', fontWeight: 900, color: '#fff', letterSpacing: '0.5px' }}>ATOMOBILES</span>
+          <span className={styles.logoName} style={{ fontSize: '18px', fontWeight: 900, color: 'var(--text-primary)', letterSpacing: '0.5px' }}>ATOMOBILES</span>
           <span className={styles.logoTagline} style={{ fontSize: '10px', color: 'var(--brand-accent)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>Wholesale Dealer</span>
         </div>
       </Link>
@@ -98,7 +99,7 @@ export default function Header() {
             placeholder="Search for phones, brands..."
             value={query}
             onChange={e => handleSearch(e.target.value)}
-            style={{ flex: 1, background: 'transparent', border: 'none', color: '#fff', padding: '12px 16px', outline: 'none', fontSize: '14px' }}
+            style={{ flex: 1, background: 'transparent', border: 'none', color: 'var(--text-primary)', padding: '12px 16px', outline: 'none', fontSize: '14px' }}
           />
           <button onClick={() => handleSearch(query)} style={{ background: 'var(--brand-accent)', border: 'none', padding: '12px 20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Search size={18} color="#160d0a" />
@@ -125,7 +126,7 @@ export default function Header() {
                     </div>
                   )}
                   <div>
-                    <div style={{ color: '#fff', fontSize: '14px', fontWeight: 600 }}>{product.name}</div>
+                    <div style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 600 }}>{product.name}</div>
                     <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{formatINR(product.our_price)}</div>
                   </div>
                 </Link>
@@ -143,7 +144,7 @@ export default function Header() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Link href="/profile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
               <User size={18} color="#fff" />
-              <span className="header-action-text" style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Account</span>
+              <span className="header-action-text" style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Account</span>
             </Link>
             <Link href="/profile" style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--brand-accent)', overflow: 'hidden', display: 'flex' }}>
                <img src={`https://ui-avatars.com/api/?name=${user.email || 'User'}&background=c87941&color=fff`} style={{ width: '100%', height: '100%' }} alt="User" />
@@ -155,23 +156,25 @@ export default function Header() {
         ) : (
           <Link href="/login" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
             <User size={18} color="#fff" />
-            <span className="header-action-text" style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Account</span>
+            <span className="header-action-text" style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Account</span>
           </Link>
         )}
 
         <Link href="/track" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
           <Truck size={18} color="#fff" />
-          <span className="header-action-text" style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Track</span>
+          <span className="header-action-text" style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Track</span>
         </Link>
 
         <Link href="/profile" className="header-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.2)', padding: '6px 12px', borderRadius: '6px' }}>
-          <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Account settings</span>
+          <span style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Account settings</span>
         </Link>
 
         <Link href="/profile?view=orders" className="header-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
           <LayoutGrid size={18} color="#fff" />
-          <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Bulk Orders</span>
+          <span style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Bulk Orders</span>
         </Link>
+
+        <ThemeSwitcher />
 
         <Link href="/cart" className="header-checkout-btn" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', background: 'var(--brand-accent)', padding: '10px 16px', borderRadius: '6px' }}>
           <ShoppingCart size={16} color="#160d0a" strokeWidth={2.5} />

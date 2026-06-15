@@ -4,7 +4,7 @@
 /* ============================================================
    DESIGN TOKENS
    ============================================================ */
-:root {
+:root, [data-theme='cafe'] {
   /* Coffee Brand Colors */
   --brand-primary: #160d0a;    /* Deep Espresso / Almost Black */
   --brand-secondary: #241814;  /* Dark Mocha */
@@ -81,6 +81,63 @@
 
   /* Transitions */
   --transition: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Neon Dark Theme */
+[data-theme='neon-dark'] {
+  --brand-primary: #000000;
+  --brand-secondary: #09090b;
+  --brand-accent: #39ff14;
+  --brand-accent-dark: #2cc910;
+  --brand-accent-light: #bfffb3;
+
+  --bg-page: #09090b;
+  --bg-card: #18181b;
+  --bg-header: #000000;
+  --bg-footer: #000000;
+  --bg-highlight: #27272a;
+
+  --text-primary: #ffffff;
+  --text-secondary: #d4d4d8;
+  --text-muted: #a1a1aa;
+  --text-white: #ffffff;
+  --text-dark: #ffffff; /* dark cards also use white text */
+  --text-accent: #39ff14;
+
+  --price-original: #71717a;
+  --price-our: #39ff14;
+  --price-savings: #39ff14;
+  --price-prepaid: #39ff14;
+}
+
+/* Minimalist B&W Theme */
+[data-theme='minimalist-bw'] {
+  --brand-primary: #ffffff;
+  --brand-secondary: #f4f4f5;
+  --brand-accent: #000000;
+  --brand-accent-dark: #000000;
+  --brand-accent-light: #e4e4e7;
+
+  --bg-page: #ffffff;
+  --bg-card: #ffffff;
+  --bg-header: #ffffff;
+  --bg-footer: #ffffff;
+  --bg-highlight: #f4f4f5;
+
+  --text-primary: #000000;
+  --text-secondary: #3f3f46;
+  --text-muted: #71717a;
+  --text-white: #ffffff; /* keep text-white as white for dark buttons */
+  --text-dark: #000000;
+  --text-accent: #000000;
+
+  --price-original: #71717a;
+  --price-our: #000000;
+  --price-savings: #000000;
+  --price-prepaid: #000000;
+  
+  --border: #e4e4e7;
+  --border-focus: #000000;
 }
 
 /* ============================================================

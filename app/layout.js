@@ -20,17 +20,21 @@ export const viewport = {
   maximumScale: 5,
 };
 
+import { ThemeProvider } from '@/components/ThemeProvider';
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
-        <ClientLayoutWrapper>
-          {children}
-        </ClientLayoutWrapper>
+        <ThemeProvider attribute="data-theme" defaultTheme="cafe" enableSystem={false} themes={['cafe', 'neon-dark', 'minimalist-bw']}>
+          <ClientLayoutWrapper>
+            {children}
+          </ClientLayoutWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -92,7 +92,7 @@ export default function DealOfTheDay() {
         </div>
 
         <div className="deal-timer-container">
-            <div style={{ color: '#fff', fontSize: '18px', fontWeight: 700, marginBottom: '16px' }}>Deal of the Day - Ends In:</div>
+            <div style={{ color: 'var(--text-primary)', fontSize: '18px', fontWeight: 700, marginBottom: '16px' }}>Deal of the Day - Ends In:</div>
             <div className="deal-timer-wrap">
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div className="deal-timer-box">
@@ -100,21 +100,21 @@ export default function DealOfTheDay() {
                 </div>
                 <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Days</span>
               </div>
-              <span style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
+              <span style={{ color: 'var(--text-primary)', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div className="deal-timer-box">
                   {timeLeft.hours.toString().padStart(2, '0')}
                 </div>
                 <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Hours</span>
               </div>
-              <span style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
+              <span style={{ color: 'var(--text-primary)', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div className="deal-timer-box">
                   {timeLeft.mins.toString().padStart(2, '0')}
                 </div>
                 <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Mins</span>
               </div>
-              <span style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
+              <span style={{ color: 'var(--text-primary)', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div className="deal-timer-box" style={{ color: 'var(--brand-accent)' }}>
                   {timeLeft.secs.toString().padStart(2, '0')}
