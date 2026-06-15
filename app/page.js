@@ -36,23 +36,23 @@ export default function HomeContent() {
           </h2>
           
           <div className="hero-features-grid">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f3e3d3', fontSize: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: '16px' }}>
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> Verified B2B-only Pricing
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f3e3d3', fontSize: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: '16px' }}>
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> Nationwide Express Shipping
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f3e3d3', fontSize: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: '16px' }}>
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> Flexible Payment Plans
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f3e3d3', fontSize: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: '16px' }}>
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> 100% Quality Authenticated
             </div>
           </div>
 
           <div className="hero-buttons">
-            <Link href="#products" className="hero-btn" style={{ background: 'var(--brand-accent)', color: '#160d0a', padding: '16px 32px', borderRadius: '30px', fontWeight: 800, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-              <Zap size={20} fill="#160d0a" /> Shop Now
+            <Link href="#products" className="hero-btn" style={{ background: 'var(--brand-accent)', color: 'var(--brand-primary)', padding: '16px 32px', borderRadius: '30px', fontWeight: 800, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+              <Zap size={20} fill='var(--brand-primary)' /> Shop Now
             </Link>
             <a href="https://wa.me/917397189222" target="_blank" rel="noopener noreferrer" className="hero-btn" style={{ background: 'rgba(37, 211, 102, 0.1)', color: 'var(--text-primary)', padding: '16px 32px', borderRadius: '30px', fontWeight: 800, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', border: '1px solid rgba(37, 211, 102, 0.4)' }}>
               <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" style={{ width: '20px', height: '20px' }} /> WhatsApp support
@@ -113,7 +113,7 @@ export default function HomeContent() {
                 </div>
                 
                 <div style={{ marginTop: 'auto' }}>
-                  <div style={{ display: 'block', textAlign: 'center', background: '#f4d3b6', color: '#160d0a', padding: '14px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', textDecoration: 'none' }}>
+                  <div style={{ display: 'block', textAlign: 'center', background: 'var(--brand-accent)', color: 'var(--brand-primary)', padding: '14px', borderRadius: '8px', fontWeight: 800, fontSize: '14px', textDecoration: 'none' }}>
                     Buy Now
                   </div>
                 </div>

@@ -122,7 +122,7 @@ export default function DealOfTheDay() {
                 <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Secs</span>
               </div>
             </div>
-            <div style={{ color: '#f3e3d3', fontSize: '14px', background: 'var(--glass-bg)', padding: '12px', borderRadius: '8px' }}>
+            <div style={{ color: 'var(--text-primary)', fontSize: '14px', background: 'var(--glass-bg)', padding: '12px', borderRadius: '8px' }}>
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> Exclusive offer online
             </div>
           </div>
