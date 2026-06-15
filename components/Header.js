@@ -102,7 +102,7 @@ export default function Header() {
             style={{ flex: 1, background: 'transparent', border: 'none', color: 'var(--text-primary)', padding: '12px 16px', outline: 'none', fontSize: '14px' }}
           />
           <button onClick={() => handleSearch(query)} style={{ background: 'var(--brand-accent)', border: 'none', padding: '12px 20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Search size={18} color="#160d0a" />
+            <Search size={18} color="var(--brand-primary)" />
           </button>
         </div>
         
@@ -177,7 +177,7 @@ export default function Header() {
         <ThemeSwitcher />
 
         <Link href="/cart" className="header-checkout-btn" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', background: 'var(--brand-accent)', padding: '10px 16px', borderRadius: '6px' }}>
-          <ShoppingCart size={16} color="#160d0a" strokeWidth={2.5} />
+          <ShoppingCart size={16} color="var(--brand-primary)" strokeWidth={2.5} />
           <span className="header-action-text" style={{ color: '#160d0a', fontSize: '15px', fontWeight: 700 }}>Checkout</span>
           {cartCount > 0 && <span style={{ marginLeft: '4px', background: '#160d0a', color: 'var(--brand-accent)', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 800 }}>{cartCount}</span>}
         </Link>

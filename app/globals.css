@@ -11,6 +11,9 @@
   --brand-accent: #e8a468;     /* Caramel / Warm Amber */
   --brand-accent-dark: #c87941;
   --brand-accent-light: #f4d3b6;
+  --hero-bg-start: #4a2c1d;
+  --hero-bg-end: #160d0a;
+  --deal-bg: #241710;
 
   /* Backgrounds */
   --bg-page: #2a1c16;          /* Dark Mocha Background */
@@ -90,6 +93,9 @@
   --brand-accent: #39ff14;
   --brand-accent-dark: #2cc910;
   --brand-accent-light: #bfffb3;
+  --hero-bg-start: #1a2e1a;
+  --hero-bg-end: #000000;
+  --deal-bg: #18181b;
 
   --bg-page: #09090b;
   --bg-card: #18181b;
@@ -122,6 +128,9 @@
   --brand-accent: #000000;
   --brand-accent-dark: #000000;
   --brand-accent-light: #e4e4e7;
+  --hero-bg-start: #f4f4f5;
+  --hero-bg-end: #ffffff;
+  --deal-bg: #000000;
 
   --bg-page: #ffffff;
   --bg-card: #ffffff;
@@ -780,7 +789,7 @@ ul, ol {
 .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
 .hero-btn { flex: 1; justify-content: center; min-width: max-content; }
 
-.deal-card-wrap { background: #241710; border-radius: 24px; padding: 40px; display: flex; align-items: center; gap: 40px; flex-wrap: wrap; border: 1px solid rgba(255,255,255,0.05); }
+.deal-card-wrap { background: var(--deal-bg); border-radius: 24px; padding: 40px; display: flex; align-items: center; gap: 40px; flex-wrap: wrap; border: 1px solid rgba(255,255,255,0.05); }
 .deal-image-wrap { flex: 1 1 300px; background: #fdfbf7; border-radius: 16px; padding: 24px; display: flex; justify-content: center; align-items: center; }
 .deal-info-wrap { flex: 2 1 300px; display: flex; flex-direction: column; gap: 8px; }
 .deal-timer-container { flex: 1 1 100%; text-align: center; margin-top: 24px; }
@@ -858,4 +867,8 @@ ul, ol {
   .product-card-title { font-size: 14px; margin-bottom: 4px; -webkit-line-clamp: 2; }
   .price-our { font-size: 16px !important; }
   .product-card-badge { font-size: 11px; margin-bottom: 10px; }
+}
+
+[data-theme='minimalist-bw'] .hero-image {
+  filter: grayscale(100%);
 }
