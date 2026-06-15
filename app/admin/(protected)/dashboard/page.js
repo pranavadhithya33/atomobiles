@@ -81,7 +81,7 @@ export default function AdminDashboard() {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
 
   // Deal of the Day State
-  const [dealState, setDealState] = useState({ productId: '', price: '', expiresAt: '' });
+  const [dealState, setDealState] = useState({ productId: '', price: '', hours: '', minutes: '', seconds: '' });
   const [savingDeal, setSavingDeal] = useState(false);
   const [currentDeal, setCurrentDeal] = useState(null);
 
@@ -155,11 +155,11 @@ export default function AdminDashboard() {
         setDealState({
           productId: data.deal.id,
           price: data.deal.deal_price || '',
-          expiresAt: data.deal.deal_expires_at ? new Date(new Date(data.deal.deal_expires_at).getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, 16) : ''
+          hours: '', minutes: '', seconds: ''
         });
       } else {
         setCurrentDeal(null);
-        setDealState({ productId: '', price: '', expiresAt: '' });
+        setDealState({ productId: '', price: '', hours: '', minutes: '', seconds: '' });
       }
     } catch (err) {
       console.error('Failed to fetch deal:', err);
@@ -178,17 +178,22 @@ export default function AdminDashboard() {
       return;
     }
     
-    if (!dealState.price || !dealState.expiresAt) return alert('Price and expiry are required');
+    const h = parseInt(dealState.hours) || 0;
+    const m = parseInt(dealState.minutes) || 0;
+    const s = parseInt(dealState.seconds) || 0;
+    
+    if (!dealState.price || (h === 0 && m === 0 && s === 0)) return alert('Price and expiry duration (hours/mins/secs) are required');
     
     setSavingDeal(true);
     try {
+      const expiresAtDate = new Date(Date.now() + (h * 3600 + m * 60 + s) * 1000).toISOString();
       const res = await fetch('/api/deal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           product_id: dealState.productId,
           deal_price: dealState.price,
-          expires_at: new Date(dealState.expiresAt).toISOString()
+          expires_at: expiresAtDate
         })
       });
       if (!res.ok) throw new Error('Save failed');
@@ -1370,13 +1375,33 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Expiration Date & Time</label>
-                    <input 
-                      type="datetime-local" 
-                      className="form-input" 
-                      value={dealState.expiresAt}
-                      onChange={(e) => setDealState(prev => ({ ...prev, expiresAt: e.target.value }))}
-                    />
+                    <label className="form-label">Expires In (Duration from now)</label>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <input 
+                        type="number" 
+                        className="form-input" 
+                        placeholder="Hours"
+                        min="0"
+                        value={dealState.hours}
+                        onChange={(e) => setDealState(prev => ({ ...prev, hours: e.target.value }))}
+                      />
+                      <input 
+                        type="number" 
+                        className="form-input" 
+                        placeholder="Mins"
+                        min="0" max="59"
+                        value={dealState.minutes}
+                        onChange={(e) => setDealState(prev => ({ ...prev, minutes: e.target.value }))}
+                      />
+                      <input 
+                        type="number" 
+                        className="form-input" 
+                        placeholder="Secs"
+                        min="0" max="59"
+                        value={dealState.seconds}
+                        onChange={(e) => setDealState(prev => ({ ...prev, seconds: e.target.value }))}
+                      />
+                    </div>
                   </div>
                 </>
               )}
