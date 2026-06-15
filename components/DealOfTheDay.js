@@ -58,8 +58,8 @@ export default function DealOfTheDay() {
 
   return (
     <div className="responsivePadding" style={{ padding: '60px 40px 20px' }}>
-      <div style={{ background: '#241710', borderRadius: '24px', padding: '40px', display: 'flex', alignItems: 'center', gap: '40px', flexWrap: 'wrap', border: '1px solid rgba(255,255,255,0.05)' }}>
-        <div style={{ flex: '1 1 300px', background: '#fdfbf7', borderRadius: '16px', padding: '24px', display: 'flex', justifyContent: 'center' }}>
+      <div className="deal-card-wrap">
+        <div className="deal-image-wrap">
           <Image 
             src={deal.images && deal.images.length > 0 ? deal.images[0] : '/multi_charger.png'} 
             alt={deal.name} 
@@ -69,7 +69,7 @@ export default function DealOfTheDay() {
           />
         </div>
         
-        <div style={{ flex: '2 1 400px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '24px' }}>
+        <div className="deal-content-wrap">
           <div>
             <div style={{ color: 'var(--brand-accent)', fontWeight: 800, fontSize: '18px', letterSpacing: '1px', marginBottom: '8px' }}>DEAL OF THE DAY</div>
             <h3 style={{ color: '#fff', fontSize: '28px', fontWeight: 800, marginBottom: '8px', lineHeight: 1.2 }}>{deal.name}</h3>
@@ -94,30 +94,30 @@ export default function DealOfTheDay() {
 
           <div style={{ textAlign: 'center' }}>
             <div style={{ color: '#fff', fontSize: '18px', fontWeight: 700, marginBottom: '16px' }}>Deal of the Day - Ends In:</div>
-            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center', marginBottom: '24px' }}>
+            <div className="deal-timer-wrap">
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ background: '#1a100c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px', fontWeight: 700 }}>
+                <div className="deal-timer-box">
                   {timeLeft.days.toString().padStart(2, '0')}
                 </div>
                 <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Days</span>
               </div>
               <span style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ background: '#1a100c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px', fontWeight: 700 }}>
+                <div className="deal-timer-box">
                   {timeLeft.hours.toString().padStart(2, '0')}
                 </div>
                 <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Hours</span>
               </div>
               <span style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ background: '#1a100c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px', fontWeight: 700 }}>
+                <div className="deal-timer-box">
                   {timeLeft.mins.toString().padStart(2, '0')}
                 </div>
                 <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Mins</span>
               </div>
               <span style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 4px', paddingBottom: '20px' }}>:</span>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ background: '#1a100c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--brand-accent)', fontSize: '24px', fontWeight: 700 }}>
+                <div className="deal-timer-box" style={{ color: 'var(--brand-accent)' }}>
                   {timeLeft.secs.toString().padStart(2, '0')}
                 </div>
                 <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Secs</span>

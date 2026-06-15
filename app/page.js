@@ -28,14 +28,14 @@ export default function HomeContent() {
         borderBottom: '1px solid rgba(255,255,255,0.05)'
       }}>
         <div style={{ flex: '1 1 500px' }}>
-          <h1 style={{ fontSize: '64px', fontWeight: 900, color: '#fff', lineHeight: 1.1, marginBottom: '16px', letterSpacing: '1px' }}>
+          <h1 className="hero-title">
             ATOMOBILES
           </h1>
-          <h2 style={{ fontSize: '24px', color: 'var(--brand-accent)', fontWeight: 500, marginBottom: '40px', letterSpacing: '1px' }}>
+          <h2 className="hero-subtitle">
             HIGH-TECH WHOLESALE DISTRIBUTION
           </h2>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '48px' }}>
+          <div className="hero-features-grid">
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f3e3d3', fontSize: '16px' }}>
               <span style={{ color: 'var(--brand-accent)' }}>✓</span> Verified B2B-only Pricing
             </div>
@@ -50,11 +50,11 @@ export default function HomeContent() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '16px' }}>
-            <Link href="#products" style={{ background: 'var(--brand-accent)', color: '#160d0a', padding: '16px 32px', borderRadius: '30px', fontWeight: 800, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+          <div className="hero-buttons">
+            <Link href="#products" className="hero-btn" style={{ background: 'var(--brand-accent)', color: '#160d0a', padding: '16px 32px', borderRadius: '30px', fontWeight: 800, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
               <Zap size={20} fill="#160d0a" /> Shop Now
             </Link>
-            <a href="https://wa.me/917397189222" target="_blank" rel="noopener noreferrer" style={{ background: 'rgba(37, 211, 102, 0.1)', color: '#fff', padding: '16px 32px', borderRadius: '30px', fontWeight: 800, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', border: '1px solid rgba(37, 211, 102, 0.4)' }}>
+            <a href="https://wa.me/917397189222" target="_blank" rel="noopener noreferrer" className="hero-btn" style={{ background: 'rgba(37, 211, 102, 0.1)', color: '#fff', padding: '16px 32px', borderRadius: '30px', fontWeight: 800, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', border: '1px solid rgba(37, 211, 102, 0.4)' }}>
               <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" style={{ width: '20px', height: '20px' }} /> WhatsApp support
             </a>
           </div>
@@ -82,7 +82,7 @@ export default function HomeContent() {
         {loading ? (
           <div style={{ color: '#fff', textAlign: 'center' }}>Loading products...</div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
+          <div className="product-grid">
             {products.map(p => (
               <Link href={`/products/${p.slug}`} key={p.id} style={{ background: '#fdfbf7', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', textDecoration: 'none' }}>
                 <div style={{ height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>

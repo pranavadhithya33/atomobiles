@@ -705,4 +705,29 @@ ul, ol {
 .darkTextCard input, .darkTextCard select, .darkTextCard textarea, .form-input, .tracking-input { color: var(--text-dark) !important; background: #fdfbf7 !important; border: 1px solid #ddd !important; }
 .form-label { color: var(--text-dark) !important; font-weight: 700; font-size: 13px; margin-bottom: 6px; display: block; }
 .heroSection { padding: 80px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
-@media (max-width: 768px) { .heroSection { padding: 40px 16px; justify-content: center; text-align: center; } .responsivePadding { padding: 40px 16px !important; } }
+
+/* Responsive Utility Classes for Homepage */
+.hero-title { font-size: 64px; font-weight: 900; color: #fff; line-height: 1.1; margin-bottom: 16px; letter-spacing: 1px; }
+.hero-subtitle { font-size: 24px; color: var(--brand-accent); font-weight: 500; margin-bottom: 40px; letter-spacing: 1px; }
+.hero-features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 48px; }
+.hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+.hero-btn { flex: 1; justify-content: center; min-width: max-content; }
+
+.deal-card-wrap { background: #241710; border-radius: 24px; padding: 40px; display: flex; align-items: center; gap: 40px; flex-wrap: wrap; border: 1px solid rgba(255,255,255,0.05); }
+.deal-image-wrap { flex: 1 1 300px; background: #fdfbf7; border-radius: 16px; padding: 24px; display: flex; justify-content: center; }
+.deal-content-wrap { flex: 2 1 300px; display: flex; justify-content: space-between; alignItems: center; flex-wrap: wrap; gap: 24px; }
+.deal-timer-wrap { display: flex; gap: 8px; justify-content: center; align-items: center; margin-bottom: 24px; }
+.deal-timer-box { background: #1a100c; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; font-weight: 700; }
+
+@media (max-width: 768px) { 
+  .heroSection { padding: 40px 16px; justify-content: center; text-align: center; } 
+  .responsivePadding { padding: 40px 16px !important; } 
+  
+  .hero-title { font-size: 40px; }
+  .hero-subtitle { font-size: 16px; margin-bottom: 24px; }
+  .hero-features-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 32px; text-align: left; display: inline-grid; }
+  
+  .deal-card-wrap { padding: 24px 16px; gap: 24px; }
+  .deal-content-wrap { text-align: center; justify-content: center; }
+  .deal-timer-box { width: 50px; height: 50px; font-size: 20px; }
+}
