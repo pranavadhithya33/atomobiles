@@ -952,7 +952,7 @@ export default function AdminDashboard() {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <select 
-            value={theme === 'cafe' ? 'minimalist-bw' : theme} 
+            value={theme} 
             onChange={(e) => setTheme(e.target.value)}
             style={{ 
               background: 'var(--bg-card)', 
@@ -967,6 +967,7 @@ export default function AdminDashboard() {
           >
             <option value="minimalist-bw">Light (B&W)</option>
             <option value="neon-dark">Dark Theme</option>
+            <option value="cafe">Cafe Theme</option>
           </select>
           <button onClick={handleLogout} className={styles.logoutBtn}>
             <LogOut size={14} style={{ display:'inline', marginRight:5, verticalAlign:'middle' }} />
@@ -1223,8 +1224,7 @@ export default function AdminDashboard() {
                                   e.stopPropagation();
                                   toggleManageRoute(o);
                                 }}
-                                className="btn btn-outline"
-                                style={{ padding: '6px 12px', fontSize: 11, fontWeight: 700, borderRadius: 8, height: 'auto' }}
+                                style={{ background: 'transparent', color: 'var(--text-primary)', border: '1px solid var(--border)', padding: '6px 12px', fontSize: 11, fontWeight: 700, borderRadius: 8, height: 'auto', cursor: 'pointer' }}
                               >
                                 {expandedRouteOrderId === o.id ? 'Close Route' : 'Manage Route'}
                               </button>
