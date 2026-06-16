@@ -54,7 +54,7 @@ export default function ThemeSwitcher() {
           <div style={{ 
             position: 'absolute', 
             top: '100%', 
-            right: 0, 
+            left: 0, 
             marginTop: '8px', 
             background: 'var(--bg-card)', 
             border: '1px solid var(--border)', 

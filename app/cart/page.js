@@ -92,7 +92,7 @@ export default function CartPage() {
               />
             </div>
 
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-dark)', marginBottom: '4px' }}>
                 {item.name}
               </div>

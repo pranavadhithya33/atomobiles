@@ -17,6 +17,9 @@
   --hero-text: #ffffff;
   --deal-text: #ffffff;
   --deal-muted: rgba(255, 255, 255, 0.7);
+  --glass-icon: #ffffff;
+  --header-text: #ffffff;
+  --header-text: #ffffff;
 
   /* Backgrounds */
   --bg-page: #2a1c16;          /* Dark Mocha Background */
@@ -862,9 +865,9 @@ input:-webkit-autofill:active{
 .header-hide-mobile { display: flex; }
 
 @media (max-width: 768px) {
-  .header-container { padding: 12px 16px; gap: 12px; }
+  .header-container { padding: 12px 16px; gap: 12px; justify-content: center; }
   .header-search-wrap { order: 3; flex: 1 1 100%; max-width: 100%; }
-  .header-actions { gap: 12px; }
+  .header-actions { order: 2; width: 100%; justify-content: space-between; gap: 8px; margin-top: 4px; }
   .header-action-text { display: none !important; }
   .header-hide-mobile { display: none !important; }
   .header-checkout-btn { padding: 8px 12px !important; }
