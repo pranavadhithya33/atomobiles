@@ -569,4 +569,23 @@
   color: var(--text-secondary);
   font-size: 14px;
 }
+
+/* Responsive Fixes for Admin Container */
+@media (max-width: 768px) {
+  .adminPage {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+  .adminHeader {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px var(--space-md);
+  }
+  .adminHeader > div {
+    flex-wrap: wrap;
+  }
+  .adminBody {
+    padding: 12px;
+  }
+}
 

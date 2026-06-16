@@ -796,9 +796,9 @@ input:-webkit-autofill:active{
 /* ============================================================
    UI/UX FIXES
    ============================================================ */
-.darkTextCard { color: var(--text-dark); }
-.darkTextCard h1, .darkTextCard h2, .darkTextCard h3, .darkTextCard p, .darkTextCard span, .darkTextCard div { color: var(--text-dark); }
-.darkTextCard input, .darkTextCard select, .darkTextCard textarea { color: var(--text-dark) !important; background: #fdfbf7 !important; border: 1px solid #ddd !important; }
+.darkTextCard { color: #000000; }
+.darkTextCard h1, .darkTextCard h2, .darkTextCard h3, .darkTextCard p, .darkTextCard span, .darkTextCard div { color: #000000; }
+.darkTextCard input, .darkTextCard select, .darkTextCard textarea { color: #000000 !important; background: #fdfbf7 !important; border: 1px solid #ddd !important; }
 .form-label { color: var(--text-dark) !important; font-weight: 700; font-size: 13px; margin-bottom: 6px; display: block; }
 .heroSection { padding: 80px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
 
