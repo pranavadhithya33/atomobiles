@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import ProductCard from '@/components/ProductCard';
-import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import styles from './page.module.css';
 
@@ -311,22 +310,24 @@ export default function Home() {
         {/* =============================================
             TRENDING NOW — Horizontal Scroll
             ============================================= */}
-        <section className="section" id="trending">
-          <div className="container">
-            <div className="section-header reveal">
-              <div>
-                <span className="section-tag">🔥 Trending</span>
-                <h2 className="section-title">Trending Now</h2>
+        {trendingProducts.length > 0 && (
+          <section className="section" id="trending">
+            <div className="container">
+              <div className="section-header reveal">
+                <div>
+                  <span className="section-tag">🔥 Trending</span>
+                  <h2 className="section-title">Trending Now</h2>
+                </div>
+                <a href="#products" className="view-all">View All →</a>
               </div>
-              <a href="#products" className="view-all">View All →</a>
+              <div className="scroll-row stagger-children">
+                {trendingProducts.slice(0, 6).map((product) => (
+                  <ProductCard key={product.id} product={product} variant="horizontal" onAddToCart={handleAddToCart} />
+                ))}
+              </div>
             </div>
-            <div className="scroll-row stagger-children">
-              {trendingProducts.slice(0, 6).map((product) => (
-                <ProductCard key={product.id} product={product} variant="horizontal" onAddToCart={handleAddToCart} />
-              ))}
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* =============================================
             DEAL OF THE DAY
@@ -423,42 +424,46 @@ export default function Home() {
         {/* =============================================
             BEST SELLERS — Horizontal Scroll
             ============================================= */}
-        <section className="section" id="bestsellers">
-          <div className="container">
-            <div className="section-header reveal">
-              <div>
-                <span className="section-tag">🏆 Popular</span>
-                <h2 className="section-title">Best Sellers</h2>
+        {bestSellers.length > 0 && (
+          <section className="section" id="bestsellers">
+            <div className="container">
+              <div className="section-header reveal">
+                <div>
+                  <span className="section-tag">🏆 Popular</span>
+                  <h2 className="section-title">Best Sellers</h2>
+                </div>
+                <a href="#products" className="view-all">View All →</a>
               </div>
-              <a href="#products" className="view-all">View All →</a>
+              <div className="scroll-row stagger-children">
+                {bestSellers.map((product) => (
+                  <ProductCard key={product.id} product={product} variant="horizontal" onAddToCart={handleAddToCart} />
+                ))}
+              </div>
             </div>
-            <div className="scroll-row stagger-children">
-              {bestSellers.map((product) => (
-                <ProductCard key={product.id} product={product} variant="horizontal" onAddToCart={handleAddToCart} />
-              ))}
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* =============================================
             NEW ARRIVALS — Horizontal Scroll
             ============================================= */}
-        <section className="section" id="new">
-          <div className="container">
-            <div className="section-header reveal">
-              <div>
-                <span className="section-tag">🆕 Fresh</span>
-                <h2 className="section-title">New Arrivals</h2>
+        {newArrivals.length > 0 && (
+          <section className="section" id="new">
+            <div className="container">
+              <div className="section-header reveal">
+                <div>
+                  <span className="section-tag">🆕 Fresh</span>
+                  <h2 className="section-title">New Arrivals</h2>
+                </div>
+                <a href="#products" className="view-all">View All →</a>
               </div>
-              <a href="#products" className="view-all">View All →</a>
+              <div className="scroll-row stagger-children">
+                {newArrivals.map((product) => (
+                  <ProductCard key={product.id} product={product} variant="horizontal" onAddToCart={handleAddToCart} />
+                ))}
+              </div>
             </div>
-            <div className="scroll-row stagger-children">
-              {newArrivals.map((product) => (
-                <ProductCard key={product.id} product={product} variant="horizontal" onAddToCart={handleAddToCart} />
-              ))}
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* =============================================
             WHY US — Features with 3D Tilt
@@ -578,7 +583,6 @@ export default function Home() {
         </section>
       </main>
 
-      <Footer />
       <WhatsAppButton />
     </>
   );
