@@ -1,111 +1,192 @@
-// components/ProductCard.js
+"use client";
+
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Smartphone, ShoppingBag } from 'lucide-react';
-import { motion } from 'framer-motion';
-import styles from '@/styles/ProductCard.module.css';
-import { formatINR } from '@/lib/utils';
+import styles from './ProductCard.module.css';
 
-const MotionLink = motion(Link);
+export default function ProductCard({ product, variant = 'grid', onAddToCart }) {
+  const [liked, setLiked] = useState(false);
+  const [added, setAdded] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
-export default function ProductCard({ product }) {
-  // market_price is pre-computed by the API as max(amazon, flipkart, online)
-  const marketPrice = product.market_price || Math.max(
-    product.amazon_price || 0,
-    product.flipkart_price || 0,
-    product.online_price || 0
-  );
+  const {
+    id,
+    name,
+    brand,
+    specs,
+    price,
+    originalPrice,
+    rating,
+    reviewCount,
+    image,
+    badge,
+    savings,
+  } = product;
 
-  // our_price is pre-computed by API as exactly 10% off market price
-  const ourPrice = product.our_price;
-  const savings = marketPrice > ourPrice ? marketPrice - ourPrice : 0;
+  const handleAdd = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setAdded(true);
+    onAddToCart?.(product);
+    setTimeout(() => setAdded(false), 2000);
+  };
+
+  const handleLike = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setLiked(!liked);
+  };
+
+  const discountPercent = originalPrice
+    ? Math.round(((originalPrice - price) / originalPrice) * 100)
+    : 0;
+
+  const renderStars = () => {
+    const fullStars = Math.floor(rating);
+    const hasHalf = rating % 1 >= 0.5;
+    return (
+      <span className={styles.stars}>
+        {'★'.repeat(fullStars)}
+        {hasHalf && '½'}
+        {'☆'.repeat(5 - fullStars - (hasHalf ? 1 : 0))}
+      </span>
+    );
+  };
+
+  if (variant === 'horizontal') {
+    return (
+      <Link href={`/products/${id}`} className={styles.horizontalCard}>
+        <div className={styles.horizontalImageWrap}>
+          <div className={`${styles.imagePlaceholder} ${imageLoaded ? styles.loaded : ''}`}>
+            <Image
+              src={image}
+              alt={name}
+              fill
+              sizes="200px"
+              className={styles.productImage}
+              onLoad={() => setImageLoaded(true)}
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
+          {badge && (
+            <span className={`${styles.badge} ${styles[`badge${badge}`]}`}>
+              {badge}
+            </span>
+          )}
+        </div>
+        <div className={styles.horizontalInfo}>
+          <span className={styles.brand}>{brand}</span>
+          <h3 className={styles.name}>{name}</h3>
+          <div className={styles.rating}>
+            {renderStars()}
+            <span className={styles.reviewCount}>({reviewCount})</span>
+          </div>
+          <div className={styles.priceRow}>
+            <span className={styles.price}>₹{price.toLocaleString('en-IN')}</span>
+            {originalPrice && (
+              <span className={styles.originalPrice}>
+                ₹{originalPrice.toLocaleString('en-IN')}
+              </span>
+            )}
+          </div>
+          {savings > 0 && (
+            <span className={styles.savings}>Save ₹{savings.toLocaleString('en-IN')}</span>
+          )}
+        </div>
+      </Link>
+    );
+  }
 
   return (
-    <MotionLink 
-      href={`/products/${product.slug}`} 
-      className={styles.card} 
-      aria-label={product.name}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      whileHover={{ y: -6, scale: 1.02, boxShadow: '0 12px 24px rgba(62, 39, 35, 0.15)' }}
-      whileTap={{ scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-    >
-      {/* Image */}
-      <div className={styles.imageWrap}>
-        {product.images?.[0] ? (
-          <Image
-            src={product.images[0]}
-            alt={product.name}
-            className={styles.image}
-            width={300}
-            height={300}
-            style={{ objectFit: 'contain' }}
-            loading="lazy"
-            referrerPolicy="no-referrer"
-          />
-        ) : (
-          <div className={styles.imagePlaceholder}>
-            <Smartphone size={40} color="#d1d5db" />
-          </div>
-        )}
-
-        {/* 10% off badge — always shown when market price exists */}
-        {marketPrice > 0 && (
-          <span className={styles.discountBadge}>10% OFF</span>
-        )}
-      </div>
-
-      {/* Body */}
-      <div className={styles.body}>
-        {product.category && (
-          <span className={styles.category}>{product.category}</span>
-        )}
-        <h3 className={styles.name}>{product.name}</h3>
-
-        <div className={styles.priceRow}>
-          {/* Our wholesale price */}
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600, textTransform: 'uppercase' }}>Our Price</span>
-            <span className={styles.ourPrice}>{formatINR(ourPrice)}</span>
+    <div className={styles.cardWrapper}>
+      <Link href={`/products/${id}`} className={styles.card}>
+        {/* Image Area */}
+        <div className={styles.imageArea}>
+          <div className={`${styles.imageContainer} ${imageLoaded ? styles.loaded : ''}`}>
+            <Image
+              src={image}
+              alt={name}
+              fill
+              sizes="(max-width: 480px) 50vw, (max-width: 768px) 33vw, 25vw"
+              className={styles.productImage}
+              onLoad={() => setImageLoaded(true)}
+              style={{ objectFit: 'contain' }}
+            />
           </div>
 
-          {/* Online price struck through */}
-          {marketPrice > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-              <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600, textTransform: 'uppercase' }}>Online Price</span>
-              <span className={styles.originalPrice} style={{ textDecoration: 'line-through' }}>
-                {formatINR(marketPrice)}
-              </span>
-            </div>
+          {/* Badge */}
+          {badge && (
+            <span className={`${styles.badge} ${styles[`badge${badge}`]}`}>
+              {badge}
+            </span>
+          )}
+
+          {/* Wishlist */}
+          <button
+            className={`${styles.wishlistBtn} ${liked ? styles.liked : ''}`}
+            onClick={handleLike}
+            aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill={liked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </button>
+
+          {/* Discount Badge */}
+          {discountPercent > 0 && (
+            <span className={styles.discountBadge}>{discountPercent}% OFF</span>
           )}
         </div>
 
-        {savings > 0 && (
-          <span className={styles.savings}>🎉 You save {formatINR(savings)}</span>
+        {/* Info Area */}
+        <div className={styles.infoArea}>
+          <span className={styles.brand}>{brand}</span>
+          <h3 className={styles.name}>{name}</h3>
+          <p className={styles.specs}>{specs}</p>
+
+          <div className={styles.rating}>
+            {renderStars()}
+            <span className={styles.reviewCount}>({reviewCount})</span>
+          </div>
+
+          <div className={styles.priceBlock}>
+            <span className={styles.price}>₹{price.toLocaleString('en-IN')}</span>
+            {originalPrice && (
+              <span className={styles.originalPrice}>
+                ₹{originalPrice.toLocaleString('en-IN')}
+              </span>
+            )}
+          </div>
+
+          {savings > 0 && (
+            <span className={styles.savings}>Save ₹{savings.toLocaleString('en-IN')}</span>
+          )}
+        </div>
+      </Link>
+
+      {/* Add Button */}
+      <button
+        className={`${styles.addButton} ${added ? styles.added : ''}`}
+        onClick={handleAdd}
+        aria-label={added ? 'Added to cart' : 'Add to cart'}
+      >
+        {added ? (
+          <>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Added
+          </>
+        ) : (
+          <>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Add to Order
+          </>
         )}
-
-        <span className={styles.buyBtn}>
-          <ShoppingBag size={14} strokeWidth={2.5} />
-          Buy Now
-        </span>
-      </div>
-    </MotionLink>
-  );
-}
-
-// Skeleton Card
-export function SkeletonCard() {
-  return (
-    <div className={styles.skeletonCard}>
-      <div className={`${styles.skeletonImage} skeleton`} />
-      <div className={styles.skeletonBody}>
-        <div className={`${styles.skeletonLine} skeleton`} style={{ width: '50%' }} />
-        <div className={`${styles.skeletonLine} skeleton`} style={{ width: '90%' }} />
-        <div className={`${styles.skeletonLine} skeleton`} style={{ width: '70%' }} />
-        <div className={`${styles.skeletonLine} skeleton`} style={{ width: '60%', height: 32, marginTop: 4 }} />
-      </div>
+      </button>
     </div>
   );
 }

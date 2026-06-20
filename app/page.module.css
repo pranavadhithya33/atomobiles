@@ -1,0 +1,653 @@
+/* =============================================
+   HOMEPAGE STYLES
+   ============================================= */
+
+/* Hero */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rem 1.5rem 4rem;
+  overflow: hidden;
+}
+
+.heroCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 900px;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #888888;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.8s ease both;
+}
+
+.heroBadgeDot {
+  width: 6px;
+  height: 6px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.heroTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.heroLetter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(40px) rotateX(90deg);
+  filter: blur(4px);
+  animation: letterReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes letterReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.heroSubtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: #888888;
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+  animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+.heroButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeInUp 0.8s ease 0.5s both;
+}
+
+.heroStats {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  margin-top: 4rem;
+  animation: fadeInUp 0.8s ease 0.6s both;
+}
+
+@media (max-width: 640px) {
+  .heroStats {
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+}
+
+.stat {
+  text-align: center;
+}
+
+.statValue {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: #ffffff;
+  display: block;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: #555555;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Marquee */
+.marqueeWrap {
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 1rem 0;
+}
+
+.marqueeWrap span {
+  font-size: 0.875rem;
+  color: #666666;
+  white-space: nowrap;
+}
+
+/* Deal Section */
+.dealSection {
+  background: linear-gradient(180deg, #000000 0%, #050508 100%);
+}
+
+.dealCard {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 2rem;
+}
+
+@media (min-width: 768px) {
+  .dealCard {
+    grid-template-columns: 1fr 1fr;
+    padding: 3rem;
+  }
+}
+
+.dealImage {
+  position: relative;
+  aspect-ratio: 1;
+  background: #f5f5f5;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.dealImg {
+  padding: 2rem;
+}
+
+.dealInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dealBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 100px;
+  width: fit-content;
+  margin-bottom: 1rem;
+}
+
+.dealTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.dealSpecs {
+  font-size: 1rem;
+  color: #888888;
+  margin-bottom: 1rem;
+}
+
+.dealRating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stars {
+  color: #f59e0b;
+  font-size: 1rem;
+  letter-spacing: -1px;
+}
+
+.reviewCount {
+  font-size: 0.875rem;
+  color: #555555;
+}
+
+.dealPriceBlock {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.dealPrice {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.dealOriginal {
+  font-size: 1rem;
+  color: #444444;
+  text-decoration: line-through;
+}
+
+.dealSavings {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #10b981;
+  padding: 0.25rem 0.75rem;
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 4px;
+}
+
+/* Product Grid */
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .productGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .productGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Filter Pills */
+.filterPills {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.filterPill {
+  padding: 0.5rem 1.25rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 100px;
+  color: #888888;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.filterPill:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.filterActive {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.loadMoreWrap {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+/* Features */
+.featuresSection {
+  background: linear-gradient(180deg, #050508 0%, #000000 100%);
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .featuresGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .featuresGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.featureCard {
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.featureCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: scaleX(0);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.featureCard:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.featureCard:hover::before {
+  transform: scaleX(1);
+}
+
+.featureIcon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  margin-bottom: 1.25rem;
+  color: #ffffff;
+}
+
+.featureTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.featureDesc {
+  font-size: 0.875rem;
+  color: #666666;
+  line-height: 1.6;
+}
+
+/* Dealers */
+.dealersGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 480px) {
+  .dealersGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .dealersGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .dealersGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.dealerCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.dealerCard:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateX(4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.dealerAvatar {
+  width: 48px;
+  height: 48px;
+  background: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #000000;
+  flex-shrink: 0;
+}
+
+.dealerInfo {
+  min-width: 0;
+}
+
+.dealerName {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dealerLocation {
+  font-size: 0.8125rem;
+  color: #555555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Reviews */
+.reviewCard {
+  min-width: 300px;
+  max-width: 340px;
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.reviewCard:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.reviewStars {
+  color: #f59e0b;
+  font-size: 1rem;
+  letter-spacing: -1px;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.reviewText {
+  font-size: 0.9375rem;
+  color: #cccccc;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.reviewAuthor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.reviewName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.reviewLocation {
+  font-size: 0.8125rem;
+  color: #555555;
+}
+
+/* Contact */
+.contactGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .contactGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contactCard {
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.contactCard:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.contactIcon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.contactCard h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.25rem;
+}
+
+.contactCard p {
+  font-size: 0.875rem;
+  color: #888888;
+}
+
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formInput {
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  color: #ffffff;
+  font-size: 0.9375rem;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.formInput::placeholder {
+  color: #444444;
+}
+
+.formInput:focus {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+}
+
+.formInput:is(textarea) {
+  resize: vertical;
+  min-height: 120px;
+}

@@ -1,180 +1,124 @@
-'use client';
-// Header redesign v5 - SuperCoins & Orders Update - 2026-04-26-1758
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, Smartphone, Truck, User, LogOut, LayoutGrid, ShoppingCart, Coins } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import ThemeSwitcher from './ThemeSwitcher';
-import styles from '@/styles/Header.module.css';
-import { formatINR } from '@/lib/utils';
-import { useCart } from '@/context/CartContext';
+import styles from './Header.module.css';
 
-export default function Header() {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-  const searchRef = useRef(null);
-  const debounceRef = useRef(null);
-  const pathname = usePathname();
-  const [user, setUser] = useState(null);
-  const [coins, setCoins] = useState(0);
-  const { cartCount } = useCart();
+export default function Header({ cartCount = 0 }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
-    fetch('/api/auth/me')
-      .then(res => res.json())
-      .then(data => {
-        setUser(data.user || null);
-        if (data.user) {
-          setCoins(data.user.coins_balance || 0);
-        }
-      })
-      .catch(err => console.error(err));
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    setUser(null);
-    setCoins(0);
-    window.location.href = '/';
-  };
-  const handleSearch = (val) => {
-    setQuery(val);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (!val.trim()) {
-      setResults([]);
-      setShowDropdown(false);
-      return;
-    }
-    setIsSearching(true);
-    debounceRef.current = setTimeout(async () => {
-      try {
-        const res = await fetch(`/api/products?search=${encodeURIComponent(val)}&limit=6`);
-        const data = await res.json();
-        setResults(data || []);
-        setShowDropdown(true);
-      } catch {
-        setResults([]);
-      } finally {
-        setIsSearching(false);
-      }
-    }, 300);
-  };
-
-  useEffect(() => {
-    const handler = (e) => {
-      if (searchRef.current && !searchRef.current.contains(e.target)) {
-        setShowDropdown(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
-
-  if (pathname?.startsWith('/admin')) return null;
+  const navLinks = [
+    { href: '#products', label: 'Products' },
+    { href: '#deals', label: 'Deals' },
+    { href: '#reviews', label: 'Reviews' },
+    { href: '#contact', label: 'Contact' },
+  ];
 
   return (
-    <header className="header-container">
-      {/* Left: Logo */}
-      <Link href="/" className={styles.logo} style={{ gap: '10px', textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-        <div className={styles.logoIcon} style={{ width: '40px', height: '40px', background: 'rgba(232, 164, 104, 0.1)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Smartphone size={24} color="var(--brand-accent)" strokeWidth={2} />
-        </div>
-        <div className={styles.logoText} style={{ display: 'flex', flexDirection: 'column' }}>
-          <span className={styles.logoName} style={{ fontSize: '18px', fontWeight: 900, color: 'var(--text-primary)', letterSpacing: '0.5px' }}>ATOMOBILES</span>
-          <span className={styles.logoTagline} style={{ fontSize: '10px', color: 'var(--brand-accent)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>Wholesale Dealer</span>
-        </div>
-      </Link>
+    <>
+      <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
+        <div className={styles.container}>
+          {/* Logo */}
+          <Link href="/" className={styles.logo}>
+            <span className={styles.logoText}>ATOMOBILES</span>
+          </Link>
 
-      {/* Center: Search Bar */}
-      <div className="header-search-wrap" ref={searchRef}>
-        <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', borderRadius: '8px', overflow: 'hidden' }}>
-          <input
-            id="header-search"
-            type="text"
-            placeholder="Search for phones, brands..."
-            value={query}
-            onChange={e => handleSearch(e.target.value)}
-            style={{ flex: 1, background: 'transparent', border: 'none', color: 'var(--text-primary)', padding: '12px 16px', outline: 'none', fontSize: '14px' }}
-          />
-          <button onClick={() => handleSearch(query)} style={{ background: 'var(--brand-accent)', border: 'none', padding: '12px 20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Search size={18} color="var(--brand-primary)" />
-          </button>
-        </div>
-        
-        {showDropdown && (
-          <div className={styles.searchDropdown} style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'var(--bg-page)', border: '1px solid var(--glass-border)', borderRadius: '8px', marginTop: '8px', zIndex: 10, boxShadow: 'var(--shadow-lg)', overflow: 'hidden' }}>
-            {isSearching ? (
-              <div style={{ padding: '16px', textAlign: 'center', color: 'var(--text-muted)' }}>Searching…</div>
-            ) : results.length > 0 ? (
-              results.map(product => (
-                <Link
-                  key={product.id}
-                  href={`/products/${product.slug}`}
-                  onClick={() => { setShowDropdown(false); setQuery(''); }}
-                  style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', textDecoration: 'none', borderBottom: '1px solid var(--glass-bg)' }}
-                >
-                  {product.images?.[0] ? (
-                    <Image src={product.images[0]} alt={product.name} width={40} height={40} style={{ objectFit: 'contain', background: 'var(--bg-card)', borderRadius: '4px' }} unoptimized referrerPolicy="no-referrer" />
-                  ) : (
-                    <div style={{ width: '40px', height: '40px', background: 'var(--glass-border)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Smartphone size={18} color="var(--brand-accent)" />
-                    </div>
-                  )}
-                  <div>
-                    <div style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 600 }}>{product.name}</div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{formatINR(product.our_price)}</div>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <div style={{ padding: '16px', textAlign: 'center', color: 'var(--text-muted)' }}>No results found</div>
-            )}
-          </div>
-        )}
-      </div>
+          {/* Desktop Nav */}
+          <nav className={styles.desktopNav}>
+            {navLinks.map((link) => (
+              <a key={link.href} href={link.href} className={styles.navLink}>
+                {link.label}
+              </a>
+            ))}
+          </nav>
 
-      {/* Right: Actions */}
-      <div className="header-actions">
-        {user ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Link href="/profile" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
-              <User size={18} color="var(--header-text)" />
-              <span className="header-action-text" style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Account</span>
+          {/* Actions */}
+          <div className={styles.actions}>
+            {/* Search */}
+            <button
+              className={styles.iconBtn}
+              onClick={() => setSearchOpen(!searchOpen)}
+              aria-label="Search"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+              </svg>
+            </button>
+
+            {/* Cart */}
+            <Link href="/cart" className={styles.iconBtn} aria-label="Cart">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
             </Link>
-            <Link href="/profile" style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--brand-accent)', overflow: 'hidden', display: 'flex' }}>
-               <img src={`https://ui-avatars.com/api/?name=${user.email || 'User'}&background=c87941&color=fff`} style={{ width: '100%', height: '100%' }} alt="User" />
-            </Link>
-            <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', borderRadius: '50%', background: 'var(--glass-border)', border: 'none', cursor: 'pointer' }}>
-              <LogOut size={14} color="var(--header-text)" />
+
+            {/* Mobile Menu Toggle */}
+            <button
+              className={styles.menuToggle}
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Menu"
+            >
+              <span className={`${styles.menuLine} ${menuOpen ? styles.open : ''}`} />
+              <span className={`${styles.menuLine} ${menuOpen ? styles.open : ''}`} />
+              <span className={`${styles.menuLine} ${menuOpen ? styles.open : ''}`} />
             </button>
           </div>
-        ) : (
-          <Link href="/login" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
-            <User size={18} color="var(--header-text)" />
-            <span className="header-action-text" style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Account</span>
-          </Link>
-        )}
+        </div>
 
-        <Link href="/track" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
-          <Truck size={18} color="var(--header-text)" />
-          <span className="header-action-text" style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>Track</span>
-        </Link>
+        {/* Search Overlay */}
+        <div className={`${styles.searchOverlay} ${searchOpen ? styles.active : ''}`}>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="Search phones, brands..."
+              className={styles.searchInput}
+              autoFocus={searchOpen}
+            />
+            <button className={styles.searchClose} onClick={() => setSearchOpen(false)}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
 
-
-
-        <ThemeSwitcher />
-
-        <Link href="/cart" className="header-checkout-btn" style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', background: 'var(--brand-accent)', padding: '10px 16px', borderRadius: '6px' }}>
-          <ShoppingCart size={16} color="var(--brand-primary)" strokeWidth={2.5} />
-          <span className="header-action-text" style={{ color: 'var(--brand-primary)', fontSize: '15px', fontWeight: 700 }}>Checkout</span>
-          {cartCount > 0 && <span style={{ marginLeft: '4px', background: 'var(--brand-primary)', color: 'var(--brand-accent)', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 800 }}>{cartCount}</span>}
-        </Link>
+      {/* Mobile Menu */}
+      <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}>
+        <div className={styles.mobileMenuContent}>
+          {navLinks.map((link, i) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className={styles.mobileNavLink}
+              onClick={() => setMenuOpen(false)}
+              style={{ animationDelay: `${i * 0.05}s` }}
+            >
+              {link.label}
+            </a>
+          ))}
+          <div className={styles.mobileMenuFooter}>
+            <Link href="/login" className={styles.mobileMenuBtn}>Login</Link>
+            <Link href="/signup" className={styles.mobileMenuBtn}>Sign Up</Link>
+          </div>
+        </div>
       </div>
-    </header>
+
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`${styles.mobileOverlay} ${menuOpen ? styles.active : ''}`}
+        onClick={() => setMenuOpen(false)}
+      />
+    </>
   );
 }
