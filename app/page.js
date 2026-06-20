@@ -8,6 +8,33 @@ import ProductCard from '@/components/ProductCard';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import styles from './page.module.css';
 
+function CountdownTimer({ expiresAt }) {
+  const [timeLeft, setTimeLeft] = useState('');
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const difference = new Date(expiresAt).getTime() - Date.now();
+      if (difference <= 0) {
+        setTimeLeft('EXPIRED');
+        return;
+      }
+
+      const hours = Math.floor(difference / (1000 * 60 * 60));
+      const minutes = Math.floor((difference / 1000 / 60) % 60);
+      const seconds = Math.floor((difference / 1000) % 60);
+
+      const pad = (num) => String(num).padStart(2, '0');
+      setTimeLeft(`${pad(hours)}:${pad(minutes)}:${pad(seconds)}`);
+    };
+
+    calculateTimeLeft();
+    const interval = setInterval(calculateTimeLeft, 1000);
+    return () => clearInterval(interval);
+  }, [expiresAt]);
+
+  return <span>DEAL ENDS IN {timeLeft}</span>;
+}
+
 /* =============================================
    SAMPLE DATA — Replace with your Supabase fetch
    ============================================= */
@@ -95,9 +122,7 @@ export default function Home() {
 
         const dealRes = await fetch('/api/deal');
         const dealData = await dealRes.json();
-        if (dealData && dealData.deal) {
-          setDealProduct(dealData.deal);
-        }
+        setDealProduct(dealData?.deal || null);
       } catch (err) {
         console.error('Error fetching home page data:', err);
       } finally {
@@ -122,14 +147,26 @@ export default function Home() {
     : allProducts.filter(p => p.brand.toLowerCase() === selectedCategory.toLowerCase());
 
   // Determine active deal
-  const activeDeal = dealProduct ? {
+  const isDealActive = dealProduct && 
+                       dealProduct.is_deal_of_the_day && 
+                       dealProduct.deal_expires_at && 
+                       (new Date(dealProduct.deal_expires_at).getTime() > Date.now());
+
+  const activeDeal = isDealActive ? {
     name: dealProduct.name,
-    description: dealProduct.description || '256GB | Premium build | Ultra high performance',
+    description: dealProduct.description && dealProduct.description.length > 120
+      ? dealProduct.description.slice(0, 120) + '...'
+      : (dealProduct.description || '256GB | Premium build | Ultra high performance'),
     price: dealProduct.deal_price || dealProduct.our_price,
     originalPrice: dealProduct.market_price || Math.max(dealProduct.amazon_price || 0, dealProduct.flipkart_price || 0, dealProduct.online_price || 0),
     image: dealProduct.images?.[0] || '/phones/iphone16promax.jpg',
-    slug: dealProduct.slug
+    slug: dealProduct.slug,
+    expiresAt: dealProduct.deal_expires_at
   } : null;
+
+  const dealDiscountPercent = activeDeal && activeDeal.originalPrice && activeDeal.price
+    ? Math.round(((activeDeal.originalPrice - activeDeal.price) / activeDeal.originalPrice) * 100)
+    : 0;
 
   // Scroll progress
   useEffect(() => {
@@ -350,7 +387,9 @@ export default function Home() {
                   />
                 </div>
                 <div className={styles.dealInfo}>
-                  <span className={styles.dealBadge}>DEAL ENDS IN 04:23:15</span>
+                  <span className={styles.dealBadge}>
+                    <CountdownTimer expiresAt={activeDeal.expiresAt} />
+                  </span>
                   <h3 className={styles.dealTitle}>{activeDeal.name}</h3>
                   <p className={styles.dealSpecs}>{activeDeal.description}</p>
                   <div className={styles.dealRating}>
@@ -362,7 +401,7 @@ export default function Home() {
                     {activeDeal.originalPrice && activeDeal.originalPrice > activeDeal.price && (
                       <>
                         <span className={styles.dealOriginal}>₹{activeDeal.originalPrice.toLocaleString('en-IN')}</span>
-                        <span className={styles.dealSavings}>Save ₹{(activeDeal.originalPrice - activeDeal.price).toLocaleString('en-IN')}</span>
+                        <span className={styles.dealSavings}>Save ₹{(activeDeal.originalPrice - activeDeal.price).toLocaleString('en-IN')} ({dealDiscountPercent}% OFF)</span>
                       </>
                     )}
                   </div>
