@@ -1,58 +1,113 @@
 "use client";
-import Link from "next/link";
-import styles from "./Footer.module.css";
+
+import Link from 'next/link';
+import styles from './Footer.module.css';
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
+  const links = {
+    shop: [
+      { label: 'All Phones', href: '#products' },
+      { label: 'New Arrivals', href: '#new' },
+      { label: 'Deals', href: '#deals' },
+      { label: 'Best Sellers', href: '#bestsellers' },
+    ],
+    support: [
+      { label: 'Contact Us', href: '#contact' },
+      { label: 'Track Order', href: '/track' },
+      { label: 'FAQ', href: '/faq' },
+      { label: 'Warranty', href: '/warranty' },
+    ],
+    company: [
+      { label: 'About Us', href: '/about' },
+      { label: 'Dealers', href: '#dealers' },
+      { label: 'Terms', href: '/terms' },
+      { label: 'Privacy', href: '/privacy' },
+    ],
+  };
+
   return (
     <footer className={styles.footer}>
+      {/* Massive Watermark */}
+      <div className={styles.watermark}>ATOMOBILES</div>
+
       <div className={styles.container}>
-        {/* Main Footer Grid */}
-        <div className={styles.grid}>
-          {/* Brand Column */}
+        {/* Top Section */}
+        <div className={styles.top}>
           <div className={styles.brand}>
-            <h3 className={styles.logo}>ATOMOBILES</h3>
+            <Link href="/" className={styles.logo}>ATOMOBILES</Link>
             <p className={styles.tagline}>
               Premium wholesale mobile devices. Authentic products, unbeatable prices.
             </p>
             <div className={styles.socials}>
-              <a href="#" aria-label="Instagram">📷</a>
-              <a href="#" aria-label="WhatsApp">💬</a>
-              <a href="#" aria-label="Facebook">📘</a>
+              <a href="#" className={styles.socialLink} aria-label="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+              </a>
+              <a href="#" className={styles.socialLink} aria-label="WhatsApp">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+              </a>
+              <a href="#" className={styles.socialLink} aria-label="Facebook">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                </svg>
+              </a>
             </div>
           </div>
 
-          {/* Shop */}
-          <div className={styles.column}>
-            <h4>Shop</h4>
-            <Link href="/products">All Phones</Link>
-            <Link href="/products?filter=new">New Arrivals</Link>
-            <Link href="/deals">Deals</Link>
-            <Link href="/products?filter=bestseller">Best Sellers</Link>
-          </div>
-
-          {/* Support */}
-          <div className={styles.column}>
-            <h4>Support</h4>
-            <Link href="/contact">Contact Us</Link>
-            <Link href="/track">Track Order</Link>
-            <Link href="/faq">FAQ</Link>
-            <Link href="/warranty">Warranty</Link>
-          </div>
-
-          {/* Company */}
-          <div className={styles.column}>
-            <h4>Company</h4>
-            <Link href="/about">About Us</Link>
-            <Link href="/dealers">Dealers</Link>
-            <Link href="/terms">Terms</Link>
-            <Link href="/privacy">Privacy</Link>
+          <div className={styles.links}>
+            <div className={styles.linkGroup}>
+              <h4>Shop</h4>
+              <ul>
+                {links.shop.map((link) => (
+                  <li key={link.href}>
+                    <a href={link.href} className={styles.link}>{link.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className={styles.linkGroup}>
+              <h4>Support</h4>
+              <ul>
+                {links.support.map((link) => (
+                  <li key={link.href}>
+                    <a href={link.href} className={styles.link}>{link.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className={styles.linkGroup}>
+              <h4>Company</h4>
+              <ul>
+                {links.company.map((link) => (
+                  <li key={link.href}>
+                    <a href={link.href} className={styles.link}>{link.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
+        {/* Divider */}
+        <div className={styles.divider} />
+
+        {/* Bottom */}
         <div className={styles.bottom}>
-          <p>© 2026 ATOMOBILES. All rights reserved.</p>
-          <p>Premium Wholesale Deals for Businesses</p>
+          <p className={styles.copyright}>
+            © {currentYear} ATOMOBILES. All rights reserved.
+          </p>
+          <div className={styles.bottomLinks}>
+            <a href="/terms" className={styles.bottomLink}>Terms</a>
+            <a href="/privacy" className={styles.bottomLink}>Privacy</a>
+            <a href="/cookies" className={styles.bottomLink}>Cookies</a>
+          </div>
         </div>
       </div>
     </footer>

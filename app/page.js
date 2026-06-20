@@ -5,10 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import ProductCard from '@/components/ProductCard';
+import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
-import WhyChooseUs from '@/components/WhyChooseUs';
-import Dealers from '@/components/Dealers';
-import Marquee from '@/components/Marquee';
 import styles from './page.module.css';
 
 /* =============================================
@@ -22,6 +20,27 @@ const reviews = [
   { id: 3, name: 'Karthik M.', rating: 4, text: 'Great pricing on Samsung devices. Support team is very responsive.', location: 'Madurai' },
   { id: 4, name: 'Anitha R.', rating: 5, text: 'Ordered 10 phones for my shop. All arrived in perfect condition.', location: 'Salem' },
   { id: 5, name: 'Vijay P.', rating: 5, text: 'WhatsApp ordering is super convenient. Highly recommend!', location: 'Trichy' },
+];
+
+const dealers = [
+  { name: 'Ahamed', location: 'Thondi, Ramanathapuram', initial: 'A' },
+  { name: 'Rathina', location: 'Tenkasi', initial: 'R' },
+  { name: 'Jaganraj', location: 'Attur', initial: 'J' },
+  { name: 'Sarbudeen', location: 'Trichy Central', initial: 'S' },
+  { name: 'Sevagan', location: 'Thittakudi, Cuddalore', initial: 'S' },
+  { name: 'Karthick C', location: 'Hosur', initial: 'K' },
+  { name: 'Saran', location: 'Salem Division 1', initial: 'S' },
+  { name: 'Lawrence', location: 'Taramani, Chennai', initial: 'L' },
+  { name: 'JK Yashwanth Raj', location: 'Rajapalayam', initial: 'Y' },
+];
+
+const features = [
+  { icon: '◆', title: '100% Authentic', desc: 'Every device sourced directly from authorized distributors. No clones, no fakes.' },
+  { icon: '◇', title: 'Wholesale Pricing', desc: 'Competitive bulk rates that maximize your margins. Better prices for larger orders.' },
+  { icon: '◈', title: 'Statewide Network', desc: 'Active dealers across Tamil Nadu. Fast local delivery from nearest location.' },
+  { icon: '◉', title: 'Full Warranty', desc: 'Manufacturer warranty on every device. We handle all warranty claims for dealers.' },
+  { icon: '◎', title: 'Fast Delivery', desc: 'Quick turnaround on all orders. Same-day dispatch for in-stock items.' },
+  { icon: '◐', title: 'Dedicated Support', desc: 'Priority WhatsApp support for all dealers. Response within 30 minutes.' },
 ];
 
 /* =============================================
@@ -271,7 +290,23 @@ export default function Home() {
           </div>
         </section>
 
-        <Marquee />
+        {/* =============================================
+            MARQUEE ANNOUNCEMENT
+            ============================================= */}
+        <div className={styles.marqueeWrap}>
+          <div className="marquee">
+            <div className="marquee-content">
+              <span>🔥 iPhone 16 Pro Max now available at wholesale pricing</span>
+              <span>⚡ Free delivery across Tamil Nadu on orders above ₹50,000</span>
+              <span>✓ 100% authentic products with manufacturer warranty</span>
+              <span>💬 WhatsApp us for bulk pricing and dealer enquiries</span>
+              <span>🔥 iPhone 16 Pro Max now available at wholesale pricing</span>
+              <span>⚡ Free delivery across Tamil Nadu on orders above ₹50,000</span>
+              <span>✓ 100% authentic products with manufacturer warranty</span>
+              <span>💬 WhatsApp us for bulk pricing and dealer enquiries</span>
+            </div>
+          </div>
+        </div>
 
         {/* =============================================
             TRENDING NOW — Horizontal Scroll
@@ -425,9 +460,55 @@ export default function Home() {
           </div>
         </section>
 
-        <WhyChooseUs />
+        {/* =============================================
+            WHY US — Features with 3D Tilt
+            ============================================= */}
+        <section className={`section ${styles.featuresSection}`}>
+          <div className="container">
+            <div className="section-header reveal">
+              <div>
+                <span className="section-tag">✓ Trusted</span>
+                <h2 className="section-title">Why Choose Us</h2>
+                <p className="section-desc">Built on trust, quality, and relationships across Tamil Nadu</p>
+              </div>
+            </div>
+            <div className={`${styles.featuresGrid} stagger-children`}>
+              {features.map((feature, i) => (
+                <div key={i} className={`${styles.featureCard} spotlight-card`}>
+                  <div className={styles.featureIcon}>{feature.icon}</div>
+                  <h3 className={styles.featureTitle}>{feature.title}</h3>
+                  <p className={styles.featureDesc}>{feature.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-        <Dealers />
+        {/* =============================================
+            DEALERS — Fan Out
+            ============================================= */}
+        <section className="section" id="dealers">
+          <div className="container">
+            <div className="section-header reveal">
+              <div>
+                <span className="section-tag">🤝 Network</span>
+                <h2 className="section-title">Our Dealers</h2>
+                <p className="section-desc">Trusted partners bringing quality devices to every corner</p>
+              </div>
+            </div>
+            <div className={`${styles.dealersGrid} stagger-children`}>
+              {dealers.map((dealer, i) => (
+                <div key={i} className={styles.dealerCard}>
+                  <div className={styles.dealerAvatar}>{dealer.initial}</div>
+                  <div className={styles.dealerInfo}>
+                    <h4 className={styles.dealerName}>{dealer.name}</h4>
+                    <p className={styles.dealerLocation}>{dealer.location}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* =============================================
             REVIEWS — Horizontal Scroll
@@ -497,6 +578,7 @@ export default function Home() {
         </section>
       </main>
 
+      <Footer />
       <WhatsAppButton />
     </>
   );
