@@ -1,9 +1,9 @@
-/* ===== GLOBAL DARK FORM OVERRIDES =====
-   Add this to your globals.css or create a new file and import it.
-   This fixes ALL white inputs sitewide (contact form, checkout, etc.)
+/* ===== ATOMOBILES - GLOBAL DARK FORM FIXES =====
+   Add this to your globals.css OR import as a separate file.
+   This fixes white inputs on Contact, Checkout, and any other forms.
 */
 
-/* Force all inputs, selects, textareas to be dark */
+/* Force ALL form inputs to dark theme */
 input[type="text"],
 input[type="email"],
 input[type="tel"],
@@ -21,6 +21,7 @@ select {
   font-size: 14px !important;
   outline: none !important;
   transition: border-color 0.2s !important;
+  box-sizing: border-box !important;
 }
 
 input:focus,
@@ -34,7 +35,7 @@ textarea::placeholder {
   color: #555555 !important;
 }
 
-/* Fix select dropdown arrow and options */
+/* Fix select dropdown */
 select {
   appearance: none !important;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
@@ -48,7 +49,7 @@ select option {
   color: #ffffff !important;
 }
 
-/* Fix autofill yellow/white background */
+/* Fix browser autofill (stops yellow/white background) */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -63,23 +64,7 @@ select:-webkit-autofill:focus {
   transition: background-color 5000s ease-in-out 0s !important;
 }
 
-/* Fix any remaining white form containers */
-form,
-.form-container,
-.form-wrapper,
-.form-card,
-.contact-form,
-.checkout-form {
-  background: transparent !important;
-}
-
-/* Fix white cards/boxes inside dark pages */
-[class*="card"]:not([class*="ProductCard"]):not([class*="itemCard"]) {
-  background: #0a0a0a !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
-}
-
-/* Fix any inline white backgrounds */
+/* Fix any remaining white/light backgrounds */
 [style*="background: rgb(255"],
 [style*="background: #fff"],
 [style*="background: white"],
@@ -87,4 +72,11 @@ form,
 [style*="background-color: #fff"],
 [style*="background-color: white"] {
   background: #0a0a0a !important;
+  color: #ffffff !important;
+}
+
+/* Fix light borders */
+[style*="border: 1px solid #e2e8f0"],
+[style*="border: 1px solid #f1f5f9"] {
+  border-color: rgba(255,255,255,0.08) !important;
 }

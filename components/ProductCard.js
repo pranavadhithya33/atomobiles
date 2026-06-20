@@ -9,6 +9,7 @@ export default function ProductCard({ product, variant = 'grid', onAddToCart }) 
   const [liked, setLiked] = useState(false);
   const [added, setAdded] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const {
     id,
@@ -54,23 +55,41 @@ export default function ProductCard({ product, variant = 'grid', onAddToCart }) 
     );
   };
 
+  // Image component with error fallback
+  const ProductImage = ({ className, sizes }) => (
+    <>
+      {!imageError ? (
+        <Image
+          src={image}
+          alt={name}
+          fill
+          sizes={sizes}
+          className={`${styles.productImage} ${imageLoaded ? styles.imageVisible : styles.imageHidden}`}
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
+          style={{ objectFit: 'contain' }}
+          referrerPolicy="no-referrer"
+          unoptimized={image?.includes('amazon') || image?.includes('flipkart')}
+        />
+      ) : null}
+      {(imageError || !image) && (
+        <div className={styles.fallback}>
+          <span className={styles.fallbackIcon}>📱</span>
+          <span className={styles.fallbackText}>{brand || "ATOMOBILES"}</span>
+        </div>
+      )}
+    </>
+  );
+
   if (variant === 'horizontal') {
     return (
       <Link href={`/products/${id}`} className={styles.horizontalCard}>
         <div className={styles.horizontalImageWrap}>
-          <div className={`${styles.imagePlaceholder} ${imageLoaded ? styles.loaded : ''}`}>
-            <Image
-              src={image}
-              alt={name}
-              fill
-              sizes="200px"
-              className={styles.productImage}
-              onLoad={() => setImageLoaded(true)}
-              style={{ objectFit: 'contain' }}
-            />
+          <div className={styles.imageContainer}>
+            <ProductImage sizes="200px" />
           </div>
           {badge && (
-            <span className={`${styles.badge} ${styles[`badge${badge}`]}`}>
+            <span className={`${styles.badge} ${styles[`badge${badge.toUpperCase()}`]}`}>
               {badge}
             </span>
           )}
@@ -103,21 +122,13 @@ export default function ProductCard({ product, variant = 'grid', onAddToCart }) 
       <Link href={`/products/${id}`} className={styles.card}>
         {/* Image Area */}
         <div className={styles.imageArea}>
-          <div className={`${styles.imageContainer} ${imageLoaded ? styles.loaded : ''}`}>
-            <Image
-              src={image}
-              alt={name}
-              fill
-              sizes="(max-width: 480px) 50vw, (max-width: 768px) 33vw, 25vw"
-              className={styles.productImage}
-              onLoad={() => setImageLoaded(true)}
-              style={{ objectFit: 'contain' }}
-            />
+          <div className={styles.imageContainer}>
+            <ProductImage sizes="(max-width: 480px) 50vw, (max-width: 768px) 33vw, 25vw" />
           </div>
 
           {/* Badge */}
           {badge && (
-            <span className={`${styles.badge} ${styles[`badge${badge}`]}`}>
+            <span className={`${styles.badge} ${styles[`badge${badge.toUpperCase()}`]}`}>
               {badge}
             </span>
           )}
