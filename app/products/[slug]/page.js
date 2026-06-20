@@ -152,7 +152,7 @@ export default function ProductDetailPage() {
       ...(hasVariants && selectedRam != null && { ram: selectedRam }),
       ...(hasVariants && selectedStorage != null && { storage: selectedStorage }),
     });
-    router.push(`/order?${params.toString()}`);
+    router.push(`/checkout?${params.toString()}`);
   };
 
   const handleAddToCart = () => {

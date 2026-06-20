@@ -436,3 +436,101 @@ body::after {
   .hide-mobile { display: block; }
   .hide-desktop { display: none; }
 }
+
+/* ===== FLOWCHART TIMELINE STYLES ===== */
+.flowchart-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-left: 2rem;
+  box-sizing: border-box;
+}
+
+.flowchart-line {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.flowchart-progress-fill {
+  width: 100%;
+  height: var(--fill-pct, 0%);
+  background: #39ff14;
+  transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 10px #39ff14;
+}
+
+.flowchart-node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.flowchart-node-circle {
+  position: absolute;
+  left: -2rem;
+  transform: translateX(-50%);
+  margin-left: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #111111;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  color: #888888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.flowchart-node-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #888888;
+  transition: color 0.3s ease;
+  padding-left: 1.5rem;
+}
+
+/* Completed State */
+.flowchart-node.completed .flowchart-node-circle {
+  background: #10b981;
+  border-color: #10b981;
+  color: #000000;
+}
+
+.flowchart-node.completed .flowchart-node-label {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Active State */
+.flowchart-node.active .flowchart-node-circle {
+  background: #39ff14;
+  border-color: #39ff14;
+  color: #000000;
+  box-shadow: 0 0 12px rgba(57, 255, 20, 0.5);
+}
+
+.flowchart-node.active .flowchart-node-label {
+  color: #39ff14;
+  font-weight: 700;
+}
+
+/* Pending State */
+.flowchart-node.pending .flowchart-node-circle {
+  background: #111111;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #888888;
+}
+
+.flowchart-node.pending .flowchart-node-label {
+  color: #666666;
+}

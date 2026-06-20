@@ -118,7 +118,7 @@ export default function TrackOrderPage({ params }) {
   const statusStyle = getStatusStyle();
 
   return (
-    <div style={{ padding: '24px 16px', maxWidth: 600, margin: '0 auto', minHeight: '80vh' }}>
+    <div style={{ padding: '96px 16px 24px', maxWidth: 600, margin: '0 auto', minHeight: '80vh', boxSizing: 'border-box' }}>
       <Link href="/" style={{ display:'inline-flex', alignItems:'center', gap:6, color:'var(--text-secondary)', fontSize:14, fontWeight:600, marginBottom: 24 }}>
         <ArrowLeft size={16} /> Back to Home
       </Link>
