@@ -115,6 +115,10 @@ body::after {
 @media (min-width: 768px) { .section { padding: 3rem 0; } }
 @media (min-width: 1024px) { .section { padding: 3.5rem 0; } }
 
+.section + .section {
+  padding-top: 0;
+}
+
 .section-header {
   margin-bottom: 2rem;
   display: flex;
