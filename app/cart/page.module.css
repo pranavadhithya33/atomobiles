@@ -1,0 +1,240 @@
+.main {
+  padding-top: 80px;
+  min-height: 100vh;
+}
+
+.pageTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  padding: 2rem 0;
+  letter-spacing: -0.02em;
+}
+
+/* Empty State */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 6rem 0;
+  text-align: center;
+}
+
+.empty p {
+  font-size: 1.125rem;
+  color: #555555;
+}
+
+/* Cart Layout */
+.cartLayout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 1024px) {
+  .cartLayout {
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+  }
+}
+
+/* Items */
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .item {
+    grid-template-columns: 100px 1fr auto auto;
+    padding: 1.25rem;
+  }
+}
+
+.itemImage {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .itemImage {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.itemInfo {
+  min-width: 0;
+}
+
+.itemName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemSpecs {
+  font-size: 0.8125rem;
+  color: #555555;
+  margin-bottom: 0.5rem;
+}
+
+.itemPrice {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.itemActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.qty button {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.qty button:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.qty span {
+  width: 32px;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 0;
+}
+
+.remove {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #444444;
+  cursor: pointer;
+  transition: color 0.3s;
+  border-radius: 6px;
+}
+
+.remove:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.itemTotal {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: right;
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .itemTotal {
+    display: block;
+    min-width: 120px;
+  }
+}
+
+/* Summary */
+.summary {
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.5rem;
+  height: fit-content;
+  position: sticky;
+  top: 100px;
+}
+
+.summary h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  font-size: 0.9375rem;
+  color: #888888;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.summaryRow span:last-child {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.summaryTotal {
+  font-size: 1.125rem;
+  font-weight: 700;
+  border-bottom: none;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.summaryTotal span:last-child {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.checkoutBtn {
+  margin-top: 1.5rem;
+}
+
+.whatsappBtn {
+  margin-top: 0.75rem;
+}

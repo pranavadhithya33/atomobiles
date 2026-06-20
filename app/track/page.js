@@ -1,100 +1,104 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Truck, Search, ArrowLeft, Smartphone } from 'lucide-react';
-import { motion } from 'framer-motion';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import WhatsAppButton from '@/components/WhatsAppButton';
+import styles from './page.module.css';
 
-export default function TrackingLandingPage() {
+export default function TrackPage() {
   const [orderId, setOrderId] = useState('');
-  const router = useRouter();
+  const [trackingResult, setTrackingResult] = useState(null);
+  const [searched, setSearched] = useState(false);
 
   const handleTrack = (e) => {
     e.preventDefault();
-    const id = orderId.trim().toLowerCase();
-    if (id) {
-      // Force direct navigation to bypass any router issues
-      window.location.href = `/track/${id}`;
-    } else {
-      alert('Please enter a valid Order ID');
-    }
+    setSearched(true);
+    // Simulate tracking result
+    setTrackingResult({
+      id: orderId || 'ATB-2024-001',
+      status: 'shipped',
+      items: [
+        { name: 'iPhone 16 Pro Max', qty: 2 },
+        { name: 'Galaxy S24 Ultra', qty: 1 },
+      ],
+      timeline: [
+        { step: 'Order Placed', date: '20 Jun 2026, 10:30 AM', done: true },
+        { step: 'Confirmed', date: '20 Jun 2026, 11:15 AM', done: true },
+        { step: 'Shipped', date: '21 Jun 2026, 02:00 PM', done: true, active: true },
+        { step: 'Out for Delivery', date: 'Expected 22 Jun 2026', done: false },
+        { step: 'Delivered', date: 'Expected 22 Jun 2026', done: false },
+      ],
+    });
   };
 
   return (
-    <div style={{ padding: '60px 16px', maxWidth: 600, margin: '0 auto', minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-      <Link href="/" style={{ display:'inline-flex', alignItems:'center', gap:6, color:'var(--text-secondary)', fontSize:14, fontWeight:600, marginBottom: 32 }}>
-        <ArrowLeft size={16} /> Back to Shopping
-      </Link>
+    <>
+      <Header />
+      <main className={styles.main}>
+        <div className="container">
+          <h1 className={styles.pageTitle}>Track Order</h1>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="darkTextCard"
-        style={{ background: 'var(--bg-card)', borderRadius: 24, padding: '40px 32px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)', textAlign: 'center' }}
-      >
-        <div style={{ width: 64, height: 64, background: 'rgba(244, 167, 36, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-          <Truck size={32} color="var(--brand-accent)" />
-        </div>
-        
-        <h1 style={{ fontSize: 28, fontWeight: 900, marginBottom: 12 }}>Track Your Shipment</h1>
-        <p style={{ fontSize: 15, marginBottom: 32, lineHeight: 1.6 }}>
-          Enter your Order ID to view real-time delivery status, tracking timeline, and download your invoice.
-        </p>
-
-        <form onSubmit={handleTrack} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div style={{ position: 'relative' }}>
-            <input 
-              type="text" 
-              placeholder="Enter Order ID (e.g. 8b2f1a3c)"
+          <form onSubmit={handleTrack} className={styles.searchForm}>
+            <input
+              type="text"
+              placeholder="Enter Order ID (e.g., ATB-2024-001)"
+              className={styles.searchInput}
               value={orderId}
               onChange={(e) => setOrderId(e.target.value)}
               required
-              className="tracking-input"
-              style={{ 
-                width: '100%', 
-                padding: '16px 20px', 
-                borderRadius: 16, 
-                border: '2px solid var(--border)', 
-                fontSize: 16, 
-                outline: 'none',
-                transition: 'border-color 0.2s',
-                fontWeight: 600,
-              }}
-              onFocus={(e) => e.target.style.borderColor = 'var(--brand-accent)'}
-              onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
             />
-          </div>
-          
-          <motion.button 
-            whileTap={{ scale: 0.95 }}
-            type="submit"
-            style={{ 
-              width: '100%', 
-              padding: '16px', 
-              background: 'var(--brand-primary)', 
-              color: 'var(--text-primary)', 
-              border: 'none', 
-              borderRadius: 16, 
-              fontSize: 16, 
-              fontWeight: 800, 
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-            }}
-          >
-            <Search size={20} /> Track Now
-          </motion.button>
-        </form>
-        
-        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px dashed var(--border)', fontSize: 13, color: 'var(--text-secondary)' }}>
-          Need help? Contact us on <a href="https://wa.me/917397189222" style={{ color: 'var(--brand-primary)', fontWeight: 700 }}>WhatsApp</a>
+            <button type="submit" className={`btn btn-primary btn-lg ${styles.searchBtn}`}>
+              Track
+            </button>
+          </form>
+
+          {searched && trackingResult && (
+            <div className={styles.result}>
+              <div className={styles.resultHeader}>
+                <div>
+                  <span className={styles.orderId}>Order #{trackingResult.id}</span>
+                  <span className={`${styles.status} ${styles[trackingResult.status]}`}>
+                    {trackingResult.status}
+                  </span>
+                </div>
+              </div>
+
+              <div className={styles.itemsList}>
+                {trackingResult.items.map((item, i) => (
+                  <div key={i} className={styles.item}>
+                    <span>{item.name}</span>
+                    <span>Qty: {item.qty}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className={styles.timeline}>
+                {trackingResult.timeline.map((step, i) => (
+                  <div key={i} className={`${styles.timelineStep} ${step.done ? styles.done : ''} ${step.active ? styles.active : ''}`}>
+                    <div className={styles.timelineDot}>
+                      {step.done && <span>✓</span>}
+                    </div>
+                    <div className={styles.timelineContent}>
+                      <span className={styles.timelineTitle}>{step.step}</span>
+                      <span className={styles.timelineDate}>{step.date}</span>
+                    </div>
+                    {i < trackingResult.timeline.length - 1 && <div className={styles.timelineLine} />}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {searched && !trackingResult && (
+            <div className={styles.notFound}>
+              <p>Order not found. Please check your Order ID and try again.</p>
+            </div>
+          )}
         </div>
-      </motion.div>
-    </div>
+      </main>
+      <Footer />
+      <WhatsAppButton />
+    </>
   );
 }
