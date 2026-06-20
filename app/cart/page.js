@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import styles from "./page.module.css";
 import { useCart } from "@/context/CartContext";
 import { formatINR } from "@/lib/utils";
@@ -153,10 +154,11 @@ export default function CartPage() {
               <Link href="/" className={styles.continueBtn}>
                 ← Continue Shopping
               </Link>
+            </div>
           </div>
-        </div>
-      )}
-    </main>
-  </div>
+        )}
+      </main>
+      <Footer />
+    </div>
   );
 }

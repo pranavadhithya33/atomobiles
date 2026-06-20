@@ -11,6 +11,7 @@ import styles from '@/styles/ProductDetail.module.css';
 import { ChevronRight, CheckCircle, AlertCircle, Clock, ShoppingBag, MessageCircle, Package, Star, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { motion } from 'framer-motion';
+import Footer from '@/components/Footer';
 
 const WHATSAPP_NUMBER = '917397189222';
 
@@ -372,6 +373,7 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </motion.div>
+      <Footer />
     </div>
   );
 }
