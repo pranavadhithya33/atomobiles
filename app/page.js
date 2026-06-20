@@ -64,10 +64,25 @@ export default function Home() {
         const productsRes = await fetch('/api/products');
         const productsData = await productsRes.json();
         
+        const getBrandFromName = (name) => {
+          const lower = name.toLowerCase();
+          if (lower.includes('apple') || lower.includes('iphone') || lower.includes('ipad')) return 'Apple';
+          if (lower.includes('samsung')) return 'Samsung';
+          if (lower.includes('oneplus')) return 'OnePlus';
+          if (lower.includes('google') || lower.includes('pixel')) return 'Google';
+          if (lower.includes('xiaomi') || lower.includes('redmi') || lower.includes('mi') || lower.includes('poco')) return 'Xiaomi';
+          if (lower.includes('realme')) return 'Realme';
+          if (lower.includes('iqoo')) return 'iQOO';
+          if (lower.includes('vivo')) return 'Vivo';
+          if (lower.includes('oppo')) return 'Oppo';
+          if (lower.includes('motorola') || lower.includes('moto')) return 'Motorola';
+          return name.split(' ')[0] || 'Mobile';
+        };
+
         const mappedProducts = (productsData || []).map(p => ({
           id: p.slug,
           name: p.name,
-          brand: p.category || 'Mobile',
+          brand: getBrandFromName(p.name),
           specs: 'Verified | 100% Authentic',
           price: p.our_price || 0,
           originalPrice: p.market_price || 0,
@@ -115,14 +130,7 @@ export default function Home() {
     originalPrice: dealProduct.market_price || Math.max(dealProduct.amazon_price || 0, dealProduct.flipkart_price || 0, dealProduct.online_price || 0),
     image: dealProduct.images?.[0] || '/phones/iphone16promax.jpg',
     slug: dealProduct.slug
-  } : (allProducts.length > 0 ? {
-    name: allProducts[0].name,
-    description: allProducts[0].specs || 'Verified | 100% Authentic',
-    price: allProducts[0].price,
-    originalPrice: allProducts[0].originalPrice,
-    image: allProducts[0].image,
-    slug: allProducts[0].id
-  } : null);
+  } : null;
 
   // Scroll progress
   useEffect(() => {
