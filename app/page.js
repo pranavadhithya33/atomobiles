@@ -11,18 +11,7 @@ import styles from './page.module.css';
 /* =============================================
    SAMPLE DATA — Replace with your Supabase fetch
    ============================================= */
-const trendingProducts = [
-  { id: 1, name: 'iPhone 16 Pro Max', brand: 'Apple', specs: '256GB | A18 Pro | Titanium', price: 149900, originalPrice: 159900, rating: 4.9, reviewCount: 1234, image: '/phones/iphone16promax.jpg', badge: 'NEW', savings: 10000 },
-  { id: 2, name: 'Galaxy S24 Ultra', brand: 'Samsung', specs: '512GB | Snapdragon 8 Gen 3 | 200MP', price: 129999, originalPrice: 139999, rating: 4.8, reviewCount: 987, image: '/phones/galaxys24ultra.jpg', badge: 'HOT', savings: 10000 },
-  { id: 3, name: 'OnePlus 12', brand: 'OnePlus', specs: '256GB | Snapdragon 8 Gen 3 | Hasselblad', price: 64999, originalPrice: 69999, rating: 4.6, reviewCount: 756, image: '/phones/oneplus12.jpg', badge: 'DEAL', savings: 5000 },
-  { id: 4, name: 'Pixel 8 Pro', brand: 'Google', specs: '256GB | Tensor G3 | 50MP', price: 99999, originalPrice: 109999, rating: 4.5, reviewCount: 543, image: '/phones/pixel8pro.jpg', badge: '', savings: 10000 },
-  { id: 5, name: 'Xiaomi 14 Ultra', brand: 'Xiaomi', specs: '512GB | Snapdragon 8 Gen 3 | Leica', price: 89999, originalPrice: 99999, rating: 4.4, reviewCount: 432, image: '/phones/xiaomi14ultra.jpg', badge: 'NEW', savings: 10000 },
-  { id: 6, name: 'iPhone 15', brand: 'Apple', specs: '128GB | A16 Bionic | Dynamic Island', price: 79900, originalPrice: 89900, rating: 4.7, reviewCount: 2156, image: '/phones/iphone15.jpg', badge: '', savings: 10000 },
-  { id: 7, name: 'Galaxy Z Fold 6', brand: 'Samsung', specs: '512GB | Foldable | AI Powered', price: 164999, originalPrice: 174999, rating: 4.3, reviewCount: 321, image: '/phones/galaxyzfold6.jpg', badge: 'PREMIUM', savings: 10000 },
-  { id: 8, name: 'Vivo X100 Pro', brand: 'Vivo', specs: '256GB | Dimensity 9300 | Zeiss', price: 79999, originalPrice: 89999, rating: 4.4, reviewCount: 298, image: '/phones/vivox100pro.jpg', badge: '', savings: 10000 },
-];
-
-const allProducts = [...trendingProducts];
+/* Mock products replaced by dynamic DB fetch */
 
 const reviews = [
   { id: 1, name: 'Rahul K.', rating: 5, text: 'Best wholesale prices in Tamil Nadu. Authentic iPhones with warranty!', location: 'Chennai' },
@@ -59,8 +48,42 @@ const features = [
 export default function Home() {
   const [cartCount, setCartCount] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [allProducts, setAllProducts] = useState([]);
+  const [trendingProducts, setTrendingProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const heroRef = useRef(null);
   const canvasRef = useRef(null);
+
+  // Fetch products
+  useEffect(() => {
+    fetch('/api/products')
+      .then(res => res.json())
+      .then(data => {
+        const mappedProducts = (data || []).map(p => ({
+          id: p.slug, // Use slug for routing
+          name: p.name,
+          brand: p.category || 'Mobile',
+          specs: 'Verified | 100% Authentic',
+          price: p.our_price || 0,
+          originalPrice: p.market_price || 0,
+          rating: 4.8,
+          reviewCount: Math.floor(Math.random() * 500) + 100,
+          image: p.images?.[0] || '/phones/iphone16promax.jpg',
+          badge: p.featured ? 'HOT' : '',
+          savings: Math.max(0, (p.market_price || 0) - (p.our_price || 0))
+        }));
+        setAllProducts(mappedProducts);
+        
+        // Use featured products for trending, or fallback to first few products
+        const hotProducts = mappedProducts.filter(p => p.badge === 'HOT');
+        setTrendingProducts(hotProducts.length > 0 ? hotProducts : mappedProducts);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
 
   // Scroll progress
   useEffect(() => {
