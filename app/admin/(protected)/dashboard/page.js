@@ -24,7 +24,6 @@ const CATEGORIES = [
 const RAM_OPTIONS = [4, 6, 8, 12];
 const STORAGE_OPTIONS = [64, 128, 256, 512];
 
-// Build the default 16-combo variant grid
 const buildEmptyVariants = () =>
   RAM_OPTIONS.flatMap(ram =>
     STORAGE_OPTIONS.map(storage => ({ ram, storage, price: '', enabled: false }))
@@ -38,7 +37,6 @@ const EMPTY_PRODUCT = {
   variants: buildEmptyVariants(),
 };
 
-// Helper: get admin auth headers for API calls
 function getAdminHeaders(extra = {}) {
   const token = typeof window !== 'undefined' ? sessionStorage.getItem('og_admin_token') : null;
   return {
@@ -62,12 +60,10 @@ export default function AdminDashboard() {
   const [saveError, setSaveError] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
   
-  // Importer state
   const [importUrl, setImportUrl] = useState('');
   const [importing, setImporting] = useState(false);
   const [importMsg, setImportMsg] = useState('');
 
-  // Manual Order state
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [orderForm, setOrderForm] = useState({
     fullName: '', phone: '', address: '', pincode: '',
@@ -78,37 +74,26 @@ export default function AdminDashboard() {
   const [orderSaving, setOrderSaving] = useState(false);
   const [orderError, setOrderError] = useState('');
   
-  // Order Details Expansion
   const [expandedOrderId, setExpandedOrderId] = useState(null);
 
-  // Deal of the Day State
   const [dealState, setDealState] = useState({ productId: '', price: '', hours: '', minutes: '', seconds: '' });
   const [savingDeal, setSavingDeal] = useState(false);
   const [currentDeal, setCurrentDeal] = useState(null);
 
-  // Route Editor state
   const [expandedRouteOrderId, setExpandedRouteOrderId] = useState(null);
   const [routeEditForm, setRouteEditForm] = useState({
-    step1: '',
-    step2: '',
-    step3: '',
-    step4: '',
-    step5: '',
-    step6: '',
+    step1: '', step2: '', step3: '', step4: '', step5: '', step6: '',
     current_step: 1
   });
 
-  // Reviews moderation state
   const [allReviews, setAllReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
 
-  // Videos state
   const [videos, setVideos] = useState([]);
   const [videosLoading, setVideosLoading] = useState(false);
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Auth check
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const auth = sessionStorage.getItem('og_admin');
@@ -117,13 +102,11 @@ export default function AdminDashboard() {
         sessionStorage.removeItem('og_admin');
         router.replace('/admin/login');
       } else {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsAuthenticated(true);
       }
     }
   }, [router]);
 
-  // Fetch data
   const fetchProducts = () => {
     return fetch('/api/products').then(r => r.json()).then(setProducts);
   };
@@ -207,7 +190,6 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     Promise.all([fetchProducts(), fetchOrders(), fetchReviewsAdmin(), fetchVideosAdmin(), fetchCurrentDeal()]).finally(() => setLoading(false));
   }, []);
 
@@ -217,7 +199,6 @@ export default function AdminDashboard() {
     router.replace('/admin/login');
   };
 
-  // Product Modal
   const openAdd = () => {
     setEditProduct(null);
     setForm(EMPTY_PRODUCT);
@@ -227,7 +208,6 @@ export default function AdminDashboard() {
 
   const openEdit = async (p) => {
     setEditProduct(p);
-    // Start with empty grid, then overlay existing saved variants
     const grid = buildEmptyVariants();
     try {
       const res = await fetch(`/api/products/${p.id}/variants?all=true`);
@@ -240,7 +220,7 @@ export default function AdminDashboard() {
           }
         });
       }
-    } catch { /* ignore, keep empty grid */ }
+    } catch { }
 
     setForm({
       name: p.name || '',
@@ -319,7 +299,6 @@ export default function AdminDashboard() {
         stock: Number(form.stock) || 0,
         prepaid_discount_pct: Number(form.prepaid_discount_pct) || 3,
       };
-      // Don't send variants in the product payload
       delete payload.variants;
 
       const url = editProduct ? `/api/products/${editProduct.id}` : '/api/products';
@@ -333,7 +312,6 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Save failed');
 
-      // Save variants
       const productId = data.id || editProduct?.id;
       if (productId && form.variants?.length) {
         await fetch(`/api/products/${productId}/variants`, {
@@ -411,7 +389,7 @@ export default function AdminDashboard() {
       await fetchOrders();
     } catch {
       alert('Failed to update order status');
-      await fetchOrders(); // Revert on failure
+      await fetchOrders();
     }
   };
 
@@ -459,9 +437,7 @@ export default function AdminDashboard() {
     }
   };
 
-  // Manual Order Handlers
   const openAddOrder = () => {
-    console.log('Opening Add Order modal...');
     setOrderForm({
       fullName: '', phone: '', address: '', pincode: '',
       productId: '', productName: '', productSlug: '',
@@ -476,7 +452,6 @@ export default function AdminDashboard() {
     setOrderForm(prev => {
       const updated = { ...prev, [field]: value };
       
-      // Auto-calculate if product or payment changes
       if (field === 'productId') {
         const product = products.find(p => p.id === value);
         if (product) {
@@ -524,7 +499,7 @@ export default function AdminDashboard() {
           discount_amount: orderForm.basePrice - orderForm.finalPrice,
           final_price: orderForm.finalPrice,
           advance_amount: orderForm.advanceAmount,
-          status: 'confirmed', // Offline orders usually confirmed
+          status: 'confirmed',
           current_step: 1
         }),
       });
@@ -543,7 +518,6 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteOrder = async (id, shortId) => {
-    console.log('Attempting to delete order:', id, shortId);
     if (!confirm(`Permanently delete order #${shortId}?`)) return;
     try {
       const res = await fetch(`/api/orders/${id}`, { method: 'DELETE', headers: getAdminHeaders() });
@@ -551,398 +525,16 @@ export default function AdminDashboard() {
         const errData = await res.json().catch(() => ({}));
         throw new Error(errData.error || 'Failed to delete from API');
       }
-      console.log('Order deleted successfully');
       await fetchOrders();
     } catch (err) {
-      console.error('Delete order error:', err);
       alert(`Failed to delete order: ${err.message}`);
     }
   };
-
-  // Stats
-  const totalRevenue = orders.reduce((sum, o) => sum + (o.final_price || 0), 0);
-  const pendingOrders = orders.filter(o => o.status === 'pending').length;
 
   if (!isAuthenticated) return <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center' }}><AdminLoader /></div>;
 
   return (
     <div className={styles.adminPage}>
-      {/* Modals at Top to prevent stacking issues */}
-      {showModal && (
-        <div className={styles.modalOverlay} style={{ zIndex: 9999 }}>
-          <div className={styles.modal}>
-            <h2 className={styles.modalTitle}>
-              {editProduct ? <><Edit2 size={18} /> Edit Product</> : <><Plus size={18} /> Add Product</>}
-            </h2>
-
-            <div className={styles.modalForm}>
-              {/* Name */}
-              <div className="form-group">
-                <label className="form-label">Product Name *</label>
-                <input type="text" className="form-input" placeholder="e.g. Samsung Galaxy A55 5G"
-                  value={form.name} onChange={e => handleFormChange('name', e.target.value)} />
-              </div>
-
-              {/* Category */}
-              <div className="form-group">
-                <label className="form-label">Category</label>
-                <select className="form-input" value={form.category} onChange={e => handleFormChange('category', e.target.value)}>
-                  {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
-                </select>
-              </div>
-
-              {/* Prices */}
-              <div className={styles.formGrid}>
-                <div className="form-group">
-                  <label className="form-label">Our Price (₹) *</label>
-                  <input type="number" className="form-input" placeholder="e.g. 21999"
-                    value={form.our_price} onChange={e => handleFormChange('our_price', e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Online Price (General)</label>
-                  <input type="number" className="form-input" placeholder="e.g. 26999"
-                    value={form.online_price} onChange={e => handleFormChange('online_price', e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Amazon Price (Fallback)</label>
-                  <input type="number" className="form-input" placeholder="e.g. 25999"
-                    value={form.amazon_price} onChange={e => handleFormChange('amazon_price', e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Flipkart Price (Fallback)</label>
-                  <input type="number" className="form-input" placeholder="e.g. 24999"
-                    value={form.flipkart_price} onChange={e => handleFormChange('flipkart_price', e.target.value)} />
-                </div>
-              </div>
-
-              {/* Scraper URLs */}
-              <div className={styles.formGrid}>
-                <div className="form-group" style={{ position: 'relative' }}>
-                  <label className="form-label">Amazon URL (For live scraping)</label>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <input type="url" className="form-input" placeholder="https://amazon.in/dp/..."
-                      value={form.amazon_url} onChange={e => handleFormChange('amazon_url', e.target.value)} />
-                    <button type="button" className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: 12 }} 
-                      onClick={async () => {
-                        if (!form.amazon_url) return alert('Enter URL first');
-                        setImporting(true);
-                        try {
-                          const res = await fetch('/api/import', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ url: form.amazon_url, category: form.category })
-                          });
-                          const data = await res.json();
-                          if (!res.ok) throw new Error(data.error);
-                          // Update form with fetched data
-                          setForm(prev => ({
-                            ...prev,
-                            name: data.product.name,
-                            amazon_price: data.product.amazon_price,
-                            online_price: data.product.amazon_price,
-                            our_price: data.product.our_price,
-                            description: data.product.description,
-                            images: data.product.images?.length ? data.product.images : prev.images,
-                            stock: data.product.stock
-                          }));
-                          alert('Data fetched successfully!');
-                        } catch (err) { alert('Fetch failed: ' + err.message); }
-                        finally { setImporting(false); }
-                      }}
-                      disabled={importing}
-                    >
-                      {importing ? '...' : 'Fetch'}
-                    </button>
-                  </div>
-                </div>
-                <div className="form-group" style={{ position: 'relative' }}>
-                  <label className="form-label">Flipkart URL (For live scraping)</label>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <input type="url" className="form-input" placeholder="https://flipkart.com/..."
-                      value={form.flipkart_url} onChange={e => handleFormChange('flipkart_url', e.target.value)} />
-                    <button type="button" className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: 12 }} 
-                      onClick={async () => {
-                        if (!form.flipkart_url) return alert('Enter URL first');
-                        setImporting(true);
-                        try {
-                          const res = await fetch('/api/import', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ url: form.flipkart_url, category: form.category })
-                          });
-                          const data = await res.json();
-                          if (!res.ok) throw new Error(data.error);
-                          // Update form with fetched data
-                          setForm(prev => ({
-                            ...prev,
-                            name: data.product.name,
-                            amazon_price: data.product.flipkart_price || data.product.amazon_price,
-                            online_price: data.product.flipkart_price || data.product.amazon_price,
-                            our_price: data.product.our_price,
-                            description: data.product.description,
-                            images: data.product.images?.length ? data.product.images : prev.images,
-                            stock: data.product.stock
-                          }));
-                          alert('Data fetched successfully!');
-                        } catch (err) { alert('Fetch failed: ' + err.message); }
-                        finally { setImporting(false); }
-                      }}
-                      disabled={importing}
-                    >
-                      {importing ? '...' : 'Fetch'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Description */}
-              <div className="form-group">
-                <label className="form-label">Description</label>
-                <textarea className="form-input" rows={4} placeholder="Product description..."
-                  value={form.description} onChange={e => handleFormChange('description', e.target.value)} />
-              </div>
-
-              {/* Images */}
-              <div className="form-group">
-                <label className="form-label">Images (URL per line)</label>
-                <textarea className="form-input" rows={3} placeholder="Image URLs..."
-                  value={form.images.join('\n')}
-                  onChange={e => handleFormChange('images', e.target.value.split('\n'))} />
-              </div>
-
-              {/* Stock and Featured */}
-              <div className={styles.formGrid}>
-                <div className="form-group">
-                  <label className="form-label">Stock Status</label>
-                  <div style={{ display: 'flex', gap: '10px' }}>
-                    <button type="button" className={`${styles.stockToggle} ${form.stock > 0 ? styles.stockToggleIn : ''}`}
-                      onClick={() => handleFormChange('stock', 100)}>In Stock</button>
-                    <button type="button" className={`${styles.stockToggle} ${form.stock === 0 ? styles.stockToggleOut : ''}`}
-                      onClick={() => handleFormChange('stock', 0)}>Out of Stock</button>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Featured Product</label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', marginTop: '8px' }}>
-                    <input type="checkbox" checked={form.featured} onChange={e => handleFormChange('featured', e.target.checked)} />
-                    Show in home page
-                  </label>
-                </div>
-              </div>
-
-              {/* Variants Section */}
-              <div style={{ marginTop: 24, padding: 16, background: 'var(--bg-secondary)', borderRadius: 12, border: '1px solid var(--border)' }}>
-                <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--brand-primary)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  📦 RAM &amp; Storage Variants
-                </div>
-                <p style={{ fontSize: 12, color: 'var(--text-dark)', marginBottom: 14 }}>
-                  Set a price for each combination. Toggle the eye icon to show/hide that combo from customers. Leave price empty to skip.
-                </p>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 110px 44px', gap: 6, marginBottom: 6, padding: '0 4px' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>RAM</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Storage</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Price (₹)</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Show</div>
-                </div>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 320, overflowY: 'auto' }}>
-                  {(form.variants || buildEmptyVariants()).map((v, idx) => (
-                    <div
-                      key={`${v.ram}-${v.storage}`}
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr 110px 44px',
-                        gap: 6,
-                        alignItems: 'center',
-                        padding: '6px 8px',
-                        borderRadius: 8,
-                        background: v.enabled ? 'rgba(244,167,36,0.06)' : 'var(--bg-card)',
-                        border: v.enabled ? '1px solid rgba(244,167,36,0.25)' : '1px solid var(--border)',
-                        opacity: v.price ? 1 : 0.65,
-                        transition: 'all 0.15s',
-                      }}
-                    >
-                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-dark)' }}>{v.ram} GB</span>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-dark)' }}>{v.storage} GB</span>
-                      <input
-                        type="number"
-                        className="form-input"
-                        style={{ padding: '5px 8px', fontSize: 13, height: 34 }}
-                        placeholder="e.g. 21999"
-                        value={v.price}
-                        onChange={e => {
-                          const updated = [...(form.variants || buildEmptyVariants())];
-                          updated[idx] = { ...updated[idx], price: e.target.value };
-                          handleFormChange('variants', updated);
-                        }}
-                      />
-                      <button
-                        type="button"
-                        title={v.enabled ? 'Visible to customers — click to hide' : 'Hidden from customers — click to show'}
-                        onClick={() => {
-                          const updated = [...(form.variants || buildEmptyVariants())];
-                          updated[idx] = { ...updated[idx], enabled: !v.enabled };
-                          handleFormChange('variants', updated);
-                        }}
-                        style={{
-                          background: v.enabled ? 'var(--brand-primary)' : 'var(--bg-secondary)',
-                          color: v.enabled ? '#fff' : 'var(--text-muted)',
-                          border: 'none',
-                          borderRadius: 6,
-                          height: 34,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        {v.enabled ? '👁' : '🚫'}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {saveError && <div className="notice notice-error">⚠ {saveError}</div>}
-
-              <div className={styles.modalActions}>
-                <button type="button" className={styles.modalCancelBtn} onClick={closeModal}>Cancel</button>
-                <button type="button" className={styles.modalSaveBtn} onClick={handleSave} disabled={saving}>
-                  {saving ? 'Saving…' : editProduct ? '✓ Save Changes' : '+ Add Product'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showOrderModal && (
-        <div className={styles.modalOverlay} style={{ zIndex: 9999 }}>
-          <div className={styles.modal}>
-            <h2 className={styles.modalTitle}>
-              <ShoppingBag size={18} /> Add Manual Order
-            </h2>
-
-            <div className={styles.modalForm}>
-              <div className="form-group">
-                <label className="form-label">Select Product *</label>
-                <select 
-                  className="form-input" 
-                  value={orderForm.productId}
-                  onChange={(e) => handleOrderFormChange('productId', e.target.value)}
-                >
-                  <option value="">-- Choose Product --</option>
-                  {products.map(p => (
-                    <option key={p.id} value={p.id}>{p.name} - {formatINR(p.our_price)}</option>
-                  ))}
-                  <option value="custom">-- Custom Item --</option>
-                </select>
-              </div>
-
-              {orderForm.productId === 'custom' && (
-                <div className="form-group">
-                  <label className="form-label">Item Name *</label>
-                  <input 
-                    type="text" 
-                    className="form-input" 
-                    placeholder="Enter custom item name"
-                    value={orderForm.productName}
-                    onChange={(e) => handleOrderFormChange('productName', e.target.value)}
-                  />
-                </div>
-              )}
-
-              <div className={styles.formGrid}>
-                <div className="form-group">
-                  <label className="form-label">Customer Name *</label>
-                  <input 
-                    type="text" 
-                    className="form-input" 
-                    value={orderForm.fullName}
-                    onChange={(e) => handleOrderFormChange('fullName', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Phone *</label>
-                  <input 
-                    type="tel" 
-                    className="form-input" 
-                    maxLength={10}
-                    value={orderForm.phone}
-                    onChange={(e) => handleOrderFormChange('phone', e.target.value.replace(/\D/g, ''))}
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Delivery Address *</label>
-                <textarea 
-                  className={styles.formTextarea} 
-                  rows={2}
-                  value={orderForm.address}
-                  onChange={(e) => handleOrderFormChange('address', e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Pincode *</label>
-                <input 
-                  type="text" 
-                  className="form-input" 
-                  maxLength={6}
-                  value={orderForm.pincode}
-                  onChange={(e) => handleOrderFormChange('pincode', e.target.value.replace(/\D/g, ''))}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Payment Method *</label>
-                <select 
-                  className="form-input"
-                  value={orderForm.paymentOption}
-                  onChange={(e) => handleOrderFormChange('paymentOption', e.target.value)}
-                >
-                  <option value="half_cod">Half COD (50% Advance)</option>
-                  <option value="full_prepaid">Full Prepaid</option>
-                  <option value="token_advance">Token Advance (30%)</option>
-                </select>
-              </div>
-
-              <div className={styles.formGrid}>
-                <div className="form-group">
-                  <label className="form-label">Final Price (₹) *</label>
-                  <input 
-                    type="number" 
-                    className="form-input" 
-                    value={orderForm.finalPrice}
-                    onChange={(e) => handleOrderFormChange('finalPrice', Number(e.target.value))}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Advance (₹)</label>
-                  <input 
-                    type="number" 
-                    className="form-input" 
-                    value={orderForm.advanceAmount}
-                    onChange={(e) => handleOrderFormChange('advanceAmount', Number(e.target.value))}
-                  />
-                </div>
-              </div>
-
-              {orderError && <div className="notice notice-error">⚠ {orderError}</div>}
-
-              <div className={styles.modalActions}>
-                <button type="button" className={styles.modalCancelBtn} onClick={() => setShowOrderModal(false)}>Cancel</button>
-                <button type="button" className={styles.modalSaveBtn} onClick={handleOrderSave} disabled={orderSaving}>
-                  {orderSaving ? 'Creating...' : '✓ Create Order'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Header */}
       <div className={styles.adminHeader}>
         <div className={styles.adminHeaderTitle}>
@@ -958,8 +550,6 @@ export default function AdminDashboard() {
       </div>
 
       <div className={styles.adminBody}>
-        {/* Stats Bar Removed */}
-
         {/* Tabs */}
         <div className={styles.tabs}>
           <button
@@ -1001,9 +591,9 @@ export default function AdminDashboard() {
             </div>
 
             {/* Amazon Quick Importer */}
-            <div style={{ background: 'var(--bg-highlight)', padding: '16px', borderRadius: '12px', marginBottom: '16px', border: '1px solid var(--border-focus)' }}>
+            <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '12px', marginBottom: '16px', border: '1px solid var(--border-focus)' }}>
               <div style={{ fontWeight: 800, color: 'var(--brand-accent)', marginBottom: '12px', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <RefreshCw size={18} className={importing ? 'spin' : ''} />
+                <RefreshCw size={18} className={importing ? styles.spin : ''} />
                 One-Click Auto-Upload from Amazon/Flipkart
               </div>
               <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
@@ -1012,7 +602,7 @@ export default function AdminDashboard() {
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <input 
                   type="url" 
-                  className="form-input" 
+                  className={styles.darkInput} 
                   style={{ flex: 1, minWidth: '200px' }} 
                   placeholder="Paste Amazon or Flipkart product URL here..."
                   value={importUrl}
@@ -1021,7 +611,7 @@ export default function AdminDashboard() {
                 <button 
                   onClick={handleImport} 
                   disabled={importing}
-                  className="btn btn-primary" 
+                  className={styles.darkBtnPrimary} 
                   style={{ padding: '12px 20px', whiteSpace: 'nowrap' }}
                 >
                   {importing ? 'Importing...' : 'Fetch & Add'}
@@ -1036,7 +626,7 @@ export default function AdminDashboard() {
 
             {/* Bulk Refresh Button */}
             <button 
-              className="btn btn-outline"
+              className={styles.darkBtnOutline}
               style={{ width: '100%', marginBottom: '20px', display: 'flex', justifyContent: 'center', gap: '8px', padding: '12px', border: '1px solid var(--border)', color: 'var(--brand-accent)' }}
               onClick={async () => {
                 if (!confirm('This will refresh prices for all products in our master list. This may take several minutes. Proceed?')) return;
@@ -1055,7 +645,7 @@ export default function AdminDashboard() {
               }}
               disabled={importing}
             >
-              <RefreshCw size={18} className={importing ? 'spin' : ''} />
+              <RefreshCw size={18} className={importing ? styles.spin : ''} />
               {importing ? 'Syncing Catalog...' : 'Manual Bulk Refresh (10-Day Sync)'}
             </button>
 
@@ -1068,7 +658,7 @@ export default function AdminDashboard() {
               </div>
             ) : (
               <div className={styles.tableWrap}>
-                <table className={`${styles.table} darkTextCard`}>
+                <table className={styles.table}>
                   <thead>
                     <tr>
                       <th>Image</th>
@@ -1093,7 +683,7 @@ export default function AdminDashboard() {
                         </td>
                         <td data-label="Name" style={{ fontWeight:600, maxWidth:180 }}>
                           <div style={{ overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.name}</div>
-                          {p.featured && <span style={{ fontSize:10, background:'#fef3d0', color:'#d4890a', padding:'1px 6px', borderRadius:99, fontWeight:700 }}>Featured</span>}
+                          {p.featured && <span style={{ fontSize:10, background:'rgba(244,167,36,0.15)', color:'#f4a724', padding:'1px 6px', borderRadius:99, fontWeight:700 }}>Featured</span>}
                         </td>
                         <td data-label="Category" style={{ fontSize:13, color:'var(--text-secondary)' }}>{p.category || '—'}</td>
                         <td data-label="Market Price" style={{ fontSize:13, color:'#9aa3b2', textDecoration:'line-through' }}>
@@ -1231,6 +821,7 @@ export default function AdminDashboard() {
             )}
           </motion.div>
         )}
+
         {/* Reviews Moderation Tab */}
         {activeTab === 'reviews' && (
           <motion.div key="reviews" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
@@ -1258,8 +849,8 @@ export default function AdminDashboard() {
                           <div style={{ fontWeight:700, fontSize:14, color:'var(--text-primary)' }}>{review.user_name}</div>
                           <span style={{ 
                             fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 4,
-                            background: review.status === 'approved' ? '#dcfce7' : review.status === 'pending' ? '#fef3c7' : '#fee2e2',
-                            color: review.status === 'approved' ? '#166534' : review.status === 'pending' ? '#92400e' : '#991b1b',
+                            background: review.status === 'approved' ? 'rgba(16,185,129,0.1)' : review.status === 'pending' ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)',
+                            color: review.status === 'approved' ? '#10b981' : review.status === 'pending' ? '#f59e0b' : '#ef4444',
                             textTransform: 'uppercase'
                           }}>
                             {review.status}
@@ -1285,7 +876,7 @@ export default function AdminDashboard() {
                               });
                               fetchReviewsAdmin();
                             }}
-                            style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#16a34a', color: 'var(--text-primary)', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
+                            style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#10b981', color: '#ffffff', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
                           >
                             <Check size={14} /> Approve
                           </button>
@@ -1300,7 +891,7 @@ export default function AdminDashboard() {
                               });
                               fetchReviewsAdmin();
                             }}
-                            style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#ef4444', color: 'var(--text-primary)', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
+                            style={{ display:'flex', alignItems:'center', gap:4, padding:'6px 14px', background:'#ef4444', color: '#ffffff', border:'none', borderRadius:8, fontSize:12, fontWeight:700, cursor:'pointer' }}
                           >
                             <X size={14} /> Reject
                           </button>
@@ -1308,7 +899,7 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                     {review.comment && (
-                      <div style={{ fontSize:13, color:'var(--text-secondary)', lineHeight:1.5, background:'#f8fafc', padding:'10px 12px', borderRadius:8, border:'1px solid #f1f5f9' }}>
+                      <div style={{ fontSize:13, color:'var(--text-secondary)', lineHeight:1.5, background:'rgba(255,255,255,0.03)', padding:'10px 12px', borderRadius:8, border:'1px solid rgba(255,255,255,0.08)' }}>
                         &quot;{review.comment}&quot;
                       </div>
                     )}
@@ -1350,9 +941,9 @@ export default function AdminDashboard() {
               )}
 
               <div className="form-group">
-                <label className="form-label">Select Product</label>
+                <label className={styles.darkLabel}>Select Product</label>
                 <select 
-                  className="form-input" 
+                  className={styles.darkInput} 
                   value={dealState.productId}
                   onChange={(e) => setDealState(prev => ({ ...prev, productId: e.target.value }))}
                 >
@@ -1366,10 +957,10 @@ export default function AdminDashboard() {
               {dealState.productId && (
                 <>
                   <div className="form-group">
-                    <label className="form-label">Deal Price (₹)</label>
+                    <label className={styles.darkLabel}>Deal Price (₹)</label>
                     <input 
                       type="number" 
-                      className="form-input" 
+                      className={styles.darkInput} 
                       placeholder="e.g. 15999"
                       value={dealState.price}
                       onChange={(e) => setDealState(prev => ({ ...prev, price: e.target.value }))}
@@ -1377,11 +968,11 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Expires In (Duration from now)</label>
+                    <label className={styles.darkLabel}>Expires In (Duration from now)</label>
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <input 
                         type="number" 
-                        className="form-input" 
+                        className={styles.darkInput} 
                         placeholder="Hours"
                         min="0"
                         value={dealState.hours}
@@ -1389,7 +980,7 @@ export default function AdminDashboard() {
                       />
                       <input 
                         type="number" 
-                        className="form-input" 
+                        className={styles.darkInput} 
                         placeholder="Mins"
                         min="0" max="59"
                         value={dealState.minutes}
@@ -1397,7 +988,7 @@ export default function AdminDashboard() {
                       />
                       <input 
                         type="number" 
-                        className="form-input" 
+                        className={styles.darkInput} 
                         placeholder="Secs"
                         min="0" max="59"
                         value={dealState.seconds}
@@ -1411,7 +1002,7 @@ export default function AdminDashboard() {
               <button 
                 onClick={handleSaveDeal}
                 disabled={savingDeal}
-                className="btn btn-primary"
+                className={styles.darkBtnPrimary}
                 style={{ width: '100%', marginTop: '12px', padding: '14px', fontWeight: 800 }}
               >
                 {savingDeal ? 'Saving...' : (dealState.productId ? 'Save Deal of the Day' : 'Clear Active Deal')}
@@ -1434,15 +1025,15 @@ export default function AdminDashboard() {
             <div className={styles.modalForm}>
               {/* Name */}
               <div className="form-group">
-                <label className="form-label">Product Name *</label>
-                <input type="text" className="form-input" placeholder="e.g. Samsung Galaxy A55 5G"
+                <label className={styles.darkLabel}>Product Name *</label>
+                <input type="text" className={styles.darkInput} placeholder="e.g. Samsung Galaxy A55 5G"
                   value={form.name} onChange={e => handleFormChange('name', e.target.value)} />
               </div>
 
               {/* Category */}
               <div className="form-group">
-                <label className="form-label">Category</label>
-                <select className="form-input" value={form.category} onChange={e => handleFormChange('category', e.target.value)}>
+                <label className={styles.darkLabel}>Category</label>
+                <select className={styles.darkInput} value={form.category} onChange={e => handleFormChange('category', e.target.value)}>
                   {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
                 </select>
               </div>
@@ -1450,23 +1041,23 @@ export default function AdminDashboard() {
               {/* Prices */}
               <div className={styles.formGrid}>
                 <div className="form-group">
-                  <label className="form-label">Our Price (₹) *</label>
-                  <input type="number" className="form-input" placeholder="e.g. 21999"
+                  <label className={styles.darkLabel}>Our Price (₹) *</label>
+                  <input type="number" className={styles.darkInput} placeholder="e.g. 21999"
                     value={form.our_price} onChange={e => handleFormChange('our_price', e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Online Price (General)</label>
-                  <input type="number" className="form-input" placeholder="e.g. 26999"
+                  <label className={styles.darkLabel}>Online Price (General)</label>
+                  <input type="number" className={styles.darkInput} placeholder="e.g. 26999"
                     value={form.online_price} onChange={e => handleFormChange('online_price', e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Amazon Price (Fallback)</label>
-                  <input type="number" className="form-input" placeholder="e.g. 25999"
+                  <label className={styles.darkLabel}>Amazon Price (Fallback)</label>
+                  <input type="number" className={styles.darkInput} placeholder="e.g. 25999"
                     value={form.amazon_price} onChange={e => handleFormChange('amazon_price', e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Flipkart Price (Fallback)</label>
-                  <input type="number" className="form-input" placeholder="e.g. 24999"
+                  <label className={styles.darkLabel}>Flipkart Price (Fallback)</label>
+                  <input type="number" className={styles.darkInput} placeholder="e.g. 24999"
                     value={form.flipkart_price} onChange={e => handleFormChange('flipkart_price', e.target.value)} />
                 </div>
               </div>
@@ -1474,11 +1065,11 @@ export default function AdminDashboard() {
               {/* Scraper URLs */}
               <div className={styles.formGrid}>
                 <div className="form-group" style={{ position: 'relative' }}>
-                  <label className="form-label">Amazon URL (For live scraping)</label>
+                  <label className={styles.darkLabel}>Amazon URL (For live scraping)</label>
                   <div style={{ display: 'flex', gap: '8px' }}>
-                    <input type="url" className="form-input" placeholder="https://amazon.in/dp/..."
+                    <input type="url" className={styles.darkInput} placeholder="https://amazon.in/dp/..."
                       value={form.amazon_url} onChange={e => handleFormChange('amazon_url', e.target.value)} />
-                    <button type="button" className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: 12 }} 
+                    <button type="button" className={styles.darkBtnSecondary} style={{ padding: '8px 12px', fontSize: 12 }} 
                       onClick={async () => {
                         if (!form.amazon_url) return alert('Enter URL first');
                         setImporting(true);
@@ -1490,7 +1081,6 @@ export default function AdminDashboard() {
                           });
                           const data = await res.json();
                           if (!res.ok) throw new Error(data.error);
-                          // Update form with fetched data
                           setForm(prev => ({
                             ...prev,
                             name: data.product.name,
@@ -1512,11 +1102,11 @@ export default function AdminDashboard() {
                   </div>
                 </div>
                 <div className="form-group" style={{ position: 'relative' }}>
-                  <label className="form-label">Flipkart URL (For live scraping)</label>
+                  <label className={styles.darkLabel}>Flipkart URL (For live scraping)</label>
                   <div style={{ display: 'flex', gap: '8px' }}>
-                    <input type="url" className="form-input" placeholder="https://flipkart.com/..."
+                    <input type="url" className={styles.darkInput} placeholder="https://flipkart.com/..."
                       value={form.flipkart_url} onChange={e => handleFormChange('flipkart_url', e.target.value)} />
-                    <button type="button" className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: 12 }} 
+                    <button type="button" className={styles.darkBtnSecondary} style={{ padding: '8px 12px', fontSize: 12 }} 
                       onClick={async () => {
                         if (!form.flipkart_url) return alert('Enter URL first');
                         setImporting(true);
@@ -1528,7 +1118,6 @@ export default function AdminDashboard() {
                           });
                           const data = await res.json();
                           if (!res.ok) throw new Error(data.error);
-                          // Update form with fetched data
                           setForm(prev => ({
                             ...prev,
                             name: data.product.name,
@@ -1553,22 +1142,22 @@ export default function AdminDashboard() {
 
               {/* Prepaid Discount */}
               <div className="form-group">
-                <label className="form-label">Prepaid Discount %</label>
-                <input type="number" className="form-input" min="0" max="20" placeholder="3"
+                <label className={styles.darkLabel}>Prepaid Discount %</label>
+                <input type="number" className={styles.darkInput} min="0" max="20" placeholder="3"
                   value={form.prepaid_discount_pct} onChange={e => handleFormChange('prepaid_discount_pct', e.target.value)} />
               </div>
 
 
               {/* Description */}
               <div className="form-group">
-                <label className="form-label">Description</label>
+                <label className={styles.darkLabel}>Description</label>
                 <textarea className={styles.formTextarea} placeholder="Product specs, features, etc."
                   value={form.description} onChange={e => handleFormChange('description', e.target.value)} />
               </div>
 
               {/* Images */}
               <div className="form-group">
-                <label className="form-label">Product Images</label>
+                <label className={styles.darkLabel}>Product Images</label>
                 <div className={styles.imageUrlList}>
                   {form.images.map((img, idx) => (
                     <div key={idx} className={styles.imageUrlRow} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -1577,8 +1166,8 @@ export default function AdminDashboard() {
                           <img src={img} alt="Product" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         </div>
                       ) : (
-                        <div style={{ width: 60, height: 60, borderRadius: 8, background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <span style={{ fontSize: 10, color: '#999' }}>No Img</span>
+                        <div style={{ width: 60, height: 60, borderRadius: 8, background: '#1a1a1a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <span style={{ fontSize: 10, color: '#666' }}>No Img</span>
                         </div>
                       )}
                       
@@ -1586,7 +1175,7 @@ export default function AdminDashboard() {
                         <input type="file" accept="image/*" disabled={uploadingImage}
                           onChange={e => handleFileUpload(idx, e.target.files[0])}
                           style={{ fontSize: 13 }} />
-                        {img && <input type="text" className="form-input" style={{ padding: '4px 8px', fontSize: 12 }} readOnly value={img} />}
+                        {img && <input type="text" className={styles.darkInput} style={{ padding: '4px 8px', fontSize: 12 }} readOnly value={img} />}
                       </div>
 
                       <button type="button" className={styles.removeImgBtn} disabled={uploadingImage}
@@ -1608,7 +1197,7 @@ export default function AdminDashboard() {
               </label>
 
               {/* ---- Variants Grid ---- */}
-              <div style={{ background: 'var(--bg-highlight, #f8fafc)', border: '1px solid var(--border)', borderRadius: 12, padding: 16, marginTop: 4 }}>
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 12, padding: 16, marginTop: 4 }}>
                 <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--brand-primary)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
                   📦 RAM &amp; Storage Variants
                 </div>
@@ -1644,7 +1233,7 @@ export default function AdminDashboard() {
                       <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-dark)' }}>{v.storage} GB</span>
                       <input
                         type="number"
-                        className="form-input"
+                        className={styles.darkInput}
                         style={{ padding: '5px 8px', fontSize: 13, height: 34 }}
                         placeholder="e.g. 21999"
                         value={v.price}
@@ -1665,8 +1254,8 @@ export default function AdminDashboard() {
                         style={{
                           width: 36, height: 34, borderRadius: 8,
                           border: 'none', cursor: 'pointer',
-                          background: v.enabled ? '#16a34a' : '#e5e7eb',
-                          color: v.enabled ? '#fff' : '#9aa3b2',
+                          background: v.enabled ? '#10b981' : 'rgba(255,255,255,0.08)',
+                          color: v.enabled ? '#fff' : '#888',
                           fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
                           transition: 'all 0.15s',
                         }}
@@ -1678,7 +1267,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {saveError && <div className="notice notice-error">⚠ {saveError}</div>}
+              {saveError && <div className={styles.darkNoticeError}>⚠ {saveError}</div>}
 
               <div className={styles.modalActions}>
                 <button type="button" className={styles.modalCancelBtn} onClick={closeModal}>Cancel</button>
@@ -1701,9 +1290,9 @@ export default function AdminDashboard() {
 
             <div className={styles.modalForm}>
               <div className="form-group">
-                <label className="form-label">Select Product *</label>
+                <label className={styles.darkLabel}>Select Product *</label>
                 <select 
-                  className="form-input" 
+                  className={styles.darkInput} 
                   value={orderForm.productId}
                   onChange={(e) => handleOrderFormChange('productId', e.target.value)}
                 >
@@ -1717,10 +1306,10 @@ export default function AdminDashboard() {
 
               {orderForm.productId === 'custom' && (
                 <div className="form-group">
-                  <label className="form-label">Item Name *</label>
+                  <label className={styles.darkLabel}>Item Name *</label>
                   <input 
                     type="text" 
-                    className="form-input" 
+                    className={styles.darkInput} 
                     placeholder="Enter custom item name"
                     value={orderForm.productName}
                     onChange={(e) => handleOrderFormChange('productName', e.target.value)}
@@ -1730,19 +1319,19 @@ export default function AdminDashboard() {
 
               <div className={styles.formGrid}>
                 <div className="form-group">
-                  <label className="form-label">Customer Name *</label>
+                  <label className={styles.darkLabel}>Customer Name *</label>
                   <input 
                     type="text" 
-                    className="form-input" 
+                    className={styles.darkInput} 
                     value={orderForm.fullName}
                     onChange={(e) => handleOrderFormChange('fullName', e.target.value)}
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Phone *</label>
+                  <label className={styles.darkLabel}>Phone *</label>
                   <input 
                     type="tel" 
-                    className="form-input" 
+                    className={styles.darkInput} 
                     maxLength={10}
                     value={orderForm.phone}
                     onChange={(e) => handleOrderFormChange('phone', e.target.value.replace(/\D/g, ''))}
@@ -1751,7 +1340,7 @@ export default function AdminDashboard() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Delivery Address *</label>
+                <label className={styles.darkLabel}>Delivery Address *</label>
                 <textarea 
                   className={styles.formTextarea} 
                   rows={2}
@@ -1761,10 +1350,10 @@ export default function AdminDashboard() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Pincode *</label>
+                <label className={styles.darkLabel}>Pincode *</label>
                 <input 
                   type="text" 
-                  className="form-input" 
+                  className={styles.darkInput} 
                   maxLength={6}
                   value={orderForm.pincode}
                   onChange={(e) => handleOrderFormChange('pincode', e.target.value.replace(/\D/g, ''))}
@@ -1772,9 +1361,9 @@ export default function AdminDashboard() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Payment Method *</label>
+                <label className={styles.darkLabel}>Payment Method *</label>
                 <select 
-                  className="form-input"
+                  className={styles.darkInput}
                   value={orderForm.paymentOption}
                   onChange={(e) => handleOrderFormChange('paymentOption', e.target.value)}
                 >
@@ -1786,26 +1375,26 @@ export default function AdminDashboard() {
 
               <div className={styles.formGrid}>
                 <div className="form-group">
-                  <label className="form-label">Final Price (₹) *</label>
+                  <label className={styles.darkLabel}>Final Price (₹) *</label>
                   <input 
                     type="number" 
-                    className="form-input" 
+                    className={styles.darkInput} 
                     value={orderForm.finalPrice}
                     onChange={(e) => handleOrderFormChange('finalPrice', Number(e.target.value))}
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Advance (₹)</label>
+                  <label className={styles.darkLabel}>Advance (₹)</label>
                   <input 
                     type="number" 
-                    className="form-input" 
+                    className={styles.darkInput} 
                     value={orderForm.advanceAmount}
                     onChange={(e) => handleOrderFormChange('advanceAmount', Number(e.target.value))}
                   />
                 </div>
               </div>
 
-              {orderError && <div className="notice notice-error">⚠ {orderError}</div>}
+              {orderError && <div className={styles.darkNoticeError}>⚠ {orderError}</div>}
 
               <div className={styles.modalActions}>
                 <button type="button" className={styles.modalCancelBtn} onClick={() => setShowOrderModal(false)}>Cancel</button>
@@ -1821,11 +1410,11 @@ export default function AdminDashboard() {
       {expandedRouteOrderId && (
         <div className={styles.modalOverlay} style={{ zIndex: 9999 }}>
           <div className={styles.modal}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--brand-primary)', margin: 0 }}>
                 🗺️ Manage Shipment Route
               </h3>
-              <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--brand-accent-dark)', background: 'var(--brand-accent-light)', padding: '4px 10px', borderRadius: '12px' }}>
+              <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--brand-accent-dark)', background: 'rgba(57, 255, 20, 0.1)', padding: '4px 10px', borderRadius: '12px' }}>
                 Order #{expandedRouteOrderId.slice(0,8).toUpperCase()}
               </span>
             </div>
@@ -1834,21 +1423,21 @@ export default function AdminDashboard() {
               Customize the destination name for each milestone of this shipment. Choose which step is the current package location.
             </p>
 
-            <div className="admin-route-grid">
+            <div className={styles.routeGrid}>
               {[1, 2, 3, 4, 5, 6].map((num) => (
                 <div key={num} className={`admin-route-step-card ${routeEditForm.current_step === num ? 'active' : ''}`}>
-                  <div className="admin-route-radio-wrapper">
+                  <div className={styles.routeRadioWrapper}>
                     <input
                       type="radio"
                       name={`active-step-${expandedRouteOrderId}`}
-                      className="admin-route-radio"
+                      className={styles.routeRadio}
                       checked={routeEditForm.current_step === num}
                       onChange={() => setRouteEditForm(prev => ({ ...prev, current_step: num }))}
                     />
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <label className="form-label" style={{ margin: 0, fontWeight: 700 }}>
+                      <label className={styles.darkLabel} style={{ margin: 0, fontWeight: 700 }}>
                         Step {num}
                       </label>
                       {routeEditForm.current_step === num && (
@@ -1859,7 +1448,7 @@ export default function AdminDashboard() {
                     </div>
                     <input
                       type="text"
-                      className="form-input"
+                      className={styles.darkInput}
                       style={{ padding: '8px 12px', fontSize: 13, height: '36px' }}
                       placeholder={
                         num === 1 ? "Order Placed" : "Pending Hub Update"
@@ -1872,7 +1461,7 @@ export default function AdminDashboard() {
               ))}
             </div>
 
-            <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #e2e8f0' }}>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
               <button
                 type="button"
                 className={styles.modalCancelBtn}
@@ -1883,7 +1472,7 @@ export default function AdminDashboard() {
               </button>
               <button
                 type="button"
-                className="btn btn-primary"
+                className={styles.darkBtnPrimary}
                 style={{ padding: '8px 24px', fontSize: '13px', height: '36px', display: 'flex', alignItems: 'center' }}
                 onClick={() => handleSaveRoute(expandedRouteOrderId)}
               >

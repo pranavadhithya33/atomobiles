@@ -57,11 +57,11 @@ export default function AdminLoginPage() {
 
         <form onSubmit={handleLogin} style={{ display:'flex', flexDirection:'column', gap:14 }}>
           <div className="form-group">
-            <label htmlFor="admin-password" className="form-label">Admin Password</label>
+            <label htmlFor="admin-password" className={styles.darkLabel}>Admin Password</label>
             <input
               id="admin-password"
               type="password"
-              className="form-input"
+              className={styles.darkInput}
               placeholder="Enter admin password"
               value={password}
               onChange={e => setPassword(e.target.value)}
