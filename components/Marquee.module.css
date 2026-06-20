@@ -1,0 +1,33 @@
+.marqueeWrap {
+  background: rgba(244, 167, 36, 0.08);
+  border-top: 1px solid rgba(244, 167, 36, 0.15);
+  border-bottom: 1px solid rgba(244, 167, 36, 0.15);
+  overflow: hidden;
+}
+
+.marquee {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 0;
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  gap: 48px;
+  animation: scroll 20s linear infinite;
+  width: max-content;
+}
+
+.item {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(244, 167, 36, 0.9);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}

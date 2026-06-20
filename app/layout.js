@@ -2,6 +2,7 @@
 import '@/app/globals.css';
 import '@/app/animations.css';
 import '@/styles/global-dark-forms.css';
+import '@/styles/global-spacing-fix.css';
 import ClientLayoutWrapper from '@/components/ClientLayoutWrapper';
 
 export const metadata = {
