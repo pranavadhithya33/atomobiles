@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import ProductCard from '@/components/ProductCard';
 import Footer from '@/components/Footer';
@@ -49,18 +50,22 @@ export default function Home() {
   const [cartCount, setCartCount] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [allProducts, setAllProducts] = useState([]);
-  const [trendingProducts, setTrendingProducts] = useState([]);
+  const [dealProduct, setDealProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [visibleCount, setVisibleCount] = useState(8);
   const heroRef = useRef(null);
   const canvasRef = useRef(null);
 
-  // Fetch products
+  // Fetch products and deal of the day
   useEffect(() => {
-    fetch('/api/products')
-      .then(res => res.json())
-      .then(data => {
-        const mappedProducts = (data || []).map(p => ({
-          id: p.slug, // Use slug for routing
+    const loadData = async () => {
+      try {
+        const productsRes = await fetch('/api/products');
+        const productsData = await productsRes.json();
+        
+        const mappedProducts = (productsData || []).map(p => ({
+          id: p.slug,
           name: p.name,
           brand: p.category || 'Mobile',
           specs: 'Verified | 100% Authentic',
@@ -73,17 +78,51 @@ export default function Home() {
           savings: Math.max(0, (p.market_price || 0) - (p.our_price || 0))
         }));
         setAllProducts(mappedProducts);
-        
-        // Use featured products for trending, or fallback to first few products
-        const hotProducts = mappedProducts.filter(p => p.badge === 'HOT');
-        setTrendingProducts(hotProducts.length > 0 ? hotProducts : mappedProducts);
+
+        const dealRes = await fetch('/api/deal');
+        const dealData = await dealRes.json();
+        if (dealData && dealData.deal) {
+          setDealProduct(dealData.deal);
+        }
+      } catch (err) {
+        console.error('Error fetching home page data:', err);
+      } finally {
         setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
+      }
+    };
+    
+    loadData();
   }, []);
+
+  // Derive product selections
+  const trendingProducts = allProducts.filter(p => p.badge === 'HOT').length > 0
+    ? allProducts.filter(p => p.badge === 'HOT')
+    : allProducts.slice(0, 6);
+
+  const newArrivals = allProducts.slice(0, 6).map(p => ({ ...p, badge: 'NEW' }));
+  
+  const bestSellers = allProducts.slice(4, 10);
+
+  const filteredProducts = selectedCategory === 'All'
+    ? allProducts
+    : allProducts.filter(p => p.brand.toLowerCase() === selectedCategory.toLowerCase());
+
+  // Determine active deal
+  const activeDeal = dealProduct ? {
+    name: dealProduct.name,
+    description: dealProduct.description || '256GB | Premium build | Ultra high performance',
+    price: dealProduct.deal_price || dealProduct.our_price,
+    originalPrice: dealProduct.market_price || Math.max(dealProduct.amazon_price || 0, dealProduct.flipkart_price || 0, dealProduct.online_price || 0),
+    image: dealProduct.images?.[0] || '/phones/iphone16promax.jpg',
+    slug: dealProduct.slug
+  } : (allProducts.length > 0 ? {
+    name: allProducts[0].name,
+    description: allProducts[0].specs || 'Verified | 100% Authentic',
+    price: allProducts[0].price,
+    originalPrice: allProducts[0].originalPrice,
+    image: allProducts[0].image,
+    slug: allProducts[0].id
+  } : null);
 
   // Scroll progress
   useEffect(() => {
@@ -284,44 +323,50 @@ export default function Home() {
         {/* =============================================
             DEAL OF THE DAY
             ============================================= */}
-        <section className={`section ${styles.dealSection}`} id="deals">
-          <div className="container">
-            <div className="section-header reveal">
-              <div>
-                <span className="section-tag">⚡ Limited Time</span>
-                <h2 className="section-title">Deal of the Day</h2>
+        {activeDeal && (
+          <section className={`section ${styles.dealSection}`} id="deals">
+            <div className="container">
+              <div className="section-header reveal">
+                <div>
+                  <span className="section-tag">⚡ Limited Time</span>
+                  <h2 className="section-title">Deal of the Day</h2>
+                </div>
+              </div>
+              <div className={`${styles.dealCard} reveal`}>
+                <div className={styles.dealImage}>
+                  <Image
+                    src={activeDeal.image}
+                    alt={activeDeal.name}
+                    fill
+                    style={{ objectFit: 'contain' }}
+                    className={styles.dealImg}
+                  />
+                </div>
+                <div className={styles.dealInfo}>
+                  <span className={styles.dealBadge}>DEAL ENDS IN 04:23:15</span>
+                  <h3 className={styles.dealTitle}>{activeDeal.name}</h3>
+                  <p className={styles.dealSpecs}>{activeDeal.description}</p>
+                  <div className={styles.dealRating}>
+                    <span className={styles.stars}>★★★★★</span>
+                    <span className={styles.reviewCount}>(250+ reviews)</span>
+                  </div>
+                  <div className={styles.dealPriceBlock}>
+                    <span className={styles.dealPrice}>₹{(activeDeal.price || 0).toLocaleString('en-IN')}</span>
+                    {activeDeal.originalPrice && activeDeal.originalPrice > activeDeal.price && (
+                      <>
+                        <span className={styles.dealOriginal}>₹{activeDeal.originalPrice.toLocaleString('en-IN')}</span>
+                        <span className={styles.dealSavings}>Save ₹{(activeDeal.originalPrice - activeDeal.price).toLocaleString('en-IN')}</span>
+                      </>
+                    )}
+                  </div>
+                  <Link href={`/products/${activeDeal.slug}`} className="btn btn-primary btn-lg" style={{ marginTop: '1.5rem' }}>
+                    Order Now
+                  </Link>
+                </div>
               </div>
             </div>
-            <div className={`${styles.dealCard} reveal`}>
-              <div className={styles.dealImage}>
-                <Image
-                  src="/phones/iphone16promax.jpg"
-                  alt="iPhone 16 Pro Max"
-                  fill
-                  style={{ objectFit: 'contain' }}
-                  className={styles.dealImg}
-                />
-              </div>
-              <div className={styles.dealInfo}>
-                <span className={styles.dealBadge}>DEAL ENDS IN 04:23:15</span>
-                <h3 className={styles.dealTitle}>iPhone 16 Pro Max</h3>
-                <p className={styles.dealSpecs}>256GB | A18 Pro Chip | Titanium Build | 48MP Camera</p>
-                <div className={styles.dealRating}>
-                  <span className={styles.stars}>★★★★★</span>
-                  <span className={styles.reviewCount}>(1,234 reviews)</span>
-                </div>
-                <div className={styles.dealPriceBlock}>
-                  <span className={styles.dealPrice}>₹1,49,900</span>
-                  <span className={styles.dealOriginal}>₹1,59,900</span>
-                  <span className={styles.dealSavings}>Save ₹10,000</span>
-                </div>
-                <a href="/order" className="btn btn-primary btn-lg" style={{ marginTop: '1.5rem' }}>
-                  Order Now
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* =============================================
             ALL PRODUCTS — 2-col/4-col Grid
@@ -338,24 +383,32 @@ export default function Home() {
 
             {/* Filter Pills */}
             <div className={`${styles.filterPills} reveal`}>
-              <button className={`${styles.filterPill} ${styles.filterActive}`}>All</button>
-              <button className={styles.filterPill}>Apple</button>
-              <button className={styles.filterPill}>Samsung</button>
-              <button className={styles.filterPill}>OnePlus</button>
-              <button className={styles.filterPill}>Google</button>
-              <button className={styles.filterPill}>Xiaomi</button>
+              {['All', 'Apple', 'Samsung', 'OnePlus', 'Google', 'Xiaomi'].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    setVisibleCount(8);
+                  }}
+                  className={`${styles.filterPill} ${selectedCategory === cat ? styles.filterActive : ''}`}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
 
             {/* Product Grid */}
             <div className={`${styles.productGrid} stagger-children`}>
-              {allProducts.map((product) => (
+              {filteredProducts.slice(0, visibleCount).map((product) => (
                 <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
               ))}
             </div>
 
-            <div className={styles.loadMoreWrap}>
-              <button className="btn btn-secondary">Load More</button>
-            </div>
+            {visibleCount < filteredProducts.length && (
+              <div className={styles.loadMoreWrap}>
+                <button onClick={() => setVisibleCount(prev => prev + 8)} className="btn btn-secondary">Load More</button>
+              </div>
+            )}
           </div>
         </section>
 
@@ -372,7 +425,7 @@ export default function Home() {
               <a href="#products" className="view-all">View All →</a>
             </div>
             <div className="scroll-row stagger-children">
-              {trendingProducts.slice(2, 8).map((product) => (
+              {bestSellers.map((product) => (
                 <ProductCard key={product.id} product={product} variant="horizontal" onAddToCart={handleAddToCart} />
               ))}
             </div>
@@ -392,7 +445,7 @@ export default function Home() {
               <a href="#products" className="view-all">View All →</a>
             </div>
             <div className="scroll-row stagger-children">
-              {trendingProducts.filter(p => p.badge === 'NEW').map((product) => (
+              {newArrivals.map((product) => (
                 <ProductCard key={product.id} product={product} variant="horizontal" onAddToCart={handleAddToCart} />
               ))}
             </div>

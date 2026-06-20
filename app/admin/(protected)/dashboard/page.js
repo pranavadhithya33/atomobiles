@@ -11,7 +11,6 @@ import {
 import { generateInvoice } from '@/lib/invoiceGenerator';
 import { motion, AnimatePresence } from 'framer-motion';
 import AdminLoader from '@/components/AdminLoader';
-import { useTheme } from 'next-themes';
 
 const CATEGORIES = [
   { label: 'Smartphones', value: 'smartphones' },
@@ -59,13 +58,6 @@ export default function AdminDashboard() {
   const [editProduct, setEditProduct] = useState(null);
   const [form, setForm] = useState(EMPTY_PRODUCT);
   const [saving, setSaving] = useState(false);
-  const { theme, setTheme } = useTheme();
-  
-  useEffect(() => {
-    if (theme === 'cafe') {
-      setTheme('neon-dark');
-    }
-  }, [theme, setTheme]);
 
   const [saveError, setSaveError] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -958,23 +950,6 @@ export default function AdminDashboard() {
           Atomobiles <span>Admin</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <select 
-            value={theme} 
-            onChange={(e) => setTheme(e.target.value)}
-            style={{ 
-              background: 'var(--bg-card)', 
-              color: 'var(--text-primary)', 
-              border: '1px solid var(--border)', 
-              padding: '6px 12px', 
-              borderRadius: '6px', 
-              fontSize: '13px', 
-              cursor: 'pointer', 
-              outline: 'none' 
-            }}
-          >
-            <option value="minimalist-bw">Light (B&W)</option>
-            <option value="neon-dark">Dark Theme</option>
-          </select>
           <button onClick={handleLogout} className={styles.logoutBtn}>
             <LogOut size={14} style={{ display:'inline', marginRight:5, verticalAlign:'middle' }} />
             Logout

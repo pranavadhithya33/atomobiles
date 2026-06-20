@@ -16,10 +16,11 @@ export default function Header({ cartCount = 0 }) {
   }, []);
 
   const navLinks = [
-    { href: '#products', label: 'Products' },
-    { href: '#deals', label: 'Deals' },
-    { href: '#reviews', label: 'Reviews' },
-    { href: '#contact', label: 'Contact' },
+    { href: '/#products', label: 'Products', isHash: true },
+    { href: '/#deals', label: 'Deals', isHash: true },
+    { href: '/#reviews', label: 'Reviews', isHash: true },
+    { href: '/#contact', label: 'Contact', isHash: true },
+    { href: '/track', label: 'Track Order', isHash: false },
   ];
 
   return (
@@ -34,9 +35,15 @@ export default function Header({ cartCount = 0 }) {
           {/* Desktop Nav */}
           <nav className={styles.desktopNav}>
             {navLinks.map((link) => (
-              <a key={link.href} href={link.href} className={styles.navLink}>
-                {link.label}
-              </a>
+              link.isHash ? (
+                <a key={link.href} href={link.href} className={styles.navLink}>
+                  {link.label}
+                </a>
+              ) : (
+                <Link key={link.href} href={link.href} className={styles.navLink}>
+                  {link.label}
+                </Link>
+              )
             ))}
           </nav>
 
@@ -97,15 +104,27 @@ export default function Header({ cartCount = 0 }) {
       <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}>
         <div className={styles.mobileMenuContent}>
           {navLinks.map((link, i) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className={styles.mobileNavLink}
-              onClick={() => setMenuOpen(false)}
-              style={{ animationDelay: `${i * 0.05}s` }}
-            >
-              {link.label}
-            </a>
+            link.isHash ? (
+              <a
+                key={link.href}
+                href={link.href}
+                className={styles.mobileNavLink}
+                onClick={() => setMenuOpen(false)}
+                style={{ animationDelay: `${i * 0.05}s` }}
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={styles.mobileNavLink}
+                onClick={() => setMenuOpen(false)}
+                style={{ animationDelay: `${i * 0.05}s` }}
+              >
+                {link.label}
+              </Link>
+            )
           ))}
           <div className={styles.mobileMenuFooter}>
             <Link href="/login" className={styles.mobileMenuBtn}>Login</Link>
