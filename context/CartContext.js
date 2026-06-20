@@ -7,6 +7,7 @@ const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
   const [user, setUser] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [authLoaded, setAuthLoaded] = useState(false);
@@ -25,26 +26,39 @@ export function CartProvider({ children }) {
       });
   }, []);
 
-  // 2. Load Cart
+  // 2. Load Cart & Wishlist
   useEffect(() => {
     const savedCart = localStorage.getItem('og_cart');
     if (savedCart) {
       try {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCart(JSON.parse(savedCart));
       } catch (e) {
         console.error('Failed to parse cart:', e);
       }
     }
+    const savedWishlist = localStorage.getItem('og_wishlist');
+    if (savedWishlist) {
+      try {
+        setWishlist(JSON.parse(savedWishlist));
+      } catch (e) {
+        console.error('Failed to parse wishlist:', e);
+      }
+    }
     setIsLoaded(true);
   }, []);
 
-  // 3. Save Cart to localStorage
+  // 3. Save Cart & Wishlist to localStorage
   useEffect(() => {
     if (isLoaded) {
       localStorage.setItem('og_cart', JSON.stringify(cart));
     }
   }, [cart, isLoaded]);
+
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem('og_wishlist', JSON.stringify(wishlist));
+    }
+  }, [wishlist, isLoaded]);
 
   const addToCart = async (product, quantity = 1, paymentOption = 'half_cod', variantInfo = null) => {
     const variantId = variantInfo ? `${variantInfo.ram}GB-${variantInfo.storage}GB` : null;
@@ -62,8 +76,8 @@ export function CartProvider({ children }) {
         id: product.id, 
         name: product.name, 
         slug: product.slug, 
-        image: product.images?.[0], 
-        basePrice: variantInfo?.variantPrice || product.our_price,
+        image: product.image || product.images?.[0], 
+        basePrice: variantInfo?.variantPrice || product.price || product.our_price,
         paymentOption,
         quantity,
         variantId,
@@ -88,11 +102,32 @@ export function CartProvider({ children }) {
 
   const clearCart = () => setCart([]);
 
+  const toggleWishlist = (product) => {
+    setWishlist(prev => {
+      const exists = prev.some(item => item.id === product.id);
+      if (exists) {
+        return prev.filter(item => item.id !== product.id);
+      } else {
+        return [...prev, {
+          id: product.id,
+          name: product.name,
+          slug: product.slug || product.id,
+          image: product.image || product.images?.[0],
+          price: product.price || product.our_price,
+          originalPrice: product.originalPrice || product.market_price,
+          brand: product.brand
+        }];
+      }
+    });
+  };
+
+  const isInWishlist = (productId) => {
+    return wishlist.some(item => item.id === productId);
+  };
+
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   
   const cartTotal = cart.reduce((sum, item) => {
-    // Note: This total is a bit complex because of payment options
-    // For simplicity, we use the basePrice here.
     return sum + (item.basePrice * item.quantity);
   }, 0);
 
@@ -105,7 +140,12 @@ export function CartProvider({ children }) {
       updateQuantity, 
       clearCart, 
       cartCount, 
-      cartTotal 
+      cartTotal,
+      wishlist,
+      toggleWishlist,
+      isInWishlist,
+      wishlistCount: wishlist.length,
+      user
     }}>
       {children}
     </CartContext.Provider>

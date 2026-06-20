@@ -4,9 +4,10 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './ProductCard.module.css';
+import { useCart } from '@/context/CartContext';
 
 export default function ProductCard({ product, variant = 'grid', onAddToCart }) {
-  const [liked, setLiked] = useState(false);
+  const { toggleWishlist, isInWishlist } = useCart();
   const [added, setAdded] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -25,6 +26,8 @@ export default function ProductCard({ product, variant = 'grid', onAddToCart }) 
     savings,
   } = product;
 
+  const liked = isInWishlist(product.id);
+
   const handleAdd = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -36,7 +39,7 @@ export default function ProductCard({ product, variant = 'grid', onAddToCart }) 
   const handleLike = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setLiked(!liked);
+    toggleWishlist(product);
   };
 
   const discountPercent = originalPrice

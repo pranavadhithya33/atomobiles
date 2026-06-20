@@ -334,3 +334,57 @@
   opacity: 1;
   pointer-events: all;
 }
+
+.wishlistBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.authLinks {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .authLinks {
+    display: flex;
+  }
+}
+
+.authLink {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.authLink:hover {
+  color: #888888;
+}
+
+.signUpBtn {
+  background: #ffffff;
+  color: #000000;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.signUpBtn:hover {
+  background: #dddddd;
+  color: #000000;
+}
