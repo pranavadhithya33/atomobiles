@@ -7,7 +7,7 @@ import styles from './ProductCard.module.css';
 import { useCart } from '@/context/CartContext';
 
 export default function ProductCard({ product, variant = 'grid', onAddToCart }) {
-  const { toggleWishlist, isInWishlist } = useCart();
+  const { toggleWishlist, isInWishlist, addToCart } = useCart();
   const [added, setAdded] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -32,6 +32,7 @@ export default function ProductCard({ product, variant = 'grid', onAddToCart }) 
     e.preventDefault();
     e.stopPropagation();
     setAdded(true);
+    addToCart(product);
     onAddToCart?.(product);
     setTimeout(() => setAdded(false), 2000);
   };
