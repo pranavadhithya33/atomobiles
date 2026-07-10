@@ -11,6 +11,7 @@ export default function Header({ cartCount: propCartCount }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -112,11 +113,25 @@ export default function Header({ cartCount: propCartCount }) {
           <div className={styles.searchContainer}>
             <input
               type="text"
+              value={searchValue}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSearchValue(val);
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('global-search', { detail: val }));
+                }
+              }}
               placeholder="Search phones, brands..."
               className={styles.searchInput}
               autoFocus={searchOpen}
             />
-            <button className={styles.searchClose} onClick={() => setSearchOpen(false)}>
+            <button className={styles.searchClose} onClick={() => {
+              setSearchOpen(false);
+              setSearchValue('');
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('global-search', { detail: '' }));
+              }
+            }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
               </svg>

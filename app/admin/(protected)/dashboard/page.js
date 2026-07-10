@@ -59,6 +59,7 @@ export default function AdminDashboard() {
 
   const [saveError, setSaveError] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [productSearch, setProductSearch] = useState('');
   
   const [importUrl, setImportUrl] = useState('');
   const [importing, setImporting] = useState(false);
@@ -649,6 +650,18 @@ export default function AdminDashboard() {
               {importing ? 'Syncing Catalog...' : 'Manual Bulk Refresh (10-Day Sync)'}
             </button>
 
+            {/* Product Search */}
+            <div style={{ marginBottom: '16px' }}>
+              <input 
+                type="text" 
+                placeholder="Search products by name..." 
+                className={styles.darkInput} 
+                style={{ width: '100%', maxWidth: '400px' }}
+                value={productSearch}
+                onChange={(e) => setProductSearch(e.target.value)}
+              />
+            </div>
+
             {loading ? (
               <AdminLoader />
             ) : products.length === 0 ? (
@@ -656,21 +669,28 @@ export default function AdminDashboard() {
                 <div style={{ marginBottom:12, display: 'flex', justifyContent: 'center', color: 'var(--text-muted)' }}><Smartphone size={40} /></div>
                 <p>No products yet. Click &quot;Add Product&quot; to get started.</p>
               </div>
-            ) : (
-              <div className={styles.tableWrap}>
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>Image</th>
-                      <th>Name</th>
-                      <th>Category</th>
-                      <th>Market Price</th>
-                      <th>Our Price</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {products.map(p => (
+            ) : (() => {
+              const filteredProducts = products.filter(p => p.name.toLowerCase().includes(productSearch.toLowerCase()));
+              return filteredProducts.length === 0 ? (
+                <div className={styles.emptyState}>
+                  <div style={{ marginBottom:12, display: 'flex', justifyContent: 'center', color: 'var(--text-muted)' }}><Smartphone size={40} /></div>
+                  <p>No products found matching &quot;{productSearch}&quot;.</p>
+                </div>
+              ) : (
+                <div className={styles.tableWrap}>
+                  <table className={styles.table}>
+                    <thead>
+                      <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Market Price</th>
+                        <th>Our Price</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredProducts.map(p => (
                       <tr key={p.id}>
                         <td data-label="Image">
                           {p.images?.[0] ? (
@@ -703,11 +723,12 @@ export default function AdminDashboard() {
                           </div>
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })()}
           </motion.div>
         )}
 

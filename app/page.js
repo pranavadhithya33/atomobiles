@@ -75,9 +75,21 @@ const features = [
 export default function Home() {
   const [cartCount, setCartCount] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
   const [allProducts, setAllProducts] = useState([]);
   const [dealProduct, setDealProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const handleSearch = (e) => {
+      setSearchQuery(e.detail || '');
+      if (e.detail) {
+        document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+    window.addEventListener('global-search', handleSearch);
+    return () => window.removeEventListener('global-search', handleSearch);
+  }, []);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [visibleCount, setVisibleCount] = useState(8);
   const heroRef = useRef(null);
@@ -142,9 +154,12 @@ export default function Home() {
   
   const bestSellers = allProducts.slice(4, 10);
 
-  const filteredProducts = selectedCategory === 'All'
-    ? allProducts
-    : allProducts.filter(p => p.brand.toLowerCase() === selectedCategory.toLowerCase());
+  const filteredProducts = allProducts.filter(p => {
+    const matchCategory = selectedCategory === 'All' || p.brand.toLowerCase() === selectedCategory.toLowerCase();
+    const searchLower = (searchQuery || '').toLowerCase();
+    const matchSearch = searchLower === '' || p.name.toLowerCase().includes(searchLower) || p.brand.toLowerCase().includes(searchLower);
+    return matchCategory && matchSearch;
+  });
 
   // Determine active deal
   const isDealActive = dealProduct && 
@@ -268,8 +283,6 @@ export default function Home() {
     <>
       {/* Scroll Progress */}
       <div className="scroll-progress" style={{ transform: `scaleX(${scrollProgress})` }} />
-
-      <Header cartCount={cartCount} />
 
       <main>
         {/* =============================================

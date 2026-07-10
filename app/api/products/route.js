@@ -11,7 +11,7 @@ export async function GET(req) {
     const search = searchParams.get('search') || '';
     const category = searchParams.get('category') || '';
     const featured = searchParams.get('featured') === 'true';
-    const limit = parseInt(searchParams.get('limit') || '50');
+    const limit = parseInt(searchParams.get('limit') || '500');
 
     let query = supabase
       .from('products')
